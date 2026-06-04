@@ -1,5 +1,9 @@
 # Sobko MCP Knowledge Base
 
+<p align="center">
+  <img src="docs/assets/sobko_logo/Sobko_LOGO.png" alt="Sobko logo" width="180">
+</p>
+
 Sobko 是一个可迁移的 Python MCP 知识库服务，知识源限定为思想家公社学术帖和 Multiwfn 用户手册。项目内已经携带 source snapshot、normalized 数据、BM25 索引、dense embedding 分片、图片索引和评测报告，因此克隆后不需要重新爬取源数据即可直接启动 MCP。
 
 ## 当前状态
