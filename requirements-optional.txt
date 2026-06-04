@@ -1,0 +1,4 @@
+# Sobko 基础 BM25 与内置 JSON-RPC MCP server 只需要 Python 标准库。
+# 下面依赖是可选增强项，请按实际需要安装。
+mcp
+FlagEmbedding

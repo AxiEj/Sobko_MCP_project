@@ -1,0 +1,58 @@
+[
+  {
+    "query": "ORCA TDDFT 空穴电子分析怎么做",
+    "expected_source_ids": ["blog_post:758"],
+    "required_tags": ["Multiwfn", "ORCA"],
+    "expected_authority": "B",
+    "note": "已知帖子 758 应高位命中"
+  },
+  {
+    "query": "NPT 和 NVT 系综什么时候适合使用",
+    "expected_source_ids": ["blog_post:761"],
+    "required_tags": ["分子动力学"],
+    "expected_authority": "B",
+    "note": "已知帖子 761 应高位命中"
+  },
+  {
+    "query": "Multiwfn quick start 在手册哪里提到",
+    "required_source_types": ["manual"],
+    "required_tags": ["Multiwfn"],
+    "expected_authority": "A",
+    "note": "手册应优先于博客"
+  },
+  {
+    "query": "Multiwfn command-line mode 说明",
+    "required_source_types": ["manual"],
+    "required_tags": ["Multiwfn"],
+    "expected_authority": "A",
+    "note": "命令行模式主要在手册中"
+  },
+  {
+    "query": "IGMH 格点屏蔽 降低可视化耗时",
+    "expected_source_ids": ["blog_post:756"],
+    "required_tags": ["Multiwfn", "IGMH"],
+    "expected_authority": "B",
+    "note": "已知帖子 756 讨论 IGMH 格点屏蔽"
+  },
+  {
+    "query": "mIGM 方法 图形化展现弱相互作用",
+    "expected_source_ids": ["blog_post:755"],
+    "required_tags": ["Multiwfn", "弱相互作用"],
+    "expected_authority": "B",
+    "note": "已知帖子 755 讨论 mIGM"
+  },
+  {
+    "query": "Gaussian NMR CSGT 轨道对 NICS 贡献",
+    "expected_source_ids": ["blog_post:670"],
+    "required_tags": ["Gaussian", "芳香性"],
+    "expected_authority": "B",
+    "note": "已知帖子 670 讨论 Gaussian NMR=CSGT"
+  },
+  {
+    "query": "CP2K 波函数 Multiwfn 模拟 STM 图像",
+    "expected_source_ids": ["blog_post:671"],
+    "required_tags": ["CP2K", "Multiwfn"],
+    "expected_authority": "B",
+    "note": "已知帖子 671 讨论 Multiwfn 结合 CP2K"
+  }
+]

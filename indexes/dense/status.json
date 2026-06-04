@@ -1,0 +1,10 @@
+{
+  "available": true,
+  "provider": "ollama",
+  "model_name": "bge-m3:latest",
+  "dimension": 1024,
+  "generated_at": "2026-06-04T15:39:07.675631+08:00",
+  "vector_count": 11304,
+  "shard_count": 4,
+  "shards": null
+}

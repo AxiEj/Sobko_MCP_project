@@ -1,0 +1,11 @@
+# 这些目录是知识库快照或构建产物，GitHub diff 不适合直接审阅。
+data_sources/** linguist-generated=true
+normalized/** linguist-generated=true
+indexes/** linguist-generated=true
+metadata/reports/** linguist-generated=true
+
+# 大型 JSON/JSONL 索引用普通文本保存，但不要在 PR 中展开 diff。
+indexes/**/*.json diff=false
+indexes/**/*.jsonl diff=false
+normalized/**/*.jsonl diff=false
+data_sources/**/*.html diff=false

@@ -1,0 +1,20 @@
+{
+  "mcp_servers": {
+    "sobko-kb": {
+      "enabled": true,
+      "transport": "stdio",
+      "command": [
+        "python",
+        "/ABSOLUTE/PATH/TO/Sobko_MCP_project/scripts/run_server.py"
+      ],
+      "enabled_tools": [
+        "sobko_search",
+        "sobko_fetch",
+        "sobko_get_image",
+        "sobko_trace_source"
+      ],
+      "startup_timeout_sec": 60,
+      "tool_timeout_sec": 180
+    }
+  }
+}

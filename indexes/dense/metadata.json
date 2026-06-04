@@ -1,0 +1,31 @@
+{
+  "available": true,
+  "provider": "ollama",
+  "model_name": "bge-m3:latest",
+  "dimension": 1024,
+  "generated_at": "2026-06-04T15:39:07.675631+08:00",
+  "vector_count": 11304,
+  "shard_count": 4,
+  "shards": [
+    {
+      "path": "shards/chunk_embeddings_0001.jsonl",
+      "record_count": 3512,
+      "bytes": 44995904
+    },
+    {
+      "path": "shards/chunk_embeddings_0002.jsonl",
+      "record_count": 3512,
+      "bytes": 44995589
+    },
+    {
+      "path": "shards/chunk_embeddings_0003.jsonl",
+      "record_count": 3510,
+      "bytes": 44990672
+    },
+    {
+      "path": "shards/chunk_embeddings_0004.jsonl",
+      "record_count": 770,
+      "bytes": 9870655
+    }
+  ]
+}

@@ -1,0 +1,424 @@
+{
+  "summary": {
+    "case_count": 8,
+    "top1_hit_rate": 1.0,
+    "top3_hit_rate": 1.0,
+    "top5_hit_rate": 1.0,
+    "authority_preference_rate": 1.0,
+    "lexical_only_rate": 1.0
+  },
+  "cases": [
+    {
+      "query": "ORCA TDDFT 空穴电子分析怎么做",
+      "note": "已知帖子 758 应高位命中",
+      "top1_hit": true,
+      "top3_hit": true,
+      "top5_hit": true,
+      "matched_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "expected_authority": "B",
+      "effective_mode": "lexical_only",
+      "backend_warnings": [
+        "dense_fallback: Ollama embedding 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>",
+        "rerank_fallback: local=本地 FlagEmbedding reranker 不可用: SOBKO_DISABLE_LOCAL_RERANKER=1; ollama=Ollama rerank 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>"
+      ],
+      "top_result": {
+        "rank": 1,
+        "score": 1.02,
+        "chunk_id": "blog_post:758#chunk-0002",
+        "source_id": "blog_post:758",
+        "title": "Multiwfn结合ORCA的TDDFT计算做空穴-电子等分析的方法",
+        "snippet": "Multiwfn是电子激发分析的十分强大的武器库，在《Multiwfn支持的电子激发分析方法一览》（<http://sobereva.com/437>）里有全面盘点。其主功能18中有很多分析方法依赖于参考态轨道波函数和激发态组态系数，典型的如《使用Multiwfn做空穴-电子分析全面考察电子激发特征》（<http://sobereva.com/434>）介绍的空穴-电子分析和δr指数、《在Multiwfn中通过IFCT方法计算电子激发过程中任意片段间的电子转移量》（<http://sobereva.com/433…",
+        "authority_level": "B",
+        "source_type": "blog_post",
+        "software_tags": [
+          "Gaussian",
+          "Multiwfn",
+          "ORCA"
+        ],
+        "topic_tags": [
+          "波函数分析",
+          "激发态与光谱",
+          "综述/教程/投稿经验",
+          "量子化学"
+        ],
+        "method_tags": [
+          "IFCT",
+          "NTO",
+          "TDDFT"
+        ],
+        "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/758/index.md",
+        "relative_path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/758/index.md",
+        "url": "http://sobereva.com/758",
+        "page_range": null,
+        "section_path": [
+          "Multiwfn结合ORCA的TDDFT计算做空穴-电子等分析的方法",
+          "0 前言"
+        ],
+        "image_ids": []
+      }
+    },
+    {
+      "query": "NPT 和 NVT 系综什么时候适合使用",
+      "note": "已知帖子 761 应高位命中",
+      "top1_hit": true,
+      "top3_hit": true,
+      "top5_hit": true,
+      "matched_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "expected_authority": "B",
+      "effective_mode": "lexical_only",
+      "backend_warnings": [
+        "dense_fallback: Ollama embedding 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>",
+        "rerank_fallback: local=本地 FlagEmbedding reranker 不可用: SOBKO_DISABLE_LOCAL_RERANKER=1; ollama=Ollama rerank 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>"
+      ],
+      "top_result": {
+        "rank": 1,
+        "score": 1.02,
+        "chunk_id": "blog_post:761#chunk-0006",
+        "source_id": "blog_post:761",
+        "title": "谈谈做分子动力学模拟什么时候适合用NPT和NVT系综",
+        "snippet": "顺带一提，也有很多动力学研究的本身就是非平衡过程，比如两相间的互溶，这种情况就不可能先加入NVT预平衡过程了。\n\n对初学者们，本文最后留下一句话进行强调：**若无明确、说得通的理由，不要用NVT！！！**",
+        "authority_level": "B",
+        "source_type": "blog_post",
+        "software_tags": [
+          "GROMACS"
+        ],
+        "topic_tags": [
+          "分子动力学",
+          "综述/教程/投稿经验"
+        ],
+        "method_tags": [
+          "NPT",
+          "NVT"
+        ],
+        "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/761/index.md",
+        "relative_path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/761/index.md",
+        "url": "http://sobereva.com/761",
+        "page_range": null,
+        "section_path": [
+          "谈谈做分子动力学模拟什么时候适合用NPT和NVT系综"
+        ],
+        "image_ids": []
+      }
+    },
+    {
+      "query": "Multiwfn quick start 在手册哪里提到",
+      "note": "手册应优先于博客",
+      "top1_hit": true,
+      "top3_hit": true,
+      "top5_hit": true,
+      "matched_ranks": [
+        1,
+        2
+      ],
+      "expected_authority": "A",
+      "effective_mode": "lexical_only",
+      "backend_warnings": [
+        "dense_fallback: Ollama embedding 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>",
+        "rerank_fallback: local=本地 FlagEmbedding reranker 不可用: SOBKO_DISABLE_LOCAL_RERANKER=1; ollama=Ollama rerank 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>"
+      ],
+      "top_result": {
+        "rank": 1,
+        "score": 1.03,
+        "chunk_id": "manual:multiwfn_manual#chunk-0113",
+        "source_id": "manual:multiwfn_manual",
+        "title": "Multiwfn 用户手册",
+        "snippet": "1\nOverview\nMajor functions of Multiwfn\nPS: Despite that there are so many functions in Multiwfn and the manual is quite thick, you\ncan easily learn how to realize the functions listed below by checking the \"Multiwfn quick start\"\ndocument in Multiwfn binary pa…",
+        "authority_level": "A",
+        "source_type": "manual",
+        "software_tags": [
+          "Multiwfn",
+          "NBO"
+        ],
+        "topic_tags": [
+          "波函数分析",
+          "激发态与光谱",
+          "综述/教程/投稿经验",
+          "量子化学",
+          "静电势与电荷"
+        ],
+        "method_tags": [
+          "ESP",
+          "NTO"
+        ],
+        "path": "data_sources/sobko_sources/multiwfn用户手册/Multiwfn_manual.md",
+        "relative_path": "data_sources/sobko_sources/multiwfn用户手册/Multiwfn_manual.md",
+        "url": "http://sobereva.com/multiwfn/Multiwfn_manual.html",
+        "page_range": [
+          20,
+          20
+        ],
+        "section_path": [
+          "Multiwfn 用户手册",
+          "Page 20"
+        ],
+        "image_ids": []
+      }
+    },
+    {
+      "query": "Multiwfn command-line mode 说明",
+      "note": "命令行模式主要在手册中",
+      "top1_hit": true,
+      "top3_hit": true,
+      "top5_hit": true,
+      "matched_ranks": [
+        1,
+        2,
+        4
+      ],
+      "expected_authority": "A",
+      "effective_mode": "lexical_only",
+      "backend_warnings": [
+        "dense_fallback: Ollama embedding 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>",
+        "rerank_fallback: local=本地 FlagEmbedding reranker 不可用: SOBKO_DISABLE_LOCAL_RERANKER=1; ollama=Ollama rerank 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>"
+      ],
+      "top_result": {
+        "rank": 1,
+        "score": 1.03,
+        "chunk_id": "manual:multiwfn_manual#chunk-0003",
+        "source_id": "manual:multiwfn_manual",
+        "title": "Multiwfn 用户手册",
+        "snippet": "6~2.8\nof Chapter 2 and Chapter 3. Note that the tutorials and examples given in Chapter 4\nonly cover most important and frequently used functions rather than all functions of\nMultiwfn.\n4\n. Different functions of Multiwfn require different type of input file,…",
+        "authority_level": "A",
+        "source_type": "manual",
+        "software_tags": [
+          "Multiwfn"
+        ],
+        "topic_tags": [
+          "波函数分析",
+          "综述/教程/投稿经验",
+          "量子化学"
+        ],
+        "method_tags": [],
+        "path": "data_sources/sobko_sources/multiwfn用户手册/Multiwfn_manual.md",
+        "relative_path": "data_sources/sobko_sources/multiwfn用户手册/Multiwfn_manual.md",
+        "url": "http://sobereva.com/multiwfn/Multiwfn_manual.html",
+        "page_range": [
+          2,
+          2
+        ],
+        "section_path": [
+          "Multiwfn 用户手册",
+          "Page 2"
+        ],
+        "image_ids": []
+      }
+    },
+    {
+      "query": "IGMH 格点屏蔽 降低可视化耗时",
+      "note": "已知帖子 756 讨论 IGMH 格点屏蔽",
+      "top1_hit": true,
+      "top3_hit": true,
+      "top5_hit": true,
+      "matched_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "expected_authority": "B",
+      "effective_mode": "lexical_only",
+      "backend_warnings": [
+        "dense_fallback: Ollama embedding 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>",
+        "rerank_fallback: local=本地 FlagEmbedding reranker 不可用: SOBKO_DISABLE_LOCAL_RERANKER=1; ollama=Ollama rerank 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>"
+      ],
+      "top_result": {
+        "rank": 1,
+        "score": 1.02,
+        "chunk_id": "blog_post:756#chunk-0001",
+        "source_id": "blog_post:756",
+        "title": "通过格点屏蔽巨幅降低IGMH可视化分析片段间相互作用的耗时",
+        "snippet": "**通过格点屏蔽巨幅降低IGMH可视化分析片段间相互作用的耗时** \nSignificantly reducing computational cost of IGMH visual analysis for interfragment interactions via grid screening\n\n文/Sobereva@[北京科音](http://www.keinsci.com) 2025-Nov-24",
+        "authority_level": "B",
+        "source_type": "blog_post",
+        "software_tags": [
+          "Multiwfn"
+        ],
+        "topic_tags": [
+          "可视化",
+          "弱相互作用",
+          "波函数分析",
+          "结构与文件格式"
+        ],
+        "method_tags": [
+          "IGMH"
+        ],
+        "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/756/index.md",
+        "relative_path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/756/index.md",
+        "url": "http://sobereva.com/756",
+        "page_range": null,
+        "section_path": [
+          "通过格点屏蔽巨幅降低IGMH可视化分析片段间相互作用的耗时"
+        ],
+        "image_ids": []
+      }
+    },
+    {
+      "query": "mIGM 方法 图形化展现弱相互作用",
+      "note": "已知帖子 755 讨论 mIGM",
+      "top1_hit": true,
+      "top3_hit": true,
+      "top5_hit": true,
+      "matched_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "expected_authority": "B",
+      "effective_mode": "lexical_only",
+      "backend_warnings": [
+        "dense_fallback: Ollama embedding 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>",
+        "rerank_fallback: local=本地 FlagEmbedding reranker 不可用: SOBKO_DISABLE_LOCAL_RERANKER=1; ollama=Ollama rerank 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>"
+      ],
+      "top_result": {
+        "rank": 1,
+        "score": 1.02,
+        "chunk_id": "blog_post:755#chunk-0001",
+        "source_id": "blog_post:755",
+        "title": "使用mIGM方法基于几何结构快速图形化展现弱相互作用",
+        "snippet": "**使用mIGM方法基于几何结构快速图形化展现弱相互作用** \nUsing mIGM method to rapidly graphically represent weak interactions based on geometry\n\n文/Sobereva@[北京科音](http://www.keinsci.com) 2025-Nov-24",
+        "authority_level": "B",
+        "source_type": "blog_post",
+        "software_tags": [
+          "Multiwfn"
+        ],
+        "topic_tags": [
+          "可视化",
+          "弱相互作用",
+          "波函数分析",
+          "综述/教程/投稿经验"
+        ],
+        "method_tags": [
+          "NCI",
+          "mIGM"
+        ],
+        "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/755/index.md",
+        "relative_path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/755/index.md",
+        "url": "http://sobereva.com/755",
+        "page_range": null,
+        "section_path": [
+          "使用mIGM方法基于几何结构快速图形化展现弱相互作用"
+        ],
+        "image_ids": []
+      }
+    },
+    {
+      "query": "Gaussian NMR CSGT 轨道对 NICS 贡献",
+      "note": "已知帖子 670 讨论 Gaussian NMR=CSGT",
+      "top1_hit": true,
+      "top3_hit": true,
+      "top5_hit": true,
+      "matched_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "expected_authority": "B",
+      "effective_mode": "lexical_only",
+      "backend_warnings": [
+        "dense_fallback: Ollama embedding 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>",
+        "rerank_fallback: local=本地 FlagEmbedding reranker 不可用: SOBKO_DISABLE_LOCAL_RERANKER=1; ollama=Ollama rerank 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>"
+      ],
+      "top_result": {
+        "rank": 1,
+        "score": 1.02,
+        "chunk_id": "blog_post:670#chunk-0006",
+        "source_id": "blog_post:670",
+        "title": "基于Gaussian的NMR=CSGT任务得到各个轨道对NICS贡献的方法",
+        "snippet": "chk转成fch文件，然后用Multiwfn按照<http://sobereva.com/269>观看轨道，或者让Multiwfn按照《在Multiwfn中单独考察pi电子结构特征》（<http://sobereva.com/432>）自动识别pi轨道，可知17、20、21号轨道是pi轨道。下面就计算这三个pi轨道对NICS的贡献。创建如下输入文件，对应本文文件包里的benzene_NICS-pi.gjf。其中guess=read读取之前的chk文件是为了省SCF过程的时间。IOp(10/93=2)必须写，这样才…",
+        "authority_level": "B",
+        "source_type": "blog_post",
+        "software_tags": [
+          "Gaussian",
+          "Multiwfn",
+          "NBO"
+        ],
+        "topic_tags": [
+          "可视化",
+          "波函数分析",
+          "激发态与光谱",
+          "芳香性",
+          "量子化学"
+        ],
+        "method_tags": [
+          "NICS"
+        ],
+        "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/670/index.md",
+        "relative_path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/670/index.md",
+        "url": "http://sobereva.com/670",
+        "page_range": null,
+        "section_path": [
+          "基于Gaussian的NMR=CSGT任务得到各个轨道对NICS贡献的方法",
+          "b3lyp/6-31g(d) NMR=CSGT"
+        ],
+        "image_ids": []
+      }
+    },
+    {
+      "query": "CP2K 波函数 Multiwfn 模拟 STM 图像",
+      "note": "已知帖子 671 讨论 Multiwfn 结合 CP2K",
+      "top1_hit": true,
+      "top3_hit": true,
+      "top5_hit": true,
+      "matched_ranks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "expected_authority": "B",
+      "effective_mode": "lexical_only",
+      "backend_warnings": [
+        "dense_fallback: Ollama embedding 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>",
+        "rerank_fallback: local=本地 FlagEmbedding reranker 不可用: SOBKO_DISABLE_LOCAL_RERANKER=1; ollama=Ollama rerank 服务不可用: http://127.0.0.1:11434: <urlopen error [Errno 61] Connection refused>"
+      ],
+      "top_result": {
+        "rank": 1,
+        "score": 1.02,
+        "chunk_id": "blog_post:671#chunk-0001",
+        "source_id": "blog_post:671",
+        "title": "使用Multiwfn结合CP2K的波函数模拟周期性体系的隧道扫描显微镜（STM）图像",
+        "snippet": "**使用Multiwfn结合CP2K的波函数模拟周期性体系的隧道扫描显微镜（STM）图像**\n\nSimulating scanning tunneling microscope (STM) images of periodic systems using Multiwfn in combination with wavefunction produced by CP2K\n\n文/Sobereva@[北京科音](http://www.keinsci.com) 2023-Jun-4",
+        "authority_level": "B",
+        "source_type": "blog_post",
+        "software_tags": [
+          "CP2K",
+          "Multiwfn"
+        ],
+        "topic_tags": [
+          "可视化",
+          "波函数分析",
+          "第一性原理",
+          "结构与文件格式",
+          "综述/教程/投稿经验"
+        ],
+        "method_tags": [],
+        "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/671/index.md",
+        "relative_path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/671/index.md",
+        "url": "http://sobereva.com/671",
+        "page_range": null,
+        "section_path": [
+          "使用Multiwfn结合CP2K的波函数模拟周期性体系的隧道扫描显微镜（STM）图像"
+        ],
+        "image_ids": []
+      }
+    }
+  ]
+}
