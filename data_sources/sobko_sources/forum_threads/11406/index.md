@@ -48,7 +48,7 @@ An overview of electron excitation analysis methods supported by Multiwfn
 
 
 
-另外，在笔者讲授的量子化学波函数分析与Multiwfn程序培训班（http://www.keinsci.com/workshop/WFN_content.html）里专门有一节“电子激发分析”，专门全面详细系统地讲解各种电子激发分析方法并给出具体例子，是一次性从头完整学习电子激发分析极好的方式，欢迎参加。
+另外，在笔者讲授的相关波函数分析与 Multiwfn 教程（[已省略培训课程链接]）里专门有一节“电子激发分析”，专门全面详细系统地讲解各种电子激发分析方法并给出具体例子，是一次性从头完整学习电子激发分析极好的方式，可另行参考。
 
 
 

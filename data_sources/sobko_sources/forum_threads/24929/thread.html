@@ -426,7 +426,7 @@ strong { color: #111827; }
 <p>4.3 对AIMD模拟里每一帧计算原子自旋布居、键级和自旋密度cub文件并作图</p>
 <p>4.3.1 前言&amp;准备</p>
 <p>我们既可以对一批不同的体系通过脚本调用Multiwfn做波函数分析，也可以对同一个体系的特定过程（IRC、势能面扫描、动力学模拟等）的每一帧做波函数分析，将所有帧的分析结果汇总到一起绘图，就可以非常清晰直观地考察化学过程中电子结构的变化了。通过脚本实现对扫描和IRC的每一帧批量用Multiwfn分析然后绘图的过程在《制作动画分析电子结构特征》（http://sobereva.com/86）和《通过键级曲线和ELF/LOL/RDG等值面动画研究化学反应过程》（http://sobereva.com/200）都有详细说明。</p>
-<p>在本节，笔者专门示例一下怎么靠脚本对ORCA跑的从头算动力学（AIMD）里每一帧进行波函数分析然后作图。读者请阅读《使用ORCA做从头算动力学(AIMD)的简单例子》（http://sobereva.com/576）了解ORCA跑动力学的初步知识。用于本节的例子是下面这个O2与乙炔反应的动力学过程，是北京科音高级量子化学培训班（http://sobereva.com/612）里的一部分，至于具体模拟细节和本文无关，就不多说了。</p>
+<p>在本节，笔者专门示例一下怎么靠脚本对ORCA跑的从头算动力学（AIMD）里每一帧进行波函数分析然后作图。读者请阅读《使用ORCA做从头算动力学(AIMD)的简单例子》（http://sobereva.com/576）了解ORCA跑动力学的初步知识。用于本节的例子是下面这个O2与乙炔反应的动力学过程，是相关高级量子化学教程（http://sobereva.com/612）里的一部分，至于具体模拟细节和本文无关，就不多说了。</p>
 <p>1.png (89.2 KB, 下载次数 Times of downloads: 145)</p>
 <p>下载附件 Download</p>
 <p>2021-8-30 22:21 上传 Uploaded</p>
@@ -529,7 +529,7 @@ strong { color: #111827; }
 <p>EOF</p>
 <p>mv spindensity.cub cub/${input//molden.input/cub}  //将产生的自旋密度的cub文件的名字改成和输入文件同名</p>
 <p>done</p>
-<p>将上面脚本产生的cub目录放到C:\目录下。启动VMD，将我写的这个tcl语言的脚本http://sobereva.com/attach/612/showiso.tcl里的内容粘贴到VMD命令行窗口中运行，VMD就会依次载入各个cub文件，把渲染出的自旋密度为0.02 a.u.的等值面图保存为VMD目录下的“[序号].bmp”文件。这个tcl脚本内容不在本文范畴以内，因此不做解释了，VMD的tcl脚本的编写我在北京科音分子动力学与GROMACS培训班（http://www.keinsci.com/workshop/KGMX_content.html）里讲得特别系统详细。</p>
+<p>将上面脚本产生的cub目录放到C:\目录下。启动VMD，将我写的这个tcl语言的脚本http://sobereva.com/attach/612/showiso.tcl里的内容粘贴到VMD命令行窗口中运行，VMD就会依次载入各个cub文件，把渲染出的自旋密度为0.02 a.u.的等值面图保存为VMD目录下的“[序号].bmp”文件。这个tcl脚本内容不在本文范畴以内，因此不做解释了，VMD的tcl脚本的编写我在相关分子动力学与 GROMACS 教程（[已省略培训课程链接]）里讲得特别系统详细。</p>
 <p>最后，用免费的视频处理程序ffmpeg把当前目录下所有bmp文件合并成gif动画，分为两步</p>
 <p>先基于某帧的bmp文件创建调色板文件：ffmpeg -i 00027.bmp -vf palettegen palette.png</p>
 <p>将所有bmp文件合并为video.gif，每秒5帧：ffmpeg -r 5 -i %05d.bmp -i palette.png -lavfi paletteuse video.gif</p>

@@ -44,7 +44,7 @@ Multiwfn从很早期的版本开始就支持DOS的绘制，后来又不断进行
 
 
 
-本文的内容非常深入细致，如果你很急着作出TDOS/PDOS/OPDOS图，可以先直接参考本文第3节的例子，之后若想全面了解Multiwfn的绘制DOS的功能，再看本文其它部分。本文内容对应Multiwfn官网上的最新版本，不要用太老的版本，否则情况和本文可能明显不符！Multiwfn可在其官网http://sobereva.com/multiwfn免费下载，相关基础知识看《Multiwfn入门tips》（http://sobereva.com/167）和《Multiwfn FAQ》（http://sobereva.com/452）。在笔者讲授的《量子化学波函数分析与Multiwfn程序培训班》（http://www.keinsci.com/workshop/WFN_content.html）中专门有一节详细讲态密度的相关概念、分析和绘制，内容远比本文深入全面得多，欢迎参加。
+本文的内容非常深入细致，如果你很急着作出TDOS/PDOS/OPDOS图，可以先直接参考本文第3节的例子，之后若想全面了解Multiwfn的绘制DOS的功能，再看本文其它部分。本文内容对应Multiwfn官网上的最新版本，不要用太老的版本，否则情况和本文可能明显不符！Multiwfn可在其官网http://sobereva.com/multiwfn免费下载，相关基础知识看《Multiwfn入门tips》（http://sobereva.com/167）和《Multiwfn FAQ》（http://sobereva.com/452）。在笔者讲授的《相关波函数分析与 Multiwfn 教程》（[已省略培训课程链接]）中专门有一节详细讲态密度的相关概念、分析和绘制，内容远比本文深入全面得多，可另行参考。
 
 
 

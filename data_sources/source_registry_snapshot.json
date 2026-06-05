@@ -1,11 +1,11 @@
 {
   "project": "sobko_mcp",
   "index_version": "2026.06.sobko.v1",
-  "generated_at": "2026-06-05T18:47:15.941267+08:00",
-  "source_count": 608,
+  "generated_at": "2026-06-05T20:21:21.884743+08:00",
+  "source_count": 617,
   "source_type_counts": {
     "blog_post": 580,
-    "forum_thread": 26,
+    "forum_thread": 35,
     "manual": 1,
     "software_doc": 1
   },
@@ -592,14 +592,18 @@
     "blog_post:1",
     "manual:multiwfn_manual",
     "software_doc:sobtop",
+    "forum_thread:10106",
     "forum_thread:10775",
     "forum_thread:11406",
     "forum_thread:12488",
     "forum_thread:12858",
     "forum_thread:13242",
     "forum_thread:13861",
+    "forum_thread:17494",
     "forum_thread:21826",
     "forum_thread:23457",
+    "forum_thread:2369",
+    "forum_thread:2388",
     "forum_thread:2413",
     "forum_thread:24439",
     "forum_thread:24929",
@@ -612,11 +616,16 @@
     "forum_thread:37196",
     "forum_thread:41087",
     "forum_thread:428",
+    "forum_thread:43116",
     "forum_thread:4447",
     "forum_thread:45783",
     "forum_thread:462",
+    "forum_thread:4829",
     "forum_thread:536",
+    "forum_thread:57134",
+    "forum_thread:577",
     "forum_thread:58922",
-    "forum_thread:6020"
+    "forum_thread:6020",
+    "forum_thread:9878"
   ]
 }

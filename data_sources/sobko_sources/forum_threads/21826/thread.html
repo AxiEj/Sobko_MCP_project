@@ -35,7 +35,7 @@ strong { color: #111827; }
 <p>1 前言</p>
 <p>《使用Multiwfn图形化研究弱相互作用》（http://sobereva.com/68）介绍的NCI方法是如今用得非常普遍、广为流行的图形化研究弱相互作用的方法，后来我又在《使用Multiwfn研究分子动力学中的弱相互作用》（http://sobereva.com/186）中介绍了averaged NCI（aNCI）方法，可以把动态过程中的平均化的相互作用予以直观展现。aNCI对于研究蛋白和配体间的相互作用非常有价值，但那篇文章里我没给出具体例子，估计有用户实现起来会遇到一些技术上的困难，不过也有不少用户已经很好地用Multiwfn做了这种分析讨论了蛋白-配体结合问题，比如PLoS ONE, 13, e0196651 (2018)。本文的目的是详细演示如何在Multiwfn中做aNCI分析来清晰直观地展现蛋白和配体之间的弱相互作用，让所有用户都可以顺利地运用这种分析研究实际问题。aNCI的原理在本文就不再累述了，请先仔细阅读《使用Multiwfn研究分子动力学中的弱相互作用》了解相关背景知识。并且非常推荐阅读《一篇最全面介绍各种弱相互作用可视化分析方法的文章已发表！》（http://sobereva.com/667）介绍的笔者的综述文章，其中含有对aNCI的详细介绍并给出了典型的应用例子。</p>
 <p>PS：虽然ligplot和ProteinPlus中的PoseView等程序也能以二维图的方式展现配体与蛋白各残基的相互作用，但那种展现方式过于抽象，不能体现三维空间关系，而且也不能体现实际动态环境的情况，局限性极大。用aNCI则严格得多、给出的信息丰富得多。</p>
-<p>读者请使用2021年3月4日及以后更新的Multiwfn版本，否则有的地方和本文所述不符。Multiwfn可以在http://sobereva.com/multiwfn免费下载。本文用的VMD是1.9.3版，可以在http://www.ks.uiuc.edu/Research/vmd/免费下载。本文的例子是北京科音分子动力学与GROMACS培训班（http://www.keinsci.com/workshop/KGMX_content.html）中我讲蛋白质-配体复合物模拟的3ATL那个例子，此体系结构如下</p>
+<p>读者请使用2021年3月4日及以后更新的Multiwfn版本，否则有的地方和本文所述不符。Multiwfn可以在http://sobereva.com/multiwfn免费下载。本文用的VMD是1.9.3版，可以在http://www.ks.uiuc.edu/Research/vmd/免费下载。本文的例子是相关分子动力学与 GROMACS 教程（[已省略培训课程链接]）中我讲蛋白质-配体复合物模拟的3ATL那个例子，此体系结构如下</p>
 <p>1.png (157.85 KB, 下载次数 Times of downloads: 245)</p>
 <p>下载附件 Download</p>
 <p>2021-3-4 04:01 上传 Uploaded</p>

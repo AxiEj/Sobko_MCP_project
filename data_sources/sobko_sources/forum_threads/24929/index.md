@@ -1048,7 +1048,7 @@ echo | awk '{printf ("\n%s %10.6f %s\n","Average HOMO-LUMO gap:",t1/t2," eV")}' 
 
 
 
-在本节，笔者专门示例一下怎么靠脚本对ORCA跑的从头算动力学（AIMD）里每一帧进行波函数分析然后作图。读者请阅读《使用ORCA做从头算动力学(AIMD)的简单例子》（http://sobereva.com/576）了解ORCA跑动力学的初步知识。用于本节的例子是下面这个O2与乙炔反应的动力学过程，是北京科音高级量子化学培训班（http://sobereva.com/612）里的一部分，至于具体模拟细节和本文无关，就不多说了。
+在本节，笔者专门示例一下怎么靠脚本对ORCA跑的从头算动力学（AIMD）里每一帧进行波函数分析然后作图。读者请阅读《使用ORCA做从头算动力学(AIMD)的简单例子》（http://sobereva.com/576）了解ORCA跑动力学的初步知识。用于本节的例子是下面这个O2与乙炔反应的动力学过程，是相关高级量子化学教程（http://sobereva.com/612）里的一部分，至于具体模拟细节和本文无关，就不多说了。
 
 
 
@@ -1356,7 +1356,7 @@ done
 
 
 
-将上面脚本产生的cub目录放到C:\目录下。启动VMD，将我写的这个tcl语言的脚本http://sobereva.com/attach/612/showiso.tcl里的内容粘贴到VMD命令行窗口中运行，VMD就会依次载入各个cub文件，把渲染出的自旋密度为0.02 a.u.的等值面图保存为VMD目录下的“[序号].bmp”文件。这个tcl脚本内容不在本文范畴以内，因此不做解释了，VMD的tcl脚本的编写我在北京科音分子动力学与GROMACS培训班（http://www.keinsci.com/workshop/KGMX_content.html）里讲得特别系统详细。
+将上面脚本产生的cub目录放到C:\目录下。启动VMD，将我写的这个tcl语言的脚本http://sobereva.com/attach/612/showiso.tcl里的内容粘贴到VMD命令行窗口中运行，VMD就会依次载入各个cub文件，把渲染出的自旋密度为0.02 a.u.的等值面图保存为VMD目录下的“[序号].bmp”文件。这个tcl脚本内容不在本文范畴以内，因此不做解释了，VMD的tcl脚本的编写我在相关分子动力学与 GROMACS 教程（[已省略培训课程链接]）里讲得特别系统详细。
 
 
 

@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用Shermo结合量子化学程序方便地计算分子的各种热力学数据</title>
+<style>
+body { max-width: 920px; margin: 2rem auto; padding: 0 1rem; line-height: 1.72; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #1f2933; }
+a { color: #2563eb; }
+h1, h2, h3, h4 { line-height: 1.35; }
+.source-note { color: #667085; font-size: 0.92rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+strong { color: #111827; }
+</style>
+</head>
+<body>
+<!-- Clean archival copy generated from browser-verified Markdown; site navigation, login widgets, reply forms, footers, and ad containers are intentionally omitted. -->
+<h1>使用Shermo结合量子化学程序方便地计算分子的各种热力学数据</h1>
+<div class="source-note">
+<div>Source: <a href="http://bbs.keinsci.com/thread-17494-1-1.html">http://bbs.keinsci.com/thread-17494-1-1.html</a></div>
+<div>Archive scope: 仅保留已抽取正文；站点导航、登录/回帖控件、页脚和非正文区已移除。</div>
+</div>
+<h2>使用Shermo结合量子化学程序方便地计算分子的各种热力学数据</h2>
+<ul>
+<li>原帖 URL：<a href="http://bbs.keinsci.com/thread-17494-1-1.html">http://bbs.keinsci.com/thread-17494-1-1.html</a></li>
+<li>论坛板块：量子化学</li>
+<li>作者：<strong>sobereva</strong></li>
+<li>浏览量：135792 | 回复数：106 | 共8页</li>
+<li>完整性：<strong>全部内容已完整抓取</strong>。</li>
+</ul>
+<h3>楼层正文</h3>
+<h4>1 楼（楼主）｜sobereva</h4>
+<p>使用Shermo结合量子化学程序方便地计算分子的各种热力学数据Using Shermo combined with quantum chemistry programs to conveniently calculate various thermodynamic data</p>
+<p>文/Sobereva@北京科音First release: 2020-May-19  Last update: 2025-Jun-18</p>
+<p>1 前言</p>
+<p>在日常量子化学研究中，计算焓、熵、自由能等热力学数据是最常涉及的问题。主流量子化学程序如Gaussian、ORCA等都自带了振动分析功能，在任务结束后会自动给出热力学数据。但是用这些程序来获得热力学数据往往并不方便，也有很多局限性。为了能令广大量子化学研究者在热力学数据计算方面极尽便利，笔者开发了Shermo程序，在此文将简要介绍并给出使用例子。</p>
+<p>Shermo程序的原文已经发表，使用Shermo程序计算热力学数据发表文章时请务必记得引用，也十分建议大家阅读：</p>
+<p>Tian Lu, Qinxue Chen, Shermo: A general code for calculating molecular thermochemistry properties, Comput. Theor. Chem., 1200, 113249 (2021) DOI: 10.1016/j.comptc.2021.113249</p>
+<p>Shermo-A general code for calculating molecular thermochemistry properties.pdf</p>
+<p>(1.87 MB, 下载次数 Times of downloads: 401)</p>
+<p>2021-4-28 00:13 上传 Uploaded<br>
+点击下载<br>
+Click to download</p>
+<p>上面的论文正式发表前也发在了论文预印本网站ChemRxiv上，见https://doi.org/10.26434/chemrxiv.12278801。没有权限访问上面的正式版文章的话也可以看这个预印版，内容基本一样，引用时请务必引用上面的正式版。</p>
+<p>笔者之前还写过《Shermo：计算气相分子配分函数和热力学数据的简单程序》（http://sobereva.com/315）一文，那篇文章里介绍的Shermo是1.0版，是本文介绍的Shermo的前身。那个1.0版没有多大实际应用价值，功能很少，使用也很不方便。</p>
+<p>2 Shermo的功能和特点</p>
+<p>Shermo是一个免费的可以独立运行的计算分子热力学数据的程序，需要从量子化学程序振动分析的输出文件里读取信息来进行计算，计算时基于理想气体假设（各种量子化学程序给出的热力学数据也都是如此）。</p>
+<p>Shermo有以下特点：</p>
+<p>• 可以读入五种最流行的量子化学程序的输出文件（可以是振动分析，也可以是优化+振动分析），包括Gaussian、ORCA、GAMESS-US、NWChem、xtb。还可以读入CP2K第一性原理程序的振动分析的输出文件</p>
+<p>• 可以计算所有常见的热力学量，包括内能、焓、熵、自由能、等压和等容热容、配分函数</p>
+<p>• 频率校正因子可以对ZPE、熵、升温对焓/内能的增加量、热容同时分别设置（不像Gaussian等程序里只能设一个全局校正因子）</p>
+<p>• 可以非常方便地对温度和压力进行扫描来考察热力学量随温度和压力的变化</p>
+<p>• 默认使用谐振近似模型考虑振动对热力学量的贡献（Gaussian等程序给出的热力学数据就是用的这个方法），同时还支持Truhlar、Grimme和Minenkov各自提出的准RRHO方法考虑低频振动的贡献，对柔性分子、弱相互作用团簇等含有低频的体系可以得到明显更合理的结果！！！</p>
+<p>• 平动、转动、振动、电子激发对各种热力学量的贡献可以分别输出，而且各个振动模式的贡献也可以单独输出，这对于分析影响热力学量的内在因素、解释不同体系热力学量的差异非常有益</p>
+<p>• 可以给出一批构型/构象的Boltzmann分布比例和构象权重的热力学数据</p>
+<p>• 可以考虑浓度变化（如气相标准态到液相标准态）导致的自由能改变</p>
+<p>• 可以通过双击图标执行，也可以通过纯命令行方式运行，因此可以非常容易地嵌入到批处理脚本中，从而一次性计算一大批体系</p>
+<p>• Shermo不用安装也不用配置运行环境就能直接执行，不像Python脚本那样还得先装个Python，因此脑盲也能顺利使用</p>
+<p>• Shermo的输出信息极其简单易懂，而且手册写得特别详细，所有热力学量计算的基本原理和公式都在附录里介绍了</p>
+<p>由上可见，Shermo在热力学数据计算方面既强大又灵活方便，可谓分子热力学数据计算离不开的工具。不仅把一些很繁琐的事情变得极其简单，还弥补了不少空白。此外，Shermo算的结果的可靠性在很多情况下也高于量子化学程序直接输出的结果。比如Gaussian不支持准RRHO方法，因此对于柔性大体系计算的自由能可能有多达几甚至十几kcal/mol的误差；ORCA判断点群时容易判断错，导致转动对称数识别错误，进而令转动对热力学量的贡献错误；GAMESS-US的转动常数计算得有问题，也因此导致转动对热力学量的贡献计算得有问题。</p>
+<p>稍有一定经验的Gaussian用户都知道其自带的计算热力学数据的freqchk工具，如今有了Shermo之后freqchk就可以彻底扔了。不仅freqchk没有上述的Shermo的大多数优点，而且使用时还必须提供chk文件，如果没保留的话就瞎了，而且为了用freqchk还得装个Gaussian。而对于ORCA、GAMESS-US等其它程序用户，连类似freqchk的工具都没有，就更离不开Shermo了。</p>
+<p>3 Shermo程序的使用简介</p>
+<p>Shermo程序的细节看Shermo手册里的说明，这里我只是把Shermo程序最最基本的一些信息简单提一下。</p>
+<p>Shermo程序的可执行文件和手册可以在程序主页http://sobereva.com/soft/shermo上下载。文件包里的Shermo.exe是Windows下的可执行文件，没有后缀的是Linux下的可执行文件。settings.ini是用来设置运行参数的文件。</p>
+<p>Shermo程序既可以通过交互式方式运行，也可以通过命令行方式运行，后者便于将Shermo嵌入批处理脚本来进行批量计算。</p>
+<p>在Windows下运行Shermo通常是双击Shermo.exe图标来启动，程序会先从当前目录下的settings.ini中读取运行参数并显示在屏幕上。输入文件路径后，程序就会从输入文件中读取电子能量、振动频率、原子质量等信息，然后开始计算热力学数据并输出。即便对于巨大体系，也是一瞬间就能算完。</p>
+<p>在Linux下运行时，可以进入Shermo目录后输入./Shermo命令来启动。如果你想在任意目录下都能通过Shermo命令启动之并让其从Shermo目录下的settings.ini中载入运行参数，则在~/.bashrc文件里加入以下两行，之后重新进入终端即可。</p>
+<p>export PATH=$PATH:/sob/Shermo_2.0</p>
+<p>export Shermopath=/sob/Shermo_2.0</p>
+<p>（这里假设/sob/Shermo_2.0是Shermo可执行文件和settings.ini所在的目录）</p>
+<p>如果在Linux下运行时你嫌编辑settings.ini文件麻烦，也可以直接指定运行参数，比如</p>
+<p>Shermo example/G16_H2CO_freq.out -T 350 -sclZPE 0.9806</p>
+<p>就代表用Shermo处理example/G16_H2CO_freq.out，温度设为350 K，ZPE校正因子设为0.9806。而其它没有明确指定的参数则使用当前settings.ini里设置的。</p>
+<p>settings.ini文件里的选项在手册2.3节有详细介绍，在此文件自带的注释里也有简要介绍。诸如在settings.ini里看到有ilowfreq参数，就说明以命令行方式使用时可以用-ilowfreq [参数值] 的形式直接指定数值。</p>
+<p>在线使用：除了下载使用外，Shermo也可以通过https://atomistica-online-shermo.anvil.app网站在线使用，用户直接将计算化学程序的输出文件上传，根据情况对计算方式进行设置，就可以马上返回Shermo计算输出的结果。此在线平台是Stevan Armaković开发的，有使用相关问题请与之联系。通过此在线平台使用Shermo时，除了要引用Shermo原文外，还应同时引用平台作者的文章https://doi.org/10.1080/08927022.2022.2126865。</p>
+<p>4 Shermo使用实例</p>
+<p>下面通过一些实例介绍如何使用Shermo结合主流量子化学程序做各种热化学分析，在Shermo手册里还有更多更具体的例子。如果你对热力学量计算原理的知识极为匮乏，强烈建议先看看Shermo手册的附录了解基本常识，否则不可能正确理解结果的含义、在研究文章中正确地分析讨论。</p>
+<p>如上所述，Gaussian、ORCA、GAMESS-US、NWChem、xtb、CP2K的振动分析或优化+振动分析的输出文件都可以给Shermo当输入文件用，具体说明参看Shermo手册2.4节。下面的例子我们就用一般量子化学研究者最常用的Gaussian来做优化+振动分析。</p>
+<p>如果你急于体验Shermo，或者在看下面的文字时在某些操作上有困惑，可以看看这个简单的Shermo操作演示视频，一些常用的功能和用法都体现了：《使用Shermo程序计算各种热力学数据的基本操作演示》（https://www.bilibili.com/video/BV1EN411X7b3/）。</p>
+<p>4.1 计算气相下甲醛的热力学数据</p>
+<p>这里我们以一个简单分子甲醛为例计算350 K下的各种热力学数据。本例涉及到的输入输出文件可以在这里下载：http://sobereva.com/attach/552/H2CO.zip。</p>
+<p>此例我们用B3LYP/6-31G*进行优化和振动分析，而用更好的CCSD(T)/cc-pVTZ级别计算电子能量。如果不理解这么做的原因，看《浅谈为什么优化和振动分析不需要用大基组》（http://sobereva.com/387）。简单来说，电子能量的误差主导了内能、焓、自由能的误差，而电子能量对计算级别的要求又显著高于优化和振动分析，所以电子能量的计算应当用更好的级别。</p>
+<p>B3LYP/6-31G*下做优化和振动分析的输出文件是本文文件包里的H2CO_optfreq.out。基于优化后的结构再在CCSD(T)/cc-pVTZ下算单点能，输出文件是本文文件包里的H2CO_SP.out，从中可见电子能量是-114.3338033 a.u.。如果你不知道在哪里读电子能量，看《谈谈该从Gaussian输出文件中的什么地方读电子能量》（http://sobereva.com/488）。</p>
+<p>这里我们先以交互式的方式执行Shermo。用文本编辑器编辑Shermo目录下的settings.ini文件，将里面的E=后面的值改为-114.3338033（如果用默认值0的话，电子能量会用从输入文件中读取的，因此对于本例来说将对应B3LYP/6-31G*级别的电子能量，这显然太糙了），注意等号和数值之间必须有个空格。再将T=后面的值设为350，代表在350 K下分析。为了得到更准确的结果，最好通过频率校正因子来消除由于谐振近似和计算级别自身原因带来的系统性误差，这点在《谈谈谐振频率校正因子》（http://sobereva.com/221）中有详细介绍，没看过者之后一定要看。B3LYP/6-31G*级别下的ZPE校正因子为0.9806，因此我们将sclZPE=后面的值设为这个值。当前级别下其它的频率校正因子（比如计算熵用的校正因子）都很接近与1，所以我们保持默认值1.0不变。此例我们用RRHO模型计算热力学量，这和Gaussian 16算热力学量的方式相同，因此把ilowfreq后面的值设为0（对于含有低频的情况明显不如Shermo默认用的准RRHO模型好，具体看下一节）。</p>
+<p>保存settings.ini后启动Shermo，首先我们会看到以下运行参数信息，和我们在settings.ini中设的一致。为了确保计算结果无误，每次都应当注意检查这里。</p>
+<p>Running parameters:</p>
+<p>Printing individual contribution of vibration modes: No</p>
+<p>Temperature:     350.000 K</p>
+<p>Pressure:          1.000 atm</p>
+<p>Scale factor of vibrational frequencies for ZPE:        0.9806</p>
+<p>Scale factor of vibrational frequencies for U(T)-U(0):  1.0000</p>
+<p>Scale factor of vibrational frequencies for S(T):       1.0000</p>
+<p>Scale factor of vibrational frequencies for CV:         1.0000</p>
+<p>Low frequencies treatment: Harmonic approximation</p>
+<p>然后将H2CO_optfreq.out的图标拖到Shermo窗口里，此时路径就自动产生了。按回车后首先看到分子的信息</p>
+<p>======= Molecular information =======</p>
+<p>Electronic energy:     -114.33380330 a.u.</p>
+<p>Spin multiplicity:  1</p>
+<p>Atom    1 (C )   Mass:   12.000000 amu</p>
+<p>Atom    2 (O )   Mass:   15.994910 amu</p>
+<p>Atom    3 (H )   Mass:    1.007830 amu</p>
+<p>Atom    4 (H )   Mass:    1.007830 amu</p>
+<p>Total mass:       30.010570 amu</p>
+<p>Point group: C2v</p>
+<p>Rotational symmetry number:  2</p>
+<p>Principal moments of inertia (amu*Bohr^2):</p>
+<p>6.335702       46.693826       53.029529</p>
+<p>Rotational constants relative to principal axes (GHz):</p>
+<p>284.852589     38.650532     34.032760</p>
+<p>Rotational temperatures (K):   13.670753    1.854931    1.633313</p>
+<p>This is not a linear molecule</p>
+<p>There are     6 frequencies (cm^-1):</p>
+<p>1197.2  1279.7  1562.4  1848.9  2920.0  2972.3</p>
+<p>以上信息中的电子能量是settings.ini中我们自己设的，而自旋多重度、原子质量、频率都是从输入文件中读取的。转动惯量以及与其相关的转动常数和转动温度都是Shermo基于原子坐标和原子质量计算出来的。点群和转动对称数是Shermo基于当前几何结构直接判断的。如果此处显示的信息有任何和实际不符，则接下来的计算结果将没意义，因此每次最好看一眼。</p>
+<p>接下来程序分别输出了体系整体平动、整体转动、分子内振动和电子激发各自对内能(U)、焓(H)、熵(S)、自由能(G)、等容热容(CV)、等压热容(CP)和配分函数(q)的贡献。输出的格式紧凑、内容非常清晰易读，还用了多种单位输出以方便用户。只要你仔细看过Shermo手册的附录，或者参加过北京科音的初级或中级量子化学教程（见http://sobereva.com/355）并仔细复习过，就肯定能轻易看懂这些信息，所以我就不再多说了。CV和CP的差异，以及H与U的差异仅来自于平动的贡献，因此只有平动部分是将它们分别输出的。</p>
+<p>======= Translation =======</p>
+<p>Translational q:    5.810322E+030     q/NA:    9.648265E+006</p>
+<p>Translational U:      4.365 kJ/mol      1.043 kcal/mol</p>
+<p>Translational H:      7.275 kJ/mol      1.739 kcal/mol</p>
+<p>Translational S:    154.502 J/mol/K    36.927 cal/mol/K  -TS:   12.92 kcal/mol</p>
+<p>Translational CV:    12.472 J/mol/K     2.981 cal/mol/K</p>
+<p>Translational CP:    20.786 J/mol/K     4.968 cal/mol/K</p>
+<p>========= Rotation ========</p>
+<p>Rotational q:    9.016795E+002</p>
+<p>Rotational U:      4.365 kJ/mol      1.043 kcal/mol    =H</p>
+<p>Rotational S:     69.045 J/mol/K    16.502 cal/mol/K   -TS:   5.776 kcal/mol</p>
+<p>Rotational CV:    12.472 J/mol/K     2.981 cal/mol/K   =CP</p>
+<p>======== Vibration ========</p>
+<p>Vibrational q(V=0):    1.014765E+000</p>
+<p>Vibrational q(bot):    3.094088E-011</p>
+<p>Vibrational U(T)-U(0):     0.227 kJ/mol     0.054 kcal/mol   =H(T)-H(0)</p>
+<p>Vibrational U:     69.323 kJ/mol     16.569 kcal/mol    =H</p>
+<p>Vibrational S:      0.770 J/mol/K     0.184 cal/mol/K   -TS:   0.064 kcal/mol</p>
+<p>Vibrational CV:     3.509 J/mol/K     0.839 cal/mol/K   =CP</p>
+<p>Zero-point energy (ZPE):     69.10 kJ/mol,     16.51 kcal/mol    0.026317 a.u.</p>
+<p>======== Electron excitation ========</p>
+<p>Electronic q:    1.000000E+000</p>
+<p>Electronic U:      0.000 kJ/mol      0.000 kcal/mol    =H</p>
+<p>Electronic S:      0.000 J/mol/K     0.000 cal/mol/K   -TS:   0.000 kcal/mol</p>
+<p>Electronic CV:     0.000 J/mol/K     0.000 cal/mol/K   =CP</p>
+<p>振动对内能的贡献（Vibrational U）一方面来自于零点能，即ZPE，另一方面来自于从0 K升至当前温度过程中导致内能的增加量，即U(T)-U(0)，它们都单独输出了。</p>
+<p>最后，程序输出了总结果。配分函数是所有上面四部分贡献的乘积，各种热力学校正量（Thermal correction）和熵都是上面四部分贡献的加和：</p>
+<p>===========================</p>
+<p>========== Total ==========</p>
+<p>===========================</p>
+<p>Total q(V=0):       5.316403E+033</p>
+<p>Total q(bot):       1.621008E+023</p>
+<p>Total q(V=0)/NA:    8.828094E+009</p>
+<p>Total q(bot)/NA:    2.691746E-001</p>
+<p>Total CV:      28.453 J/mol/K       6.800 cal/mol/K</p>
+<p>Total CP:      36.767 J/mol/K       8.788 cal/mol/K</p>
+<p>Total S:      224.317 J/mol/K      53.613 cal/mol/K    -TS:    18.765 kcal/mol</p>
+<p>Thermal correction to U:     78.053 kJ/mol     18.655 kcal/mol   0.029729 a.u.</p>
+<p>Thermal correction to H:     80.963 kJ/mol     19.351 kcal/mol   0.030837 a.u.</p>
+<p>Thermal correction to G:      2.452 kJ/mol      0.586 kcal/mol   0.000934 a.u.</p>
+<p>Electronic energy:       -114.3338033 a.u.</p>
+<p>Sum of electronic energy and ZPE, namely U/H/G at 0 K:       -114.3074860 a.u.</p>
+<p>Sum of electronic energy and thermal correction to U:        -114.3040744 a.u.</p>
+<p>Sum of electronic energy and thermal correction to H:        -114.3029660 a.u.</p>
+<p>Sum of electronic energy and thermal correction to G:        -114.3328693 a.u.</p>
+<p>上面也给出了电子能量与热力学校正量的加和，这就是我们平时经常考察的热力学量了，包括内能、焓、自由能。比如此处的Thermal correction to G代表当前我们设的350 K时的自由能的热校正量，它与电子能量的加和就是350 K下的自由能，即Sum of electronic energy and thermal correction to G后面的值。而电子能量与ZPE相加，得到的是0 K下的内能/焓/自由能，即Sum of electronic energy and ZPE后面的值。</p>
+<p>如果你想考察各个振动模式对各种热力学量的贡献，从而更深层地了解热力学量的本质、探讨各振动模式对其的影响，就把settings.ini里的prtvib后面的值改为1（输出到屏幕上）或-1（输出到当前目录下的vibcontri.txt里）。这里我们将之设为-1，然后重新运行Shermo来处理H2CO_optfreq.out，得到的vibcontri.txt内容如下：</p>
+<p>Note: The wavenumbers shown below are unscaled ones</p>
+<p>Mode  Wavenumber    Freq        Vib. Temp.    q(V=0)        q(bot)</p>
+<p>cm^-1        GHz            K</p>
+<p>1    1197.25   0.35893E+05     1722.57    1.00734069    0.08599170</p>
+<p>2    1279.68   0.38364E+05     1841.18    1.00521977    0.07243629</p>
+<p>3    1562.40   0.46840E+05     2247.95    1.00162690    0.04036762</p>
+<p>4    1848.86   0.55428E+05     2660.10    1.00050056    0.02237882</p>
+<p>5    2920.03   0.87540E+05     4201.26    1.00000612    0.00247431</p>
+<p>6    2972.29   0.89107E+05     4276.46    1.00000494    0.00222226</p>
+<p>Mode  Wavenumber     ZPE      U(T)-U(0)    U(T)      CV(T)       S(T)</p>
+<p>cm^-1      kcal/mol   kcal/mol   kcal/mol  cal/mol/K  cal/mol/K</p>
+<p>1    1197.25     1.67835    0.02513    1.70348    0.35594    0.08633</p>
+<p>2    1279.68     1.79391    0.01910    1.81301    0.28854    0.06491</p>
+<p>3    1562.40     2.19024    0.00727    2.19750    0.13358    0.02399</p>
+<p>4    1848.86     2.59181    0.00265    2.59445    0.05749    0.00855</p>
+<p>5    2920.03     4.09340    0.00005    4.09345    0.00175    0.00016</p>
+<p>6    2972.29     4.16668    0.00004    4.16672    0.00147    0.00013</p>
+<p>以上信息输出了全部6个振动模式的波数、频率、振动温度，以及它们对配分函数、ZPE、从0 K升温至当前温度令内能的增加量（也等价于令焓的增加量）、内能、等压热容和熵的贡献。由数据可见频率越低的振动模式对U(T)-U(0)、CV(T)、S(T)的贡献越大，而频率越高的振动模式对ZPE和U(T)的贡献越大（注：ZPE占U(T)的大头）。</p>
+<p>如果大家想考察其它温度或压力下的热力学数据，相应地修改一下settings.ini里的T和P，重新运行即可。使用Shermo还可以非常容易地对温度和压力进行扫描。比如当前我们想考察各种热力学量从50 K到1000 K之间的变化，就把settings.ini里的T=后面的值改为50,1000,10，这里10代表扫描步长。启动Shermo后还是载入H2CO_optfreq.out，算完后当前目录下就有了scan_UHG.txt和scan_SCq.txt，前者包含了U、H、G以及它们与电子能量的加和，后者包含了S、热容、配分函数。例如scan_SCq.txt的前几行内容如下：</p>
+<p>Unit of S, CV and CP is cal/mol/K, q(V=0)/NA and q(bot)/NA are dimensionless</p>
+<p>T(K)     P(atm)      S         CV        CP       q(V=0)/NA      q(bot)/NA</p>
+<p>50.000     1.000    37.961     5.962     7.949   3.623341E+006   8.877273E-068</p>
+<p>60.000     1.000    39.411     5.962     7.949   7.513361E+006   3.415672E-055</p>
+<p>70.000     1.000    40.636     5.962     7.949   1.391943E+007   3.668237E-046</p>
+<p>80.000     1.000    41.697     5.962     7.949   2.374593E+007   2.337871E-039</p>
+<p>...略</p>
+<p>这两个文件可以非常容易地作图。比如把scan_UHG.txt的前几行删掉后，就可以直接拖入Origin程序导入其中。将温度作为X轴，内能、焓、自由能的热校正量作为Y轴，绘制成的Line+Symbol图如下所示</p>
+<p>1.png (56.38 KB, 下载次数 Times of downloads: 505)</p>
+<p>下载附件 Download</p>
+<p>2020-5-19 03:44 上传 Uploaded</p>
+<p>之所以温度越高焓的热校正量（Hcorr）比内能的热校正量（Ucorr）高得越多，是因为前者比后者多个RT，显然T越大差异就越大。之所以体系温度越高自由能的热校正量（Gcorr）越低，并且一开始为正，温度较高后甚至变成了负值，这是因为G里面有-TS项，而熵必定是正值。</p>
+<p>类似地，对压力也可以进行扫描，只要将settings.ini里的P也指定下限、上限、步长即可。如果对温度和压力都设成设了上下限和步长，则Shermo会进行二维扫描。</p>
+<p>如果你想在Linux下纯粹靠命令行执行而不改settings.ini文件，对于跑当前的温度扫描例子来说，在按照本文第3节说的修改过~/.bashrc后，运行以下命令即可，非常方便：</p>
+<p>Shermo H2CO_optfreq.out -T 50,1000,10 -sclZPE 0.9806 -E -114.3338033</p>
+<p>4.2 计算水环境中柔性分子瑞德西韦的热力学数据</p>
+<p>4.2.1 前言</p>
+<p>瑞德西韦这个体系我之前在《使用Molclus结合xtb做的动力学模拟对瑞德西韦(Remdesivir)做构象搜索》（http://bbs.keinsci.com/thread-16255-1-1.html）中有过介绍和研究，此物对于治疗COVID-19有较好作用，这里我们计算一下它的热力学数据。这个体系的柔性非常大，因为它有很多可旋转的键。对于这样的体系，在计算时需要做特殊考虑：</p>
+<p>(1)必须使用准RRHO（quasi-RRHO）模型代替RRHO模型。RRHO（rigid-rotor harmonic oscillator）是指用谐振近似模型考虑体系内部运动对热力学量的贡献，这也是Gaussian、GAMESS-US等绝大多数量子化学程序计算热力学数据时候用的模型。RRHO对于甲醛那种刚性体系没问题，只要考虑了频率校正因子后结果通常就是比较准确的。但是对于柔性较大的体系，RRHO就可能造成明显误差了。因为柔性体系往往有很多低频模式（一般是指谐振频率在100 cm-1以下的那些振动模式），RRHO模型计算的它们对热力学量的贡献不可靠，而且频率越低越不适用，尤其是计算出来的熵的误差很大。为了解决这个问题，Truhlar课题组的文章（比如J. Phys. Chem. B, 115, 14556 (2011)）通常是将低于100波数的频率人为改为100波数后再计算各种热力学数据。虽然这么做看起来任意性太强，物理意义不太清楚，但从实效来说比起不做这种处理通常明显更为合理。另一种是Grimme在Chem. Eur. J., 18, 9955 (2012)中提出的做法，他将RRHO模型与自由转子模型算的振动对熵的贡献进行了线性插值，此时约200波数以上的振动模式的结果和RRHO模型算的基本一样，而约50波数以下的振动模式的结果和自由转子模型算的基本一样，而在约50~200波数范围内在RRHO和自由转子模型的结果间平滑过渡。Minenkov在J Comput Chem., 44, 1807 (2023)中还建议将这种插值方式也同时应用到振动对内能的贡献上，这样对低频的热力学考虑更一致，而且实测发现对内能的计算精度有所改进。Truhlar、Grimme、Minenkov这三种方法都可以比RRHO显著更好地描述低频模式对热力学量的贡献，都可以称为准RRHO或modified RRHO (mRRHO)，在Shermo中都支持，分别对应ilowfreq=1、2、3。Grimme的做法明显比Truhlar更好，改为Minenkov的做法还可能有更进一步提升。算柔性体系的时候应当用Grimme或Minenkov的准RRHO（我更推荐后者），而算刚性体系的情况，由于没有低频，用准RRHO还是RRHO都可以，结果几乎没区别。关于这个问题更多的介绍和讨论看Shermo的手册和前述的Shermo的论文。如今准RRHO已被越来越多的做理论计算的人所了解，算含有低频的柔性体系、弱相互作用体系如今还用RRHO的话很可能被内行审稿人批评。</p>
+<p>(2)应当考虑热力学量的构象平均。柔性体系往往有很多热可及构象，也就是在当前温度下，有不止一个构象出现比例明显大于零。出现比例可以按照Boltzmann分布公式根据构象之间的相对自由能计算，见《根据Boltzmann分布计算分子不同构象所占比例》（http://sobereva.com/165），而这些构象的结构可以通过构象搜索程序获得，其中我最推荐Molclus，免费灵活方便准确，详见其主页http://www.keinsci.com/research/molclus.html。实际体系的电子能量、内能、焓应当根据分布比例对各个构象计算结果进行权重平均，而熵在权重平均的基础上还要额外考虑构象熵（表达式见手册。这是由于构象间可以相互变换所带来的额外的熵）。自由能就用权重平均的焓和熵根据G=H-TS关系照常来算即可。构象平均问题在Shermo中可以很方便地考虑，只需要提供个构象列表文件即可。</p>
+<p>对于分子团簇来说，比如水的四聚体，会有多种热可及构型，计算热力学量的时候也需要对各个构型按上述方式考虑。Molclus也可以方便地对分子团簇做构型搜索，见《genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具》（http://bbs.keinsci.com/thread-2369-1-1.html）里面的说明和例子。</p>
+<p>4.2.2 计算单个构象的热力学数据</p>
+<p>下面，我们首先对已知的瑞德西韦在水中最稳定的构象计算标况下各种热力学数据，此结构如下：</p>
+<p>2.jpg (57.7 KB, 下载次数 Times of downloads: 558)</p>
+<p>下载附件 Download</p>
+<p>2020-5-19 03:43 上传 Uploaded</p>
+<p>此体系的优化和振动分析是用Gaussian在B3LYP-D3(BJ)/6-31G*在气相下做的，输出文件是Shermo文件包里的example目录下的G16_remdesivir_optfreq.out。之后通过ORCA在此结构上用更高级别的PWPB95-D3(BJ)/def2-QZVPP结合SMD溶剂模型表现的水环境计算了电子能量，输出文件对应example\ensemble\orcaSP00001.out，从中可看到电子能量为-2321.3677188 a.u.。我们将settings.ini里的内容做如下设置：</p>
+<p>E=后面的值改为-2321.3677188</p>
+<p>确认T=后面的值为298.15</p>
+<p>sclZPE=后面的值改为0.9806（DFT-D色散校正对频率校正因子的影响可忽略不计，所以还是用B3LYP/6-31G*的校正因子）</p>
+<p>ilowfreq=后面的值改为2，代表使用Grimme的准RRHO模型</p>
+<p>启动Shermo并以G16_remdesivir_optfreq.out为输入文件，结果如下，这个就是瑞德西韦当前构象在水环境中的各种热力学量了</p>
+<p>Sum of electronic energy and ZPE, namely U/H/G at 0 K:      -2320.7549750 a.u.</p>
+<p>Sum of electronic energy and thermal correction to U:       -2320.7137635 a.u.</p>
+<p>Sum of electronic energy and thermal correction to H:       -2320.7128193 a.u.</p>
+<p>Sum of electronic energy and thermal correction to G:       -2320.8212651 a.u.</p>
+<p>大家也可以算一下ilowfreq=后面的值为0，也就是用RRHO模型算的结果，你会发现自由能为-2320.8303608 a.u.，与上面的值相差多达5.7 kcal/mol。如果你具体分析的话会发现这主要来自于熵的差异，这充分说明对于较大柔性体系用RRHO模型会造成显著误差，因此就算不是为了图方便而是为了图精确，对于柔性大体系也不建议直接用Gaussian等程序直接输出的自由能。</p>
+<p>需要注意的是，若想得到严格的溶液标准态（298.15K,1 M）情况下体系的自由能，还需要将上面给出的自由能-2320.8212651再加上1.89 kcal/mol（0.003012 a.u.），这对应气相标准态（298.15K,1 atm）→溶液标准态转化的自由能变，这点在《谈谈隐式溶剂模型下溶解自由能和体系自由能的计算》（http://sobereva.com/327）有专门说明，没看过者强烈建议仔细看看。</p>
+<p>实际上Shermo直接就提供了计算浓度改变导致的自由能变的功能，都省得自己手动算了，Shermo手册里有详述和计算公式。简单来说，你只要把settings.ini里的conc设为目标浓度即可。比如当前settings.ini里T=350、P=2，若你设conc= 1.5M，则Shermo运行后不仅会输出(350K,2atm)状态的自由能，还会输出delta-G of conc. change，这就是从当前(350K,2atm)状态转变为(350K,1.5M)状态的自由能变，之后输出的Gibbs free energy at specified concentration就是(350K,1.5M)状态的自由能。显然，若设T= 298.15且conc= 1M，最后Gibbs free energy at specified concentration给你的就是液相标准态自由能。</p>
+<p>注：上面计算溶液中的自由能的做法虽然简单，但在原理上来说其实不是最完美的，因为如《谈谈隐式溶剂模型下溶解自由能和体系自由能的计算》所述，SMD模型结合M05-2X/6-31G*级别算出来的溶解自由能才是最准的，而上面这种做法在本质上等于在其它级别（PWPB95-D3(BJ)/def2-QZVPP）下算了溶解自由能。不过这没有明显问题，从实际精度角度来讲结果完全可以接受。你若不怕麻烦，就是想用最理想的做法来算，就按照《谈谈隐式溶剂模型下溶解自由能和体系自由能的计算》里的过程，用Shermo先计算气相下自由能，再手动在M05-2X/6-31G*级别下计算溶解自由能，二者相加后再加上标准态改变的自由能变就行了。</p>
+<p>4.2.3 计算构象分布比例和构象权重的热力学数据</p>
+<p>在前述的《使用Molclus结合xtb做的动力学模拟对瑞德西韦(Remdesivir)做构象搜索》一文中得到了好多能量较低的瑞德西韦的构象，下面我们就取其中最低的三个构象，通过Shermo来计算它们的构象分布比例和构象权重的热力学数据。自由能更高的构象由于贡献很小，所以这里就不纳入考虑了。</p>
+<p>我们创建一个后缀为.txt的文本文件，比如叫做list.txt，里面每一行指定一个振动分析或优化+振动分析的输出文件的路径。如果想用更好的电子能量，在路径后面加上分号作为分隔，后面写上电子能量数值即可。此例的文件是下面这样</p>
+<p>example\ensemble\gau00001.out;-2321.367718855799</p>
+<p>example\ensemble\gau00002.out;-2321.363532347723</p>
+<p>example\ensemble\gau00003.out;-2321.369898466825</p>
+<p>这里的电子能量可以从example\ensemble\中的以orca为开头的相应构象的PWPB95-D3(BJ)/def2-QZVPP级别下的单点能任务里读到。这里假定你通过双击Shermo图标启动，所以路径写的是相对于Shermo.exe的相对路径。</p>
+<p>settings.ini还是用上面的例子的。启动Shermo后，将list.txt载入，马上就得到下面的输出</p>
+<p>Processing example\ensemble\gau00001.out... (    1  of    3 )</p>
+<p>Processing example\ensemble\gau00002.out... (    2  of    3 )</p>
+<p>Processing example\ensemble\gau00003.out... (    3  of    3 )</p>
+<p>#System       U               H               G             S          CV</p>
+<p>a.u.            a.u.            a.u.        J/mol/K     J/mol/K</p>
+<p>1    -2320.713764    -2320.712819    -2320.821265     954.971     657.837</p>
+<p>2    -2320.709745    -2320.708801    -2320.817499     957.191     657.295</p>
+<p>3    -2320.715999    -2320.715054    -2320.822180     943.341     654.902</p>
+<p>System    1     Relative G=    2.401 kJ/mol     Boltzmann weight=  27.380 %</p>
+<p>System    2     Relative G=   12.289 kJ/mol     Boltzmann weight=   0.507 %</p>
+<p>System    3     Relative G=    0.000 kJ/mol     Boltzmann weight=  72.113 %</p>
+<p>Conformation weighted data:</p>
+<p>Electronic energy:     -2321.369269 a.u.</p>
+<p>U:     -2320.715355 a.u.</p>
+<p>H:     -2320.714411 a.u.</p>
+<p>G:     -2320.822488 a.u.</p>
+<p>S:       951.727 J/mol/K    Conformation entropy:     5.132 J/mol/K</p>
+<p>CV:      655.718 J/mol/K</p>
+<p>CP:      664.032 J/mol/K</p>
+<p>可见每个体系的热力学数据都分别给出了，然后给出了相对于自由能最低的那个体系的相对自由能，并由此计算出了玻尔兹曼权重（即分布比例）。最后给出了考虑构象平均的各种热力学数据，其中为了便于分析考察，构象熵也单独给出了（构象熵已经纳入到S:后面的数值了，不要再手动加进去）。由以上输出可见，第3个构象占了主导，而第1个构象也不可忽略，其中自由能最高的构象2的贡献可忽略不计。</p>
+<p>如上一节所述，如果要得到溶液中1 M标准态的各个构象的以及构象平均的自由能，应当给这里输出的各个构象的自由能以及构象权重平均的自由能都手动加上1.89 kcal/mol。是否加上1.89 kcal/mol不影响构象间的相对自由能，也因此不影响玻尔兹曼分布比率。</p>
+<p>值得一提的是构象分布比例对自由能很敏感，这就要求电子能量计算精度必须足够好，而且必须恰当考虑溶剂效应。如果在list.txt里只写路径而不写分号和电子能量，则电子能量会自动用那三个.out里读取的气相的B3LYP-D3(BJ)/6-31G*的结果，你会发现构象3的分布比例达到99.9%，严重不合理。</p>
+<p>5 通过shell脚本调用Shermo做批处理</p>
+<p>通过写shell脚本，可以调用Shermo非常容易地进行批处理。举个例子，当前目录下有一批.log文件，我们想计算它们标况下的热力学量，并且用0.975的ZPE校正因子，用Grimme的准RRHO方式考虑低频。假设你用的是Bash环境（比如用的Linux，或者在Windows下通过cmder等方式模拟Bash环境），那么可以创建一个文本文件比如叫getGall.sh，把以下内容写入到此文件中</p>
+<p>#!/bin/bash</p>
+<p>rm -f getGall.txt</p>
+<p>for inf in *.log</p>
+<p>do</p>
+<p>echo Processing ${inf} ...</p>
+<p>echo ${inf} &gt;&gt; getGall.txt</p>
+<p>./Shermo ${inf} -sclZPE 0.975 -ilowfreq 2 | grep &quot;Sum of electronic energy and thermal correction to G:&quot; | cut -d: -f 2 &gt;&gt; getGall.txt</p>
+<p>done</p>
+<p>假设getGall.sh和Shermo可执行文件就在当前目录下，给它们加上可执行权限后，输入./getGall.sh运行此脚本，运行后就在当前目录下得到了getGall.txt文件，里面记录了各个文件名以及Shermo计算出来的自由能值，如下所示</p>
+<p>Cs-atom-in.log</p>
+<p>-705.4867512 a.u.</p>
+<p>Cs-ion-in.log</p>
+<p>-705.2690829 a.u.</p>
+<p>Cs-ion-out.log</p>
+<p>-705.2490426 a.u.</p>
+<p>K-atom-in.log</p>
+<p>-1285.2091502 a.u.</p>
+<p>K-ion-in.log</p>
+<p>-1284.9920128 a.u.</p>
+<p>K-ion-out.log</p>
+<p>-1284.9852452 a.u.</p>
+<p>...略</p>
+<p>上面这个脚本稍微有一点shell脚本编写常识和Linux下的命令的知识就能理解是如何工作的。大家稍微举一反三就能利用Shermo非常方便地实现各种批处理。如果你对shell脚本编写一无所知又想学习的话，强烈建议看看《详谈Multiwfn的命令行方式运行和批量运行的方法》（http://sobereva.com/612），里面由浅入深对脚本编写做了浅显易懂的介绍并给了很多实用例子。</p>
+<p>6 固体的热力学量的计算</p>
+<p>前面说的都是气相或溶液中的分子或团簇体系。如果你研究的体系是晶体或固体表面（包括表面吸附的情况）的热力学量，一般适合用CP2K第一性原理程序做优化、振动分析然后再将输出文件提供给Shermo算热力学量。这种情况特别要注意Shermo的settings.ini里的imode设置，它默认为0，如果设为1，则平动和转动对热力学量的贡献会被忽略，显然对于算晶体、固体表面的情况设成1是必须的，因为这样的体系不会像孤立的分子/团簇那样自由地平动和转动。在相关 CP2K 第一性原理教程（http://www.keinsci.com/KFP）里面的“热力学量与能量相关属性的计算”的部分我专门给了将CP2K与Shermo结合算热力学量的详细的例子，十分推荐需要算这方面问题的人参加。</p>
+<p>7 FAQ</p>
+<p>Q1：为什么Shermo算出的热力学校正量和Gaussian输出的不一致？</p>
+<p>A: 要想Shermo输出的热力学校正量和Gaussian直接输出的严格一致，Shermo的settings.ini里的设定必须满足：</p>
+<p>• T=和P=分别与Gaussian计算时设的温度和压力一致（Gaussian默认的情况相当于T= 298.15、P= 1.0）</p>
+<p>• 频率校正因子和Gaussian设的一致（如果Gaussian计算时没用scale关键词指定，则sclZPE、sclheat、sclS都应当为1.0）</p>
+<p>• 热力学量计算模型和Gaussian一致。Gaussian用的是RRHO模型，对应于ilowfreq= 0</p>
+<p>如果以上都满足，结果还不一致，且体系结构有对称性，大概率是Gaussian的振动分析部分的代码对体系的点群判断有误，导致转动对称数判断不对，进而导致算出的转动对热力学校正量的贡献错误。而Shermo判断点群的功能明显更稳健，不一致的情况一律以Shermo为准（有多次用户问我此问题的时候我最后都发现俩程序对点群判断不一致，每次都是Shermo是正确的而Gaussian是错误的。可能是Gaussian判断点群的阈值过于严格）。</p>
+<p>Q2：用Shermo算热力学量，是否需要在Gaussian里写temperature和pressure关键词？</p>
+<p>A：当然不需要！倘若需要的话上文自然就明确说了。热力学数据是Shermo自己算出来的，根本不是从Gaussian输出文件里读取的，显然gjf文件里写影响Gaussian输出的热力学量的temperature和pressure关键词没有任何意义、对Shermo计算结果没有任何影响。</p>
+<p>Q3：单个原子怎么算热力学量？</p>
+<p>A：如果你的体系是单个原子，不要做优化，不仅没意义（根本就没有可以被优化的变量！），而且Gaussian等程序立马就会报错。对于单个原子就直接做个振动分析，把输出文件给Shermo用就完了。</p>
+<p>Q4：Shermo的sclfreq参数设的是计算U(T)-U(0)的频率校正因子，为什么很多文献里给的是H(T)-H(0)的频率校正因子，这俩频率校正因子是一回事么？</p>
+<p>A：然是一回事，有最基本的热力学数据计算常识就能理解。H(0)和U(0)是相同的，H(T)和U(T)在理想气体近似下就相差个RT，这是平动部分贡献的，和振动没有任何关系，显然给H(T)-H(0)和给U(T)-U(0)用的频率校正因子完全是一码事。再次提醒，如果你缺乏热力学数据计算的常识知识，一定仔细看看Shermo程序手册的附录，搞清楚基本计算原理。顺带一提，相关中级量子化学教程（http://www.keinsci.com/KBQC）的“热力学量与能量相关性质的计算”一节对热力学数据计算的背景知识有超级详细的讲解，十分推荐想深入学习的人参加。</p>
+<p>8 总结&amp;其它</p>
+<p>本文介绍了Shermo程序的基本特点、基本用法，并且通过实例介绍了如何将Shermo用于实际问题。由例子可见通过Shermo来计算各种热力学数据前所未有地方便、灵活，以往需要很多操作步骤的麻烦过程都被简化到极致，而且还支持准RRHO模型以合理地考虑低频模式的贡献，因此Shermo是日常应用性量子化学研究中离不开的工具。</p>
+<p>为了避免很多人嫌本文太长就不看了，本文写得比较简单，还有很多细节、更多用法说明、更多例子都没有给出，详见Shermo的手册。如果对Shermo有任何问题，看了手册还是不明白，欢迎在计算化学公社论坛（http://bbs.keinsci.com）的量子化学版求助。</p>
+<p>顺带一提，Gaussian等程序还支持更复杂的计算模型，即非谐振计算、受阻转子，在某些情况下用这些处理结果能更准确一些，但耗时高得多得多，不适合用于中、大体系。这种情况的输出文件也不被Shermo所支持，Shermo只支持谐振近似的振动分析的输出文件（也即是各种量子化学程序做振动分析时默认的情况）。</p>
+<p>如果你用的量子化学程序不是Shermo直接支持的，也照样可以用Shermo来分析。如手册所示，Shermo定义了私有格式shm，其中包含了计算热力学数据所需要的所有信息，格式非常简单。因此，如果你想让Shermo也能基于其它量子化学程序振动分析的数据来计算热力学量，自己写个小程序将输出文件转化成shm格式，再给Shermo当输入文件即可。</p>
+<p>《谈谈有小虚频时热力学量的计算》（http://sobereva.com/699）非常推荐大家一读，里面顺带介绍了Shermo支持的QRRHO模型的一些特点，并且介绍了在Shermo里将小虚频视为实频的设置以及其实际意义。</p>
+<h4>2 楼</h4>
+<p>社长威武！</p>
+<h4>3 楼</h4>
+<p>社长威威</p>
+<h4>4 楼</h4>
+<p>社长威武</p>
+<h4>5 楼</h4>
+<p>请问sob老师，有没有什么可靠的能计算三四百个原子的热力学数据的方法呢？</p>
+<h4>6 楼</h4>
+<p>GoldenBaby 发表于 2020-5-19 11:35</p>
+<p>请问sob老师，有没有什么可靠的能计算三四百个原子的热力学数据的方法呢？</p>
+<p>用本文算瑞德西韦的流程就可以</p>
+<p>如果你是问理论方法、基组层面的事，需要交代清楚体系具体特征、计算资源、用的量化程序等情况</p>
+<h4>7 楼</h4>
+<p>社长竟然引用了我的paper，不胜荣幸。</p>
+<h4>8 楼</h4>
+<p>sobereva 发表于 2020-5-19 11:47</p>
+<p>用本文算瑞德西韦的流程就可以</p>
+<p>如果你是问理论方法、基组层面的事，需要交代清楚体系具体特征、计算资源 ...</p>
+<p>体系是含有过渡金属和有机配体的配合物，最大能提供36核和196GB内存的节点，量化程序买了Gaussian和Turbomole，免费软件的软件如orca之类的可以自己安装。</p>
+<h4>9 楼</h4>
+<p>GoldenBaby 发表于 2020-5-19 21:28</p>
+<p>体系是含有过渡金属和有机配体的配合物，最大能提供36核和196GB内存的节点，量化程序买了Gaussian和Turbo ...</p>
+<p>这种大小体系的freq部分很难算</p>
+<p>硬着头皮用ORCA跑B97-3c可以试试，算不动也没别的办法了</p>
+<h4>10 楼</h4>
+<p>Frank 发表于 2020-5-19 18:15</p>
+<p>社长竟然引用了我的paper，不胜荣幸。</p>
+<p>莫非是pka那篇的作者？</p>
+<h4>11 楼</h4>
+<p>sobereva 发表于 2020-5-20 00:54</p>
+<p>莫非是pka那篇的作者？</p>
+<p>是的</p>
+<h4>12 楼</h4>
+<p>社长威武，昨天熬了个通宵把热力学数据手动算完，今天才看到这个软件，不过以后再算这这些就省心多了</p>
+<h4>13 楼</h4>
+<p>Frank 发表于 2020-5-20 05:25</p>
+<p>是的</p>
+<p>这篇工作很好，研究得很严谨</p>
+<h4>14 楼</h4>
+<p>sobereva 发表于 2020-5-20 09:12</p>
+<p>这篇工作很好，研究得很严谨</p>
+<p>多谢社长，和审稿人对线四个多月修改三次才接收</p>
+<h4>15 楼</h4>
+<p>gamess都那么多年了，转动常数还有问题？</p>
+<h4>16 楼</h4>
+<p>coolrainbow 发表于 2020-5-20 10:50</p>
+<p>gamess都那么多年了，转动常数还有问题？</p>
+<p>是的，这令我意外，如此老牌程序会有这个问题</p>
+<h4>17 楼</h4>
+<p>看来是某个研究生写的，之后再没有人检查过</p>
+<h4>18 楼</h4>
+<p>Capture.PNG (14.17 KB, 下载次数 Times of downloads: 258)</p>
+<p>下载附件 Download</p>
+<p>2020-5-24 20:39 上传 Uploaded</p>
+<p>老师，请问手册第五页这里是不是有个小笔误，前面“opt”是不是应该为“freq”?</p>
+<h4>19 楼</h4>
+<p>snljty 发表于 2020-5-24 20:40</p>
+<p>老师，请问手册第五页这里是不是有个小笔误，前面“opt”是不是应该为“freq”?</p>
+<p>肯定是啦</p>
+<h4>20 楼</h4>
+<p>snljty 发表于 2020-5-24 20:40</p>
+<p>老师，请问手册第五页这里是不是有个小笔误，前面“opt”是不是应该为“freq”?</p>
+<p>是笔误，谢谢指出</p>
+<h4>21 楼</h4>
+<p>Frank 发表于 2020-5-20 09:54</p>
+<p>多谢社长，和审稿人对线四个多月修改三次才接收</p>
+<p>请问可以给一下链接么？我想拜读学习一下。</p>
+<h4>22 楼</h4>
+<p>本帖最后由 wuzhiyi 于 2020-6-15 05:02 编辑</p>
+<ul>
+<li>In ORCA 4.0 Grimme&#x27;s quasi-RRHO approach for low energy frequencies has been implemented where frequencies below 35 cm-1 are treated as free rotors instead of harmonic vibrations. This is an improvement over the harmonic oscillator approximation which breaks dwon for these low-energy frequencies and is especially problematic for the vibrational entropy term. The quasi-RRHO approach is automatically used in ORCA 4.0</li>
+</ul>
+<p>请问Shermo如果使用orca频率文件作为输入文件的话，4.0之前和之后会因为已经有quasi-RRHO矫正而出现区别嘛？</p>
+<p>===================================</p>
+<p>仔细阅读一下发现Shermo是直接读取振动频率 所以应该没有关系</p>
+<h4>23 楼</h4>
+<p>wuzhiyi 发表于 2020-6-15 03:13</p>
+<p>请问可以给一下链接么？我想拜读学习一下。</p>
+<p>https://pubs.acs.org/doi/10.1021/acs.jpca.9b04920 欢迎阅读、引用、comment</p>
+<h4>24 楼</h4>
+<p>Frank 发表于 2020-6-15 07:25</p>
+<p>https://pubs.acs.org/doi/10.1021/acs.jpca.9b04920 欢迎阅读、引用、comment</p>
+<p>谢谢</p>
+<h4>25 楼</h4>
+<p>wuzhiyi 发表于 2020-6-15 03:16</p>
+<ul>
+<li>In ORCA 4.0 Grimme&#x27;s quasi-RRHO approach for low energy frequencies has been implemented where fre ...</li>
+</ul>
+<p>是没有关系</p>
+<h4>26 楼</h4>
+<p>不知道sob老师有没有计划根据http://bbs.keinsci.com/thread-3805-1-1.html来让Shermo自动矫正ZPE？比如写-sclZPE 不加任何参数就是自动查表矫正？</p>
+<h4>27 楼</h4>
+<p>wuzhiyi 发表于 2020-6-19 18:44</p>
+<p>不知道sob老师有没有计划根据http://bbs.keinsci.com/thread-3805-1-1.html来让Shermo自动矫正ZPE？比如写- ...</p>
+<p>没有</p>
+<p>因为同一个级别往往有不同校正因子来源，而且从输出文件里准确判断计算级别、匹配内置数据并不容易，很可能判断错误，造成结果无意义。这种自动匹配太危险了，得不偿失。</p>
+<h4>28 楼</h4>
+<p>sob老师,我现在要计算高真空(0.01 mm 汞柱)下的分子平衡结构和过渡态的自由能,请问您的程序可以计算吗?计算高真空环境下的自由能还有什么需要注意的事情吗?</p>
+<h4>29 楼</h4>
+<p>FETEYA 发表于 2020-6-27 10:59</p>
+<p>sob老师,我现在要计算高真空(0.01 mm 汞柱)下的分子平衡结构和过渡态的自由能,请问您的程序可以计算吗?计算 ...</p>
+<p>压力对结构没有影响，看</p>
+<p>谈谈温度、压力、同位素设定对量子化学计算结果产生的影响</p>
+<p>http://sobereva.com/423（http://bbs.keinsci.com/thread-10159-1-1.html）</p>
+<p>对于自由能的影响，就照常设压力即可，没什么特殊的。</p>
+<h4>30 楼</h4>
+<p>sobereva 发表于 2020-6-27 18:12</p>
+<p>压力对结构没有影响，看</p>
+<p>谈谈温度、压力、同位素设定对量子化学计算结果产生的影响</p>
+<p>http://sobereva.co ...</p>
+<p>谢谢老师解答</p>
+<h4>31 楼</h4>
+<p>sob老师 发现了疑似一个BUG 无法正确得到自由能校正量  以下是输出文件[naonao5205@localhost done]$ Shermo CH4.log -sclZPE 0.9699</p>
+<p>Shermo: A general code for calculating molecular thermochemistry properties</p>
+<p>Version 2.0.1  Release date: 2020-May-20</p>
+<p>Developer: Tian Lu (sobereva@sina.com)</p>
+<p>Beijing Kein Research Center for Natural Sciences (http://www.keinsci.com)</p>
+<p>Official website: http://sobereva.com/soft/shermo</p>
+<p>If this code is utilized in your work, PLEASE CITE:</p>
+<p>Tian Lu, Qinxue Chen, Shermo: A general code for calculating molecular thermodynamic properties, ChemRxiv (2020) DOI: 10.26434/chemrxiv.12278801</p>
+<p>Loading running parameters from settings.ini...</p>
+<p>Command of invoking Shermo:</p>
+<p>Shermo CH4.log -sclZPE 0.9699</p>
+<p>Note: One or more running parameters are overridden by arguments</p>
+<p>Running parameters:</p>
+<p>Printing individual contribution of vibration modes: No</p>
+<p>Temperature:     298.150 K</p>
+<p>Pressure:          1.000 atm</p>
+<p>Scale factor of vibrational frequencies for ZPE:        0.9699</p>
+<p>Scale factor of vibrational frequencies for U(T)-U(0):  1.0000</p>
+<p>Scale factor of vibrational frequencies for S(T):       1.0000</p>
+<p>Scale factor of vibrational frequencies for CV:         1.0000</p>
+<p>Low frequencies treatment: Harmonic approximation</p>
+<p>Default atomic masses: Same as the output file</p>
+<p>Loading Gaussian output file...</p>
+<p>Note: The electronic energy loaded from input file will be used</p>
+<p>Detecting point group...</p>
+<p>Point group has been successfully detected</p>
+<p>Warning: Rotational symmetry number cannot be identified for this point group</p>
+<p>======= Molecular information =======</p>
+<p>Electronic energy:      -40.45014800 a.u.</p>
+<p>Spin multiplicity:  1</p>
+<p>Atom    1 (C )   Mass:   12.000000 amu</p>
+<p>Atom    2 (H )   Mass:    1.007830 amu</p>
+<p>Atom    3 (H )   Mass:    1.007830 amu</p>
+<p>Atom    4 (H )   Mass:    1.007830 amu</p>
+<p>Atom    5 (H )   Mass:    1.007830 amu</p>
+<p>Total mass:       16.031320 amu</p>
+<p>Point group: Td</p>
+<p>Rotational symmetry number:  0</p>
+<p>Principal moments of inertia (amu*Bohr^2):</p>
+<p>11.547243       11.547249       11.547256</p>
+<p>Rotational constants relative to principal axes (GHz):</p>
+<p>156.291956    156.291877    156.291784</p>
+<p>Rotational temperatures (K):    7.500822    7.500819    7.500814</p>
+<p>This is not a linear molecule</p>
+<p>There are     9 frequencies (cm^-1):</p>
+<p>1318.9  1318.9  1318.9  1538.8  1538.8  3052.9  3196.7  3196.7  3196.7</p>
+<p>Note: Only for translation, U is different to H, and CV is different to CP</p>
+<p>======= Translation =======</p>
+<p>Translational q:    1.519356E+030     q/NA:    2.522950E+006</p>
+<p>Translational U:      3.718 kJ/mol      0.889 kcal/mol</p>
+<p>Translational H:      6.197 kJ/mol      1.481 kcal/mol</p>
+<p>Translational S:    143.349 J/mol/K    34.261 cal/mol/K  -TS:   10.21 kcal/mol</p>
+<p>Translational CV:    12.472 J/mol/K     2.981 cal/mol/K</p>
+<p>Translational CP:    20.786 J/mol/K     4.968 cal/mol/K</p>
+<p>========= Rotation ========</p>
+<p>Rotational q:         Infinity</p>
+<p>Rotational U:      3.718 kJ/mol      0.889 kcal/mol    =H</p>
+<p>Rotational S:   Infinity J/mol/K  Infinity cal/mol/K   -TS:Infinity kcal/mol</p>
+<p>Rotational CV:    12.472 J/mol/K     2.981 cal/mol/K   =CP</p>
+<p>======== Vibration ========</p>
+<p>Vibrational q(V=0):    1.006382E+000</p>
+<p>Vibrational q(bot):    2.416432E-021</p>
+<p>Vibrational U(T)-U(0):     0.104 kJ/mol     0.025 kcal/mol   =H(T)-H(0)</p>
+<p>Vibrational U:    114.258 kJ/mol     27.308 kcal/mol    =H</p>
+<p>Vibrational S:      0.400 J/mol/K     0.096 cal/mol/K   -TS:   0.029 kcal/mol</p>
+<p>Vibrational CV:     2.294 J/mol/K     0.548 cal/mol/K   =CP</p>
+<p>Zero-point energy (ZPE):    114.15 kJ/mol,     27.28 kcal/mol    0.043479 a.u.</p>
+<p>======== Electron excitation ========</p>
+<p>Electronic q:    1.000000E+000</p>
+<p>Electronic U:      0.000 kJ/mol      0.000 kcal/mol    =H</p>
+<p>Electronic S:      0.000 J/mol/K     0.000 cal/mol/K   -TS:   0.000 kcal/mol</p>
+<p>Electronic CV:     0.000 J/mol/K     0.000 cal/mol/K   =CP</p>
+<p>===========================</p>
+<p>========== Total ==========</p>
+<p>===========================</p>
+<p>Total q(V=0):            Infinity</p>
+<p>Total q(bot):            Infinity</p>
+<p>Total q(V=0)/NA:         Infinity</p>
+<p>Total q(bot)/NA:         Infinity</p>
+<p>Total CV:      27.238 J/mol/K       6.510 cal/mol/K</p>
+<p>Total CP:      35.552 J/mol/K       8.497 cal/mol/K</p>
+<p>Total S:     Infinity J/mol/K    Infinity cal/mol/K    -TS:  Infinity kcal/mol</p>
+<p>Thermal correction to U:    121.695 kJ/mol     29.086 kcal/mol   0.046351 a.u.</p>
+<p>Thermal correction to H:    124.174 kJ/mol     29.678 kcal/mol   0.047295 a.u.</p>
+<p>Thermal correction to G:  -Infinity kJ/mol  -Infinity kcal/mol  -Infinity a.u.</p>
+<p>Electronic energy:        -40.4501480 a.u.</p>
+<p>Sum of electronic energy and ZPE, namely U/H/G at 0 K:        -40.4066689 a.u.</p>
+<p>Sum of electronic energy and thermal correction to U:         -40.4037969 a.u.</p>
+<p>Sum of electronic energy and thermal correction to H:         -40.4028527 a.u.</p>
+<p>Sum of electronic energy and thermal correction to G:           -Infinity a.u.</p>
+<p>复制代码</p>
+<h4>32 楼</h4>
+<p>naonao5205 发表于 2020-7-11 14:53</p>
+<p>sob老师 发现了疑似一个BUG 无法正确得到自由能校正量  以下是输出文件</p>
+<p>上传你的Gaussian输出文件我检查一下</p>
+<h4>33 楼</h4>
+<p>sobereva 发表于 2020-7-12 09:00</p>
+<p>上传你的Gaussian输出文件我检查一下</p>
+<p>这个文件，在linux和win10下输出均如上 但可以用guassian自带的freqchk</p>
+<h4>34 楼</h4>
+<p>naonao5205 发表于 2020-7-12 11:41</p>
+<p>这个文件，在linux和win10下输出均如上 但可以用guassian自带的freqchk</p>
+<p>是个bug，我已修正并更新了Shermo主页上的版本。这个问题只对Td点群有，是没有对转动对称数赋值所致。</p>
+<h4>35 楼</h4>
+<p>sobereva 发表于 2020-7-13 10:59</p>
+<p>是个bug，我已修正并更新了Shermo主页上的版本。这个问题只对Td点群有，是没有对转动对称数赋值所致。</p>
+<p>sob老师 实测更新后win版本解决了 但是linux执行文件依然有这个问题</p>
+<p>我是centos8环境</p>
+<h4>36 楼</h4>
+<p>naonao5205 发表于 2020-7-13 12:32</p>
+<p>sob老师 实测更新后win版本解决了 但是linux执行文件依然有这个问题</p>
+<p>我是centos8环境</p>
+<p>Linux版也解决了，之前弄错文件了</p>
+<h4>37 楼</h4>
+<p>请问sob老师，Shermo支持MOPAC或者xtb的热力学数据计算吗？</p>
+<h4>38 楼</h4>
+<p>GoldenBaby 发表于 2020-7-17 14:10</p>
+<p>请问sob老师，Shermo支持MOPAC或者xtb的热力学数据计算吗？</p>
+<p>不支持</p>
+<h4>39 楼</h4>
+<p>Shermo今日发布了2.0.3版，解决了一个新发现的bug：对于某些体系在做热力学量扫描的时候，给出的转动熵错误，导致输出的熵和自由能错误。</p>
+<p>请之前的Shermo用户尽快去http://sobereva.com/soft/shermo/下载新版本。</p>
+<h4>40 楼</h4>
+<p>给本文增加了第5节，专门给初学者介绍了怎么非常容易地调用Shermo批量计算</p>
+<h4>41 楼</h4>
+<p>sobereva 发表于 2020-7-14 08:01</p>
+<p>Linux版也解决了，之前弄错文件了</p>
+<p>2.0.4版对Th点群还是有同样的问题。</p>
+<p>===========================</p>
+<p>========== Total ==========</p>
+<p>===========================</p>
+<p>Total q(V=0):            Infinity</p>
+<p>Total q(bot):            Infinity</p>
+<p>Total q(V=0)/NA:         Infinity</p>
+<p>Total q(bot)/NA:         Infinity</p>
+<p>Total CV:     240.342 J/mol/K      57.443 cal/mol/K</p>
+<p>Total CP:     248.657 J/mol/K      59.430 cal/mol/K</p>
+<p>Total S:     Infinity J/mol/K    Infinity cal/mol/K    -TS: -Infinity kcal/mol</p>
+<p>Thermal correction to U:    405.455 kJ/mol     96.906 kcal/mol   0.154430 a.u.</p>
+<p>Thermal correction to H:    407.934 kJ/mol     97.499 kcal/mol   0.155374 a.u.</p>
+<p>Thermal correction to G:  -Infinity kJ/mol  -Infinity kcal/mol  -Infinity a.u.</p>
+<p>Electronic energy:       -701.0371940 a.u.</p>
+<p>Sum of electronic energy and ZPE, namely U/H/G at 0 K:       -700.8995304 a.u.</p>
+<p>Sum of electronic energy and thermal correction to U:        -700.8827644 a.u.</p>
+<p>Sum of electronic energy and thermal correction to H:        -700.8818202 a.u.</p>
+<p>Sum of electronic energy and thermal correction to G:           -Infinity a.u.</p>
+<h4>42 楼</h4>
+<p>hzfish 发表于 2020-9-29 10:22</p>
+<p>2.0.4版对Th点群还是有同样的问题。</p>
+<p>===========================</p>
+<p>请把你的文件上传，否则我没法测试</p>
+<p>我这里测试过的都没问题</p>
+<h4>43 楼</h4>
+<p>sobereva 发表于 2020-9-29 15:03</p>
+<p>请把你的文件上传，否则我没法测试</p>
+<p>我这里测试过的都没问题</p>
+<p>Th点群的例子。</p>
+<h4>44 楼</h4>
+<p>hzfish 发表于 2020-9-29 16:28</p>
+<p>Th点群的例子。</p>
+<p>是个bug，我已更新了Shermo官网上的2.0.5版修正了这个bug</p>
+<h4>45 楼</h4>
+<p>sobereva 发表于 2020-9-30 19:50</p>
+<p>是个bug，我已更新了Shermo官网上的2.0.5版修正了这个bug</p>
+<p>社长，其它高对称性点群是否一并测试过？</p>
+<h4>46 楼</h4>
+<p>hzfish 发表于 2020-9-30 20:58</p>
+<p>社长，其它高对称性点群是否一并测试过？</p>
+<p>目前对这些点群都能正确识别转动对称数，覆盖足够充分了</p>
+<p>&#x27;C1 &#x27;,&#x27;Cs &#x27;,&#x27;Ci &#x27;,&#x27;C2 &#x27;,&#x27;C3 &#x27;,&#x27;C4 &#x27;,&#x27;C5 &#x27;,&#x27;C6 &#x27;,&#x27;C7 &#x27;,&#x27;C8 &#x27;,&#x27;D2 &#x27;,</p>
+<p>&#x27;D3 &#x27;,&#x27;D4 &#x27;,&#x27;D5 &#x27;,&#x27;D6 &#x27;,&#x27;D7 &#x27;,&#x27;D8 &#x27;,&#x27;C2v&#x27;,&#x27;C3v&#x27;,&#x27;C4v&#x27;,&#x27;C5v&#x27;,&#x27;C6v&#x27;,</p>
+<p>&#x27;C7v&#x27;,&#x27;C8v&#x27;,&#x27;C2h&#x27;,&#x27;C3h&#x27;,&#x27;C4h&#x27;,&#x27;C5h&#x27;,&#x27;C6h&#x27;,&#x27;C7h&#x27;,&#x27;C8h&#x27;,&#x27;D2h&#x27;,&#x27;D3h&#x27;,</p>
+<p>&#x27;D4h&#x27;,&#x27;D5h&#x27;,&#x27;D6h&#x27;,&#x27;D7h&#x27;,&#x27;D8h&#x27;,&#x27;D2d&#x27;,&#x27;D3d&#x27;,&#x27;D4d&#x27;,&#x27;D5d&#x27;,&#x27;D6d&#x27;,&#x27;D7d&#x27;,</p>
+<p>&#x27;D8d&#x27;,&#x27;S4 &#x27;,&#x27;S6 &#x27;,&#x27;S8 &#x27;,&#x27;Th &#x27;,&#x27;Td &#x27;,&#x27;Oh &#x27;,&#x27;Ih &#x27;,&#x27;Civ&#x27;,&#x27;Dih&#x27;</p>
+<p>其它情况，当前版本会提示用户自行输入转动对称数（之前版本只会提示转动对称数无法判断，但估计大多数用户没注意这个提示，只注意到了输出的信息里有inf）</p>
+<h4>47 楼</h4>
+<p>sobereva 发表于 2020-10-2 12:54</p>
+<p>目前对这些点群都能正确识别转动对称数，覆盖足够充分了</p>
+<p>&#x27;C1 &#x27;,&#x27;Cs &#x27;,&#x27;Ci &#x27;,&#x27;C2 &#x27;,&#x27;C3 &#x27;,&#x27;C4 &#x27;,&#x27;C5 &#x27;,&#x27;C ...</p>
+<p>社长能不能在settings.ini文件中增加个设置转动对称数的参数？</p>
+<p>这样可以比较与量化软件识别不同点群时数据的差异。</p>
+<h4>48 楼</h4>
+<p>有几个问题请高手指教：</p>
+<p>1）文中提到“Shermo，以及各种量子化学程序在计算热力学数据的时候都是将体系当成理想气体对待的，如果你想计算凝聚相的热力学数据，应当用能够描述周期性的分子动力学程序、第一性原理程序来做，这不属于Shermo涉及的范畴。”请问，如果我在算opt+freq的时候是在隐式溶剂模型下算的，用shemo算各种热力学数据没问题吧？是不是校正因子合理就行？</p>
+<p>2）确认一下，文中提到的“Scale factor of vibrational frequencies for U(T)-U(0):”和《谈谈谐振频率校正因子》（http://sobereva.com/221）一文中提到的“(4)用于获得准确的焓变ΔH=H(T)-H(0)的校正因子”可不可以相同？考虑到“H(0)=U(0)=电子能量+ZPE”“H=U+PV”，而PV是不需要校正的，二者是不是在理论上也是一样的？</p>
+<p>3）也是确认一下，文中提到的输出结果</p>
+<p>“Sum of electronic energy and thermal correction to G:        -114.3328693 a.u.”</p>
+<p>是不是就是《谈谈谐振频率校正因子》一文中提到的“最终将这三个量加在一起，再加上高精度方法算的电子能量E，就得到了自由能G=E+ZPE+ΔH-T*S”？ 我算了一下，基本相同，二者的差别在小数点后第6或第7位上了（a.u.单位）。</p>
+<h4>49 楼</h4>
+<p>wanlichuan 发表于 2020-11-22 18:05</p>
+<p>有几个问题请高手指教：</p>
+<p>1）文中提到“Shermo，以及各种量子化学程序在计算热力学数据的时候都是将体系当 ...</p>
+<p>1) 没问题，那段话应该主要说的是纯固体、纯液体</p>
+<p>2) 是的</p>
+<p>3) 是的</p>
+<h4>50 楼</h4>
+<p>这就放心了。谢谢。</p>
+<h4>51 楼</h4>
+<p>hzfish 发表于 2020-10-5 16:54</p>
+<p>社长能不能在settings.ini文件中增加个设置转动对称数的参数？</p>
+<p>这样可以比较与量化软件识别不同点群时数 ...</p>
+<p>Shermo 2.0.7已经直接支持手动设置点群了，见http://bbs.keinsci.com/thread-21572-1-1.html</p>
+<h4>52 楼</h4>
+<p>感谢sob老师的软件，对于大部分的分子，我用shermo都可以成功运行，但这几个文件就会出错，想问问sob老师可以帮忙看看么？这两个文件都是正常运行同时正常结束的。</p>
+<p>freq_31.out</p>
+<p>(150.56 KB, 下载次数 Times of downloads: 3)</p>
+<p>2021-4-27 21:58 上传 Uploaded<br>
+点击下载<br>
+Click to download</p>
+<p>freq_22.out</p>
+<p>(284.27 KB, 下载次数 Times of downloads: 3)</p>
+<p>2021-4-27 21:58 上传 Uploaded<br>
+点击下载<br>
+Click to download</p>
+<p>错误是</p>
+<p>forrtl: severe (64): input conversion error, unit 10, file ～/Deprotonated/freq_31.out</p>
+<p>Image              PC                Routine            Line        Source</p>
+<p>Shermo             000000000044036B  Unknown               Unknown  Unknown</p>
+<p>Shermo             000000000046FD7B  Unknown               Unknown  Unknown</p>
+<p>Shermo             0000000000433755  Unknown               Unknown  Unknown</p>
+<p>Shermo             00000000004143D1  Unknown               Unknown  Unknown</p>
+<p>Shermo             0000000000404FA2  Unknown               Unknown  Unknown</p>
+<p>libc-2.27.so       00001538F2209BF7  __libc_start_main     Unknown  Unknown</p>
+<p>Shermo             0000000000404EA9  Unknown               Unknown  Unknown</p>
+<h4>53 楼</h4>
+<p>wuzhiyi 发表于 2021-4-27 21:58</p>
+<p>感谢sob老师的软件，对于大部分的分子，我用shermo都可以成功运行，但这几个文件就会出错，想问问sob老师可 ...</p>
+<p>这是因为当前用了赝势，在下面的内容里出现了星号，导致读取出错</p>
+<p>NO LB      ZA    FRAG     MASS         X           Y           Z</p>
+<p>0 I    25.0000*   0   126.900   -1.789961   -0.021685   -0.000321</p>
+<p>1 O     8.0000    0    15.999    1.837129    0.032192    0.000396</p>
+<p>* core charge reduced due to ECP复制代码</p>
+<p>我刚刚在Shermo官网上发布了2.1.2版，可以兼容这种情况了</p>
+<h4>54 楼</h4>
+<p>帅的一塌糊涂，爱死社长了！！</p>
+<h4>55 楼</h4>
+<p>本帖最后由 wuzhiyi 于 2021-7-27 16:55 编辑</p>
+<p>想问一下sob老师，如何写多构象的相对路径</p>
+<p>假设我的shermo文件在这里，/Users/illustrious/src/Shermo_2.2_src/shermo。</p>
+<p>然后我的振动分析在这里/Users/illustrious/data。</p>
+<p>我的输入文件是/Users/illustrious/data/shermo.in</p>
+<p>opt_0.log;100</p>
+<p>opt_1.log;102</p>
+<p>分别对应gaussian的振动分析文件/Users/illustrious/data/opt_0.log和/Users/illustrious/data/opt_1.log，以及他们的单点能100和102（数字我瞎写的）。</p>
+<p>我实际运行的时候，先进入/Users/illustrious/data</p>
+<p>cd /Users/illustrious/data</p>
+<p>然后测试shermo可以正确读取文件</p>
+<p>Shermo opt_0.log -sclZPE 0.985 -ilowfreq 2</p>
+<p>没有任何问题</p>
+<p>然后我再尝试使用输入文件</p>
+<p>Shermo shermo.in -sclZPE 0.985 -ilowfreq 2</p>
+<p>得到，我觉得是路径问题，想问一下正确的路径应该怎么写，谢谢。</p>
+<p>Shermo: A general code for calculating molecular thermochemistry properties</p>
+<p>Version 2.2  Release date: 2021-Jun-17 (last update: 2021-Jul-3)</p>
+<p>Developer: Tian Lu (sobereva@sina.com)</p>
+<p>Beijing Kein Research Center for Natural Sciences (http://www.keinsci.com)</p>
+<p>Official website: http://sobereva.com/soft/shermo</p>
+<p>If this code is utilized in your work, PLEASE CITE:</p>
+<p>Tian Lu, Qinxue Chen, Shermo: A general code for calculating molecular thermodynamic properties, Comput. Theor. Chem., 1200, 113249 (2021) DOI: 10.1016/j.comptc.2021.113249</p>
+<p>Warning: settings.ini cannot be found in either current folder or the directory defined by Shermopath environment, thus default parameters are used!</p>
+<p>Command of invoking Shermo:</p>
+<p>Shermo test.in -sclZPE 0.985 -ilowfreq 2</p>
+<p>Note: One or more running parameters are overridden by arguments</p>
+<p>Running parameters:</p>
+<p>Printing individual contribution of vibration modes: No</p>
+<p>Temperature:     298.150 K</p>
+<p>Pressure:          1.000 atm</p>
+<p>Scale factor of vibrational frequencies for ZPE:        0.9850</p>
+<p>Scale factor of vibrational frequencies for U(T)-U(0):  1.0000</p>
+<p>Scale factor of vibrational frequencies for S(T):       1.0000</p>
+<p>Scale factor of vibrational frequencies for CV:         1.0000</p>
+<p>Low frequencies treatment: Grimme&#x27;s interpolation for entropy</p>
+<p>Error: Unable to identify the program that generated this file, press ENTER button to exit复制代码</p>
+<h4>56 楼</h4>
+<p>wuzhiyi 发表于 2021-7-27 16:54</p>
+<p>想问一下sob老师，如何写多构象的相对路径</p>
+<p>假设我的shermo文件在这里，/Users/illustrious/src/Shermo_2 ...</p>
+<p>列表文件的后缀必须是.txt，否则程序会试图把这个文件当做量化程序的输出文件对待</p>
+<p>手册有提到</p>
+<p>Clipboard01.png (71.02 KB, 下载次数 Times of downloads: 289)</p>
+<p>下载附件 Download</p>
+<p>2021-7-28 02:00 上传 Uploaded</p>
+<h4>57 楼</h4>
+<p>sobereva 发表于 2021-7-28 01:58</p>
+<p>列表文件的后缀必须是.txt，否则程序会试图把这个文件当做量化程序的输出文件对待</p>
+<p>手册有提到</p>
+<p>谢谢sob老师，我用高斯完成结构优化和振动分析的任务，然后用shermo来分析（Shermo opt_0.log -sclZPE 0.985 -ilowfreq 2），我发现我的输入文件好像没法准确识别C1点群，需要我输入转动对称数。 Warning: Rotational symmetry number cannot be identified for this point group</p>
+<p>Please manually input rotational symmetry number here, e.g. 6</p>
+<p>想问一下这需要怎么解决？谢谢。</p>
+<p>opt_0.log.zip</p>
+<p>(350.43 KB, 下载次数 Times of downloads: 2)</p>
+<p>2021-7-28 16:11 上传 Uploaded<br>
+点击下载<br>
+Click to download</p>
+<h4>58 楼</h4>
+<p>wuzhiyi 发表于 2021-7-28 16:12</p>
+<p>谢谢sob老师，我用高斯完成结构优化和振动分析的任务，然后用shermo来分析（Shermo opt_0.log -sclZPE 0. ...</p>
+<p>我用目前官网上的最新版本没发现你提到的问题</p>
+<p>Clipboard01.png (151.82 KB, 下载次数 Times of downloads: 281)</p>
+<p>下载附件 Download</p>
+<p>2021-7-29 03:08 上传 Uploaded</p>
+<h4>59 楼</h4>
+<p>sobereva 发表于 2021-7-29 03:09</p>
+<p>我用目前官网上的最新版本没发现你提到的问题</p>
+<p>谢谢，我发现linux是没有问题的，我自己在osx下编译的版本好像有这个问题。</p>
+<h4>60 楼</h4>
+<p>今日发布了Shermo 2.3版，新加入conc选项，在本文里也加入了一段相关说明</p>
+<p>实际上Shermo直接就提供了计算浓度改变导致的自由能变的功能，都省得自己手动算了，Shermo手册里有详述和计算公式。简单来说，你只要把settings.ini里的conc设为目标浓度即可。比如当前settings.ini里T=350、P=2，若你设conc= 1.5M，则Shermo运行后不仅会输出(350K,2atm)状态的自由能，还会输出delta-G of conc. change，这就是从当前(350K,2atm)状态转变为(350K,1.5M)状态的自由能变，之后输出的Gibbs free energy at specified concentration就是(350K,1.5M)状态的自由能。显然，若设T= 298.15且conc= 1M，最后Gibbs free energy at specified concentration给你的就是液相标准态自由能。此版本开始的Shermo还可以被molclus &gt;=1.9.9.6版调用来计算热力学数据。</p>
+<h4>61 楼</h4>
+<p>社长您好。我的高斯输出文件里有两个freq任务，前一个是低理论水平下的频率，后一个是高理论水平下的频率，再后面还有两个m052x/6-31g*的算溶解能的任务。如果想把第二个freq任务的结果交给Shermo处理，除了整个删掉前一个freq任务的输出，还有没有更方便的办法？</p>
+<h4>62 楼</h4>
+<p>Freeman 发表于 2021-10-23 16:15</p>
+<p>社长您好。我的高斯输出文件里有两个freq任务，前一个是低理论水平下的频率，后一个是高理论水平下的频率， ...</p>
+<p>这种做法太奇特，建议多个freq不要合在一个gjf里做</p>
+<h4>63 楼</h4>
+<p>老师好，48楼问了相似的问题，所以shermo程序是默认混用H,U的校正因子了吗，setting里没看到焓变的校正因子。谢谢老师</p>
+<p>“对HF或DFT，(4)和(5)的数值比较接近，混用也无妨”http://sobereva.com/221</p>
+<h4>64 楼</h4>
+<p>一条君 发表于 2021-11-3 22:04</p>
+<p>老师好，48楼问了相似的问题，所以shermo程序是默认混用H,U的校正因子了吗，setting里没看到焓变的校正因子 ...</p>
+<p>H和U就相差一个RT，显然不可能校正因子有差别</p>
+<p>分清楚焓和熵，http://sobereva.com/221里(5)明明是熵</p>
+<h4>65 楼</h4>
+<p>本帖最后由 xxzj 于 2021-12-25 14:38 编辑</p>
+<p>老师，我优化和频率计算时使用M06/6-31G* opt freq的关键词，然后单点使用的是M06/6-311+G** sp  scrf=(solvent=1,2-dichloroethane)，然后想使用shermo计算吉布斯自由能的值，是不是sclZPE、sclheat、sclS都设置为1就可以进行计算获得正确的数值，谢谢老师</p>
+<h4>66 楼</h4>
+<p>xxzj 发表于 2021-12-25 14:24</p>
+<p>老师，我优化和频率计算时使用M06/6-31G* opt freq的关键词，然后单点使用的是M06/6-311+G** sp  scrf=(sol ...</p>
+<p>这么用可以，但是用合适的sclZPE比不用原理上更好</p>
+<p>写sp关键词完全多余</p>
+<h4>67 楼</h4>
+<p>社长，我在使用Shermo计算甲烷的热力学数据的时候，根据Wavenumber和ZPE(kcal/mol)的转换关系，Wavenumber数是ZPE的两倍。即1.91816 kcal/mol对应的Wavenumber应该是670.8861，而Shermo输出的是1341.77。这是bug吗。</p>
+<h4>68 楼</h4>
+<p>forpaper 发表于 2022-3-22 10:47</p>
+<p>社长，我在使用Shermo计算甲烷的热力学数据的时候，根据Wavenumber和ZPE(kcal/mol)的转换关系，Wavenumber ...</p>
+<p>1341.77/219474.6363*627.5095/2=1.918 kcal/mol</p>
+<p>你既然都知道是2倍的关系，还不乘以2</p>
+<h4>69 楼</h4>
+<p>本帖最后由 一条君 于 2022-9-1 21:39 编辑</p>
+<p>老师，请问不同温度的热力学量的两种方法中，如果输入文件写了温度temperature=m ，那么后续settings.ini中T的数值也应该写成m吧，就是temperature=m 或 settings.ini中T的数值应该统一呀，谢谢</p>
+<h4>70 楼</h4>
+<p>一条君 发表于 2022-9-1 17:56</p>
+<p>老师，请问不同温度的热力学量的两种方法中，如果输入文件写了温度temperature=m ，那么后续settings.ini中 ...</p>
+<p>语义不明</p>
+<p>Gaussian输入文件里temperature不管设什么都不影响Shermo的计算结果</p>
+<p>因此也根本没必要用temperature关键词，Shermo输出的信息丰富得多得多</p>
+<h4>71 楼</h4>
+<p>一条君 发表于 2022-9-1 10:56</p>
+<p>老师，请问不同温度的热力学量的两种方法中，如果输入文件写了温度temperature=m ，那么后续settings.ini中 ...</p>
+<p>仔细看http://sobereva.com/423了解高斯里的temperature关键字都影响哪些结果，以及为什么不影响shermo的计算结果</p>
+<h4>72 楼</h4>
+<p>您好，Sob老师，您在贴中提到如下：指出Thermal correction to G代表当前我们设的350 K时的自由能的热校正量，它与电子能量的加和就是350 K下的自由能，即Sum of electronic energy and thermal correction to G后面的值，想问下您Sum of electronic energy and thermal correction to G直接就是350K下的自由能了吗，不需要额外进行零点能矫正了吗？Gaussian计算也会有类似的输出，这个问题一直困扰，故求助您，感谢。</p>
+<p>帖子中的相关描述内容：</p>
+<p>Thermal correction to U:     78.053 kJ/mol     18.655 kcal/mol   0.029729 a.u.</p>
+<p>Thermal correction to H:     80.963 kJ/mol     19.351 kcal/mol   0.030837 a.u.</p>
+<p>Thermal correction to G:      2.452 kJ/mol      0.586 kcal/mol   0.000934 a.u.</p>
+<p>Electronic energy:       -114.3338033 a.u.</p>
+<p>Sum of electronic energy and ZPE, namely U/H/G at 0 K:       -114.3074860 a.u.</p>
+<p>Sum of electronic energy and thermal correction to U:        -114.3040744 a.u.</p>
+<p>Sum of electronic energy and thermal correction to H:        -114.3029660 a.u.</p>
+<p>Sum of electronic energy and thermal correction to G:        -114.3328693 a.u.</p>
+<p>上面也给出了电子能量与热力学校正量的加和，这就是我们平时经常考察的热力学量了，包括内能、焓、自由能。比如此处的Thermal correction to G代表当前我们设的350 K时的自由能的热校正量，它与电子能量的加和就是350 K下的自由能，即Sum of electronic energy and thermal correction to G后面的值。而电子能量与ZPE相加，得到的是0 K下的内能/焓/自由能，即Sum of electronic energy and ZPE后面的值。</p>
+<h4>73 楼</h4>
+<p>杨俊清 发表于 2022-11-8 12:19</p>
+<p>您好，Sob老师，您在贴中提到如下：指出Thermal correction to G代表当前我们设的350 K时的自由能的热校正 ...</p>
+<p>ZPE包含在Thermal correction to G里面。把Shermo程序手册附录认真看了自然就全都明白了</p>
+<h4>74 楼</h4>
+<p>sobereva 发表于 2022-11-8 13:17</p>
+<p>ZPE包含在Thermal correction to G里面。把Shermo程序手册附录认真看了自然就全都明白了</p>
+<p>好的，非常感谢Sob老师</p>
+<h4>75 楼</h4>
+<p>请教社长，这里所说的温度是指分子所处的环境温度，还是分子的平动温度，还是分子的内态温度？</p>
+<h4>76 楼</h4>
+<p>wavefunction123 发表于 2023-6-14 15:19</p>
+<p>请教社长，这里所说的温度是指分子所处的环境温度，还是分子的平动温度，还是分子的内态温度？</p>
+<p>基于的是理想气体近似模型，没有确切的环境的概念，本身也没有环境分子</p>
+<p>平动、转动、振动态分布都对应相应温度</p>
+<h4>77 楼</h4>
+<p>sobereva 发表于 2023-6-16 11:03</p>
+<p>基于的是理想气体近似模型，没有确切的环境的概念，本身也没有环境分子</p>
+<p>平动、转动、振动态分布都对应相 ...</p>
+<p>谢谢</p>
+<h4>78 楼</h4>
+<p>老师您好，“本例涉及到的输入输出文件可以在这里下载：http://sobereva.com/attach/552/H2CO.zip”这个链接打不开，感谢老师！</p>
+<h4>79 楼</h4>
+<p>wangzh 发表于 2023-7-13 10:16</p>
+<p>老师您好，“本例涉及到的输入输出文件可以在这里下载：http://sobereva.com/attach/552/H2CO.zip”这个链 ...</p>
+<p>北京联通的网，能正常打开</p>
+<h4>80 楼</h4>
+<p>在教材以及文献中，压力都用小写p，而非大写，应该是IUPAC规定的。建议手册和程序中也相应改过来</p>
+<h4>81 楼</h4>
+<p>fineren 发表于 2023-7-26 22:40</p>
+<p>在教材以及文献中，压力都用小写p，而非大写，应该是IUPAC规定的。建议手册和程序中也相应改过来</p>
+<p>这叫Sobereva&#x27;s convention</p>
+<h4>82 楼</h4>
+<p>本帖最后由 jingetiema6112 于 2023-8-12 17:40 编辑</p>
+<p>卢老师您好，刚学习了这这篇文章。请问老师有些文献提及的 the standard molar heat capacity（ Cpm0）,   standard molar entropy （Sm0） and standard molar enthalpy （Hm0）等系列热力学数据分别对应输出文件中哪部分呢</p>
+<h4>83 楼</h4>
+<p>jingetiema6112 发表于 2023-8-10 19:25</p>
+<p>卢老师您好，刚学习了这这篇文章。请问老师有些文献提及的 the standard molar heat capacity（ Cpm0）,    ...</p>
+<p>Total CP</p>
+<p>Total S</p>
+<p>Sum of electronic energy and thermal correction to H</p>
+<h4>84 楼</h4>
+<p>sobereva 发表于 2023-8-10 23:22</p>
+<p>Total CP</p>
+<p>Total S</p>
+<p>Sum of electronic energy and thermal correction to H</p>
+<p>收到，感谢卢老师解答</p>
+<h4>85 楼</h4>
+<p>sobereva 发表于 2023-8-10 23:22</p>
+<p>Total CP</p>
+<p>Total S</p>
+<p>Sum of electronic energy and thermal correction to H</p>
+<p>卢老师，我还有一问，刚看了一篇文献，在298.15K下一个较大体系给出的the standard molar heat capacity（ Cpm0）,   standard molar entropy （Sm0） and standard molar enthalpy （Hm0）分别是263.25 J/mol/K,663.72J/mol/K和61.05kJ/mol。其中standard molar enthalpy （Hm0）的数值感到比较困惑，该文献中的化合物体系较大，数值才61.05kJ/mol；但是程序包中自带示例体系虽然比较小，Hm0部分却是-114.164548*2525.5   kJ/mol，为什么相差这么大？恳请老师指点。</p>
+<h4>86 楼</h4>
+<p>jingetiema6112 发表于 2023-8-11 06:06</p>
+<p>卢老师，我还有一问，刚看了一篇文献，在298.15K下一个较大体系给出的the standard molar heat capacity ...</p>
+<p>大概率是能量零点不同。例如DFT算孤立体系，能量零点一般是所有原子核和电子距离无穷远的态；DFT算周期性体系，视软件不同，可能和孤立体系用的零点是一样的，也可能以所有原子距离无穷远且没有自旋极化的态为零点；做实验的人常常以单质的能量/焓为零点（这样得到的结果就是生成焓）。如果零点不同，那么结果的量级自然天差地别，好比有的程序说你身高1.8m，有的程序说你头顶处的海拔是1001.8m，有的程序说你头顶距离一楼地面11.8m，都对，但是三个数彼此之间不能比</p>
+<h4>87 楼</h4>
+<p>wzkchem5 发表于 2023-8-11 15:16</p>
+<p>大概率是能量零点不同。例如DFT算孤立体系，能量零点一般是所有原子核和电子距离无穷远的态；DFT算周期性 ...</p>
+<p>感谢老师解答，我再学习下</p>
+<h4>88 楼</h4>
+<p>老师好，请问如何计算相互作用体系的热力学数据，是只针对复合物进行还是分别对单体进行的？</p>
+<p>计算相互作用能的公式是Eint=EAB-EA-EB，那么计算△G、△H、T△S的公式是否是△G=GAB-GA-GB、△H=HAB-HA-HB、T△S=TSAB-TSA-TSB？</p>
+<h4>89 楼</h4>
+<p>奥利给 发表于 2023-9-8 07:14</p>
+<p>老师好，请问如何计算相互作用体系的热力学数据，是只针对复合物进行还是分别对单体进行的？</p>
+<p>计算相互作用 ...</p>
+<p>是</p>
+<h4>90 楼</h4>
+<p>卢老师，在4.1中计算单点能为什么用CCSD(T)/cc-pVTZ而不用热力学组合方法G4MP2-6X呢，这两个区别在哪呢，或许这么说，精度哪个更好，请您指教，谢谢您~</p>
+<h4>91 楼</h4>
+<p>黑色桃花 发表于 2023-9-15 17:21</p>
+<p>卢老师，在4.1中计算单点能为什么用CCSD(T)/cc-pVTZ而不用热力学组合方法G4MP2-6X呢，这两个区别在哪呢，或 ...</p>
+<p>当前演示的是Shermo的使用，Shermo不支持处理热力学组合方法的输出文件，单独的第三方脚本的输出文件更不支持处理其输出</p>
+<p>对于G4MP2-6X算得动的范畴内，其结果比按此文基于CCSD(T)/cc-pVTZ算的结果大概率更好，因为当前只用了一个不很大的基组而已，都没做基组外推（如果文中的基组改用cc-pVQZ，结果就能很好）。</p>
+<p>另外，如果算自由能，而且碰到含显著低频的体系，G4(MP2)-6X大概率也不怎么样，因为其用的RRHO模型算的熵的合理性明显不及Shermo基于QRRHO算的</p>
+<h4>92 楼</h4>
+<p>老师有个小问题请教一下，在使用您《基于过渡态理论计算反应速率常数的Excel表格》中完整的Skodje-Truhlar方法计算透射系数时需要反应的正向势垒，即TS减去反应物的U(0)，但如果用Shermo计算热力学量时参数ilowfreq=3，此时没法输出U(0)，是不是就不能用完整的Skodje-Truhlar方法了？或者说要用完整的Skodje-Truhlar方法的话是不是应该用ilowfreq=2呢？</p>
+<h4>93 楼</h4>
+<p>MercuryLamp 发表于 2023-12-26 16:27</p>
+<p>老师有个小问题请教一下，在使用您《基于过渡态理论计算反应速率常数的Excel表格》中完整的Skodje-Truhlar ...</p>
+<p>是</p>
+<h4>94 楼</h4>
+<p>sobereva 发表于 2023-12-27 01:19</p>
+<p>是</p>
+<p>好的，谢谢老师</p>
+<h4>95 楼</h4>
+<p>Shermo 2.6发布，已支持读取xtb输出的文件计算热力学量</p>
+<p>http://bbs.keinsci.com/thread-43125-1-1.html</p>
+<h4>96 楼</h4>
+<p>用gaussian挂着orca振动分析的gaussian的.out文件也可以直接正常用来算热力学校正量么</p>
+<h4>97 楼</h4>
+<p>喵星大佬 发表于 2024-2-26 21:27</p>
+<p>用gaussian挂着orca振动分析的gaussian的.out文件也可以直接正常用来算热力学校正量么</p>
+<p>没测试过，原理上可以</p>
+<h4>98 楼</h4>
+<p>麻烦问一下sob老师，文中“值得一提的是，Shermo的settings.ini里有个imode设置，如果设为1，则平动和转动对热力学量的贡献会被忽略，这适合用于计算固体、表面、被吸附分子的热力学量，因为它们没有整体的平动和转动。”和“对柔性分子、弱相互作用团簇等含有低频的体系可以得到明显更合理的结果！！！”。这两句话有没有相关例子，不太明白怎么计算，我想算一些气相分子在SiC簇模型上的吸附热力学数据和速率常数相关内容，用Shermo能不能算。还是用另一篇文章里写的用Polyrate计算，Polyrate好像可以计算双分子和单分子反应，气相，固态，气-固界面反应。麻烦sob老师解惑@sobereva</p>
+<h4>99 楼</h4>
+<p>daanyueluo 发表于 2024-6-26 05:53</p>
+<p>麻烦问一下sob老师，文中“值得一提的是，Shermo的settings.ini里有个imode设置，如果设为1，则平动和转动 ...</p>
+<p>你知道你电脑上的Shermo装在哪个文件夹吗？</p>
+<p>你会用资源管理器找这个文件夹底下有没有settings.ini吗？</p>
+<p>你会右键用记事本打开settings.ini吗？</p>
+<p>你会找到有imode的那行，然后把那行的数字改成1，然后保存吗？</p>
+<p>这些你不可能不会，这就是为什么博文没有给例子，因为不需要给例子就知道怎么做。该改哪个文件的哪一行都告诉你了，难道还要告诉你怎么用资源管理器，怎么用记事本打开文件？</p>
+<h4>100 楼</h4>
+<p>wzkchem5 发表于 2024-6-26 18:59</p>
+<p>你知道你电脑上的Shermo装在哪个文件夹吗？</p>
+<p>你会用资源管理器找这个文件夹底下有没有settings.ini吗？</p>
+<p>...</p>
+<p>好的，谢谢！！！</p>
+<h4>101 楼</h4>
+<p>我想计算质谱测试时复合物形成的热力学量，是在473k，真空下，我校正时压强P=0可以算吗？</p>
+<h4>102 楼</h4>
+<p>wilely 发表于 2024-10-12 15:07</p>
+<p>我想计算质谱测试时复合物形成的热力学量，是在473k，真空下，我校正时压强P=0可以算吗？</p>
+<p>压力不可能设0，此时没法算平动对热力学量的贡献，看Shermo手册附录里的计算公式便知</p>
+<h4>103 楼</h4>
+<p>想请教一下老师，我目前在进行溶液中150个原子的有机分子笼和酸根阴离子体系的弱相互作用（C-H...O氢键）分析。我这个有机笼是柔性体系，因此酸根和有机笼结合时，有机笼必然会发生整体的变形。我目前需要搜索酸根在有机笼空腔的结合位点，同时我也要搜索有机笼和酸根结合后最稳定的构象。我参考您那个瑞德西韦的教程来跑我这个结构的动力学，最后选出了6个结构。我现在按照您帖子里的例子，如图2所示，将6个结构的几何优化+振动分析输出文件和高精度单点能，写在了一个list.txt文件里面.但是我把list.txt载入shermo里面的时候，如图1所示，shermo却提示找不到文件，可是我那个文件明明就在那里，请问是怎么回事呢？</p>
+<h4>104 楼</h4>
+<p>peter123 发表于 2025-5-7 15:51</p>
+<p>想请教一下老师，我目前在进行溶液中150个原子的有机分子笼和酸根阴离子体系的弱相互作用（C-H...O氢键）分 ...</p>
+<p>已经解决了，我把路径前后的双引号删除了以后就可以分析了</p>
+<h4>105 楼</h4>
+<p>本帖最后由 陈AG 于 2026-3-9 14:24 编辑</p>
+<p>sob老师，对柔性分子做构型搜索后，我选用十个能量最低的构型做opt freq ，然后再提高精度计算，然后通过4.2.3的例子就可以得到构型熵吗，得到的构型熵是文献定义的一样吗In-situ entropic ligand engineering enables high-efficiency quantum dot solar cells | Nature Communications</p>
+<h4>106 楼</h4>
+<p>陈AG 发表于 2026-3-9 14:14</p>
+<p>sob老师，对柔性分子做构型搜索后，我选用十个能量最低的构型做opt freq ，然后再提高精度计算，然后通过4. ...</p>
+<p>构象=conformation</p>
+<p>构型=configuration</p>
+<p>注意区分。当前语境是构象</p>
+<p>Shermo手册附录里直接给了构象熵的计算公式，手册里也明确给了构象熵的计算例子，手册里搜conformation entropy</p>
+<h4>107 楼</h4>
+<p>Shermo今日在官网http://sobereva.com/soft/shermo上更新了2.6.2版，解决了Gaussian输入文件里opt=calcall与freq关键词联用时Shermo会把两个子任务输出的振动频率全都载入的bug。</p>
+<h3>入库完整性评估</h3>
+<ul>
+<li>主帖全文收录</li>
+<li>全部回复完整收录</li>
+</ul>
+</body>
+</html>

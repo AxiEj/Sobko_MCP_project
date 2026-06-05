@@ -41,7 +41,7 @@ Multiwfn是极强大、非常灵活、使用特别广泛的做AIM分析的程序
 
 
 
-AIM在笔者讲授的量子化学波函数分析与Multiwfn程序培训班（http://www.keinsci.com/WFN）里有十分全面充分的讲解，是从零开始全面、完整学习AIM理论、分析和应用的绝佳途径。若想自己慢慢啃的话，笔者建议先把本帖后面笔者自己写的简明易懂的与AIM相关的博文看了，再看这些书籍、文献了解更多内容。
+AIM在笔者讲授的相关波函数分析与 Multiwfn 教程（[已省略培训课程链接]）里有十分全面充分的讲解，是从零开始全面、完整学习AIM理论、分析和应用的绝佳途径。若想自己慢慢啃的话，笔者建议先把本帖后面笔者自己写的简明易懂的与AIM相关的博文看了，再看这些书籍、文献了解更多内容。
 
 
 
@@ -49,7 +49,7 @@ AIM在笔者讲授的量子化学波函数分析与Multiwfn程序培训班（htt
 
 *The Quantum Theory of Atoms in Molecules-From Solid State to DNA and Drug Design(Matta,Boyd)：这本书的第一章最适合初学者最初学习AIM的基本概念。后面的章节介绍了AIM理论在各个领域的拓展，给出了很多实例，可以有选择性地阅读。
 
-*Some concepts in wavefunction analysis：是Multiwfn 2013年培训班中的幻灯片，后来又经过一些修订。AIM里的最重要的概念在里面都有涉及，从114页开始专门讲AIM拓扑分析和盆分析。
+*Some concepts in wavefunction analysis：是Multiwfn 2013年教程中的幻灯片，后来又经过一些修订。AIM里的最重要的概念在里面都有涉及，从114页开始专门讲AIM拓扑分析和盆分析。
 
 *Atoms in Molecules(from Encyclopedia of Computational Chemistry)、A quantum theory of molecular structure and its applications这两篇都是比较完整的AIM综述，推荐阅读。
 
@@ -358,7 +358,7 @@ cyh时代 发表于 2025-12-1 19:29
 
 老师，我想请问一下一般什么情况有必要用AIM分析呢，我看过您写的帖子，感觉虽然AIM理论比较明确，但实际化 ...
 
-成键分析有非常多的方式，AIM分析框架下能得到很多独有的信息，这不是几句话能说清楚的，在量子化学波函数分析与Multiwfn程序培训班（http://www.keinsci.com/WFN）里有非常全面的讲授。AIM分析是成键分析的重要分析方法，下文说了
+成键分析有非常多的方式，AIM分析框架下能得到很多独有的信息，这不是几句话能说清楚的，在相关波函数分析与 Multiwfn 教程（[已省略培训课程链接]）里有非常全面的讲授。AIM分析是成键分析的重要分析方法，下文说了
 
 Multiwfn支持的分析化学键的方法一览
 

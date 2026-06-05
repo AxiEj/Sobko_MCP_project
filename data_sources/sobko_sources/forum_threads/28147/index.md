@@ -81,7 +81,7 @@ https://onlinelibrary.wiley.com/share/author/H659SPFCDKPCSJUVG5YT?target=10.1002
 
 
 
-Multiwfn在化学键和弱相互作用分析上极为强大，有众多的功能，IGMH只是其中之一，各种方法汇总介绍见《Multiwfn支持的弱相互作用的分析方法概览》（http://sobereva.com/252）和《Multiwfn支持的分析化学键的方法一览》（http://sobereva.com/471）。在Multiwfn与波函数分析培训班（http://www.keinsci.com/workshop/WFN_content.html）里笔者也会做非常全面、系统性的讲解。很值得一提的是IRI是笔者提出的另一种相互作用图形化分析方法，已被很多文章使用，介绍见《使用IRI方法图形化考察化学体系中的化学键和弱相互作用》（http://sobereva.com/598），它和IGMH的用处既有共性又有互补性，这在后文将会看到。
+Multiwfn在化学键和弱相互作用分析上极为强大，有众多的功能，IGMH只是其中之一，各种方法汇总介绍见《Multiwfn支持的弱相互作用的分析方法概览》（http://sobereva.com/252）和《Multiwfn支持的分析化学键的方法一览》（http://sobereva.com/471）。在相关 Multiwfn 与波函数分析教程（[已省略培训课程链接]）里笔者也会做非常全面、系统性的讲解。很值得一提的是IRI是笔者提出的另一种相互作用图形化分析方法，已被很多文章使用，介绍见《使用IRI方法图形化考察化学体系中的化学键和弱相互作用》（http://sobereva.com/598），它和IGMH的用处既有共性又有互补性，这在后文将会看到。
 
 
 

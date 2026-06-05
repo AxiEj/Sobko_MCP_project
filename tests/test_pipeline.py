@@ -53,8 +53,8 @@ class PipelineSmokeTests(unittest.TestCase):
         self.assertEqual(counts["blog_post"], 580)
         self.assertEqual(counts["manual"], 1)
         self.assertEqual(counts["software_doc"], 1)
-        self.assertEqual(counts["forum_thread"], 26)
-        self.assertEqual(len(self.engine.sources), 608)
+        self.assertEqual(counts["forum_thread"], 35)
+        self.assertEqual(len(self.engine.sources), 617)
 
     def test_all_manifest_forum_threads_are_registered(self) -> None:
         """论坛 manifest 中的帖子必须全部进入 source registry。"""

@@ -3,8 +3,8 @@
   "provider": "local_hf",
   "model_name": "BAAI/bge-m3",
   "dimension": 1024,
-  "generated_at": "2026-06-05T18:47:24.174986+08:00",
-  "vector_count": 13485,
+  "generated_at": "2026-06-05T20:21:31.549004+08:00",
+  "vector_count": 14930,
   "format": "binary_f32_v1",
   "binary": {
     "format": "f32_row_major_v1",
@@ -13,10 +13,10 @@
     "dtype": "float32",
     "byte_order": "little",
     "shape": [
-      13485,
+      14930,
       1024
     ],
-    "bytes": 55234560
+    "bytes": 61153280
   },
   "shard_count": 0,
   "embedding_cache_config": {
@@ -31,9 +31,9 @@
     "encoder_revision": ""
   },
   "cache_stats": {
-    "reused": 13485,
-    "computed": 0,
-    "total": 13485
+    "reused": 14928,
+    "computed": 2,
+    "total": 14930
   },
   "shards": null
 }
