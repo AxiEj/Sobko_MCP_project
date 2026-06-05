@@ -1,6 +1,6 @@
 {
   "index_version": "2026.06.sobko.v1",
-  "generated_at": "2026-06-05T20:21:31.725761+08:00",
+  "generated_at": "2026-06-05T21:13:31.945759+08:00",
   "source_count": 617,
   "source_type_counts": {
     "blog_post": 580,
@@ -627,14 +627,14 @@
     "forum_thread:6020",
     "forum_thread:9878"
   ],
-  "chunk_count": 14930,
-  "image_count": 2580,
-  "bm25_doc_count": 14930,
+  "chunk_count": 14933,
+  "image_count": 2608,
+  "bm25_doc_count": 14933,
   "dense_available": true,
   "dense_reason": null,
-  "dense_vector_count": 14930,
+  "dense_vector_count": 14933,
   "dense_shard_count": 0,
-  "image_lookup_count": 2580,
+  "image_lookup_count": 2608,
   "rerank_enabled": false,
   "rerank_model_name": "dengcao/bge-reranker-v2-m3:latest"
 }

@@ -5,6 +5,7 @@ title: "使用molclus程序做团簇构型搜索和分子构象搜索"
 url: http://bbs.keinsci.com/thread-577-1-1.html
 date: "2014-11-01T00:00:00+08:00"
 source_type: forum_thread
+image_count: 8
 coverage: browser_verified_full_thread_text
 source_provider: wsl2_chrome_cdp_verified_session
 source_crawled_at: "2026-06-05T11:43:08.777Z"
@@ -5815,5 +5816,27 @@ xiaotiyang 发表于 2026-4-2 14:51
 
 ## 入库完整性评估
 
+- 图片处理：本地保留 8 张附件图，并在下方集中列出；未逐一重定位到具体楼层。
+
 - 主帖全文收录
 - 全部回复完整收录
+
+### 本地附件图片
+
+> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。
+
+![577 附件图 1](images/img_1.png)
+
+![577 附件图 2](images/img_2.png)
+
+![577 附件图 3](images/img_3.png)
+
+![577 附件图 4](images/img_4.jpg)
+
+![577 附件图 5](images/img_9.png)
+
+![577 附件图 6](images/img_11.png)
+
+![577 附件图 7](images/img_13.png)
+
+![577 附件图 8](images/img_14.png)

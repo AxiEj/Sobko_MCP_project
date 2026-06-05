@@ -5,6 +5,7 @@ title: "谈谈有小虚频时热力学量的计算"
 url: http://bbs.keinsci.com/thread-43116-1-1.html
 date: "2023-10-01T00:00:00+08:00"
 source_type: forum_thread
+image_count: 4
 coverage: browser_verified_full_thread_text
 source_provider: wsl2_chrome_cdp_verified_session
 source_crawled_at: "2026-06-05T11:54:47.513Z"
@@ -242,5 +243,19 @@ ionexchangeC 发表于 2024-2-9 22:22
 
 ## 入库完整性评估
 
+- 图片处理：本地保留 4 张附件图，并在下方集中列出；未逐一重定位到具体楼层。
+
 - 主帖全文收录
 - 全部回复完整收录
+
+### 本地附件图片
+
+> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。
+
+![43116 附件图 1](images/img_1.png)
+
+![43116 附件图 2](images/img_2.png)
+
+![43116 附件图 3](images/img_3.png)
+
+![43116 附件图 4](images/img_4.png)

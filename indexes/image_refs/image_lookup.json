@@ -39948,6 +39948,40 @@
     ],
     "exists": true
   },
+  "forum_thread:17494#img-001": {
+    "image_id": "forum_thread:17494#img-001",
+    "source_id": "forum_thread:17494",
+    "chunk_id": "forum_thread:17494#chunk-0147",
+    "alt": "17494 附件图 1",
+    "caption": "17494 附件图 1",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/17494/images/img_1.png",
+    "relative_path": "images/img_1.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-17494-1-1.html",
+    "section_path": [
+      "使用Shermo结合量子化学程序方便地计算分子的各种热力学数据",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:17494#img-002": {
+    "image_id": "forum_thread:17494#img-002",
+    "source_id": "forum_thread:17494",
+    "chunk_id": "forum_thread:17494#chunk-0147",
+    "alt": "17494 附件图 2",
+    "caption": "17494 附件图 2",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/17494/images/img_2.jpg",
+    "relative_path": "images/img_2.jpg",
+    "canonical_url": "http://bbs.keinsci.com/thread-17494-1-1.html",
+    "section_path": [
+      "使用Shermo结合量子化学程序方便地计算分子的各种热力学数据",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
   "forum_thread:23457#img-001": {
     "image_id": "forum_thread:23457#img-001",
     "source_id": "forum_thread:23457",
@@ -40290,9 +40324,9 @@
     "chunk_id": "forum_thread:2369#chunk-0161",
     "alt": "2369 附件图 1",
     "caption": "2369 附件图 1",
-    "nearby_text": "> 原帖正文记录了多处附件说明；本地目前只保留以下 8 张图片，其余附件未完整获取。",
-    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_20.jpg",
-    "relative_path": "images/img_20.jpg",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_1.png",
+    "relative_path": "images/img_1.png",
     "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
     "section_path": [
       "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
@@ -40307,9 +40341,9 @@
     "chunk_id": "forum_thread:2369#chunk-0161",
     "alt": "2369 附件图 2",
     "caption": "2369 附件图 2",
-    "nearby_text": "> 原帖正文记录了多处附件说明；本地目前只保留以下 8 张图片，其余附件未完整获取。",
-    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_22.png",
-    "relative_path": "images/img_22.png",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_3.png",
+    "relative_path": "images/img_3.png",
     "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
     "section_path": [
       "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
@@ -40324,9 +40358,9 @@
     "chunk_id": "forum_thread:2369#chunk-0161",
     "alt": "2369 附件图 3",
     "caption": "2369 附件图 3",
-    "nearby_text": "> 原帖正文记录了多处附件说明；本地目前只保留以下 8 张图片，其余附件未完整获取。",
-    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_23.png",
-    "relative_path": "images/img_23.png",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_5.png",
+    "relative_path": "images/img_5.png",
     "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
     "section_path": [
       "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
@@ -40341,9 +40375,9 @@
     "chunk_id": "forum_thread:2369#chunk-0161",
     "alt": "2369 附件图 4",
     "caption": "2369 附件图 4",
-    "nearby_text": "> 原帖正文记录了多处附件说明；本地目前只保留以下 8 张图片，其余附件未完整获取。",
-    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_24.png",
-    "relative_path": "images/img_24.png",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_6.gif",
+    "relative_path": "images/img_6.gif",
     "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
     "section_path": [
       "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
@@ -40358,9 +40392,9 @@
     "chunk_id": "forum_thread:2369#chunk-0161",
     "alt": "2369 附件图 5",
     "caption": "2369 附件图 5",
-    "nearby_text": "> 原帖正文记录了多处附件说明；本地目前只保留以下 8 张图片，其余附件未完整获取。",
-    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_25.png",
-    "relative_path": "images/img_25.png",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_7.gif",
+    "relative_path": "images/img_7.gif",
     "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
     "section_path": [
       "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
@@ -40375,9 +40409,9 @@
     "chunk_id": "forum_thread:2369#chunk-0161",
     "alt": "2369 附件图 6",
     "caption": "2369 附件图 6",
-    "nearby_text": "> 原帖正文记录了多处附件说明；本地目前只保留以下 8 张图片，其余附件未完整获取。",
-    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_26.png",
-    "relative_path": "images/img_26.png",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_8.png",
+    "relative_path": "images/img_8.png",
     "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
     "section_path": [
       "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
@@ -40392,9 +40426,9 @@
     "chunk_id": "forum_thread:2369#chunk-0161",
     "alt": "2369 附件图 7",
     "caption": "2369 附件图 7",
-    "nearby_text": "> 原帖正文记录了多处附件说明；本地目前只保留以下 8 张图片，其余附件未完整获取。",
-    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_27.png",
-    "relative_path": "images/img_27.png",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_12.gif",
+    "relative_path": "images/img_12.gif",
     "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
     "section_path": [
       "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
@@ -40409,9 +40443,247 @@
     "chunk_id": "forum_thread:2369#chunk-0161",
     "alt": "2369 附件图 8",
     "caption": "2369 附件图 8",
-    "nearby_text": "> 原帖正文记录了多处附件说明；本地目前只保留以下 8 张图片，其余附件未完整获取。",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_13.jpg",
+    "relative_path": "images/img_13.jpg",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-009": {
+    "image_id": "forum_thread:2369#img-009",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 9",
+    "caption": "2369 附件图 9",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_17.png",
+    "relative_path": "images/img_17.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-010": {
+    "image_id": "forum_thread:2369#img-010",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 10",
+    "caption": "2369 附件图 10",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_18.png",
+    "relative_path": "images/img_18.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-011": {
+    "image_id": "forum_thread:2369#img-011",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 11",
+    "caption": "2369 附件图 11",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_19.png",
+    "relative_path": "images/img_19.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-012": {
+    "image_id": "forum_thread:2369#img-012",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 12",
+    "caption": "2369 附件图 12",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_20.jpg",
+    "relative_path": "images/img_20.jpg",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-013": {
+    "image_id": "forum_thread:2369#img-013",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 13",
+    "caption": "2369 附件图 13",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_22.png",
+    "relative_path": "images/img_22.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-014": {
+    "image_id": "forum_thread:2369#img-014",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 14",
+    "caption": "2369 附件图 14",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_23.png",
+    "relative_path": "images/img_23.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-015": {
+    "image_id": "forum_thread:2369#img-015",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 15",
+    "caption": "2369 附件图 15",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_24.png",
+    "relative_path": "images/img_24.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-016": {
+    "image_id": "forum_thread:2369#img-016",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 16",
+    "caption": "2369 附件图 16",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_25.png",
+    "relative_path": "images/img_25.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-017": {
+    "image_id": "forum_thread:2369#img-017",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 17",
+    "caption": "2369 附件图 17",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_26.png",
+    "relative_path": "images/img_26.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-018": {
+    "image_id": "forum_thread:2369#img-018",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 18",
+    "caption": "2369 附件图 18",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_27.png",
+    "relative_path": "images/img_27.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-019": {
+    "image_id": "forum_thread:2369#img-019",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 19",
+    "caption": "2369 附件图 19",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
     "path": "data_sources/sobko_sources/forum_threads/2369/images/img_28.jpg",
     "relative_path": "images/img_28.jpg",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-020": {
+    "image_id": "forum_thread:2369#img-020",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 20",
+    "caption": "2369 附件图 20",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_29.png",
+    "relative_path": "images/img_29.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-021": {
+    "image_id": "forum_thread:2369#img-021",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 21",
+    "caption": "2369 附件图 21",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_30.png",
+    "relative_path": "images/img_30.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
+    "section_path": [
+      "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:2369#img-022": {
+    "image_id": "forum_thread:2369#img-022",
+    "source_id": "forum_thread:2369",
+    "chunk_id": "forum_thread:2369#chunk-0161",
+    "alt": "2369 附件图 22",
+    "caption": "2369 附件图 22",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/2369/images/img_31.jpg",
+    "relative_path": "images/img_31.jpg",
     "canonical_url": "http://bbs.keinsci.com/thread-2369-1-1.html",
     "section_path": [
       "genmer：生成团簇初始构型结合molclus做团簇结构搜索的超便捷工具",
@@ -41188,6 +41460,74 @@
     ],
     "exists": true
   },
+  "forum_thread:43116#img-001": {
+    "image_id": "forum_thread:43116#img-001",
+    "source_id": "forum_thread:43116",
+    "chunk_id": "forum_thread:43116#chunk-0020",
+    "alt": "43116 附件图 1",
+    "caption": "43116 附件图 1",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/43116/images/img_1.png",
+    "relative_path": "images/img_1.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-43116-1-1.html",
+    "section_path": [
+      "谈谈有小虚频时热力学量的计算",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:43116#img-002": {
+    "image_id": "forum_thread:43116#img-002",
+    "source_id": "forum_thread:43116",
+    "chunk_id": "forum_thread:43116#chunk-0020",
+    "alt": "43116 附件图 2",
+    "caption": "43116 附件图 2",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/43116/images/img_2.png",
+    "relative_path": "images/img_2.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-43116-1-1.html",
+    "section_path": [
+      "谈谈有小虚频时热力学量的计算",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:43116#img-003": {
+    "image_id": "forum_thread:43116#img-003",
+    "source_id": "forum_thread:43116",
+    "chunk_id": "forum_thread:43116#chunk-0020",
+    "alt": "43116 附件图 3",
+    "caption": "43116 附件图 3",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/43116/images/img_3.png",
+    "relative_path": "images/img_3.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-43116-1-1.html",
+    "section_path": [
+      "谈谈有小虚频时热力学量的计算",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:43116#img-004": {
+    "image_id": "forum_thread:43116#img-004",
+    "source_id": "forum_thread:43116",
+    "chunk_id": "forum_thread:43116#chunk-0020",
+    "alt": "43116 附件图 4",
+    "caption": "43116 附件图 4",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/43116/images/img_4.png",
+    "relative_path": "images/img_4.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-43116-1-1.html",
+    "section_path": [
+      "谈谈有小虚频时热力学量的计算",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
   "forum_thread:45783#img-001": {
     "image_id": "forum_thread:45783#img-001",
     "source_id": "forum_thread:45783",
@@ -41457,6 +41797,142 @@
     "section_path": [
       "使用Multiwfn观看分子轨道",
       "图片附件"
+    ],
+    "exists": true
+  },
+  "forum_thread:577#img-001": {
+    "image_id": "forum_thread:577#img-001",
+    "source_id": "forum_thread:577",
+    "chunk_id": "forum_thread:577#chunk-0537",
+    "alt": "577 附件图 1",
+    "caption": "577 附件图 1",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/577/images/img_1.png",
+    "relative_path": "images/img_1.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-577-1-1.html",
+    "section_path": [
+      "使用molclus程序做团簇构型搜索和分子构象搜索",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:577#img-002": {
+    "image_id": "forum_thread:577#img-002",
+    "source_id": "forum_thread:577",
+    "chunk_id": "forum_thread:577#chunk-0537",
+    "alt": "577 附件图 2",
+    "caption": "577 附件图 2",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/577/images/img_2.png",
+    "relative_path": "images/img_2.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-577-1-1.html",
+    "section_path": [
+      "使用molclus程序做团簇构型搜索和分子构象搜索",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:577#img-003": {
+    "image_id": "forum_thread:577#img-003",
+    "source_id": "forum_thread:577",
+    "chunk_id": "forum_thread:577#chunk-0537",
+    "alt": "577 附件图 3",
+    "caption": "577 附件图 3",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/577/images/img_3.png",
+    "relative_path": "images/img_3.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-577-1-1.html",
+    "section_path": [
+      "使用molclus程序做团簇构型搜索和分子构象搜索",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:577#img-004": {
+    "image_id": "forum_thread:577#img-004",
+    "source_id": "forum_thread:577",
+    "chunk_id": "forum_thread:577#chunk-0537",
+    "alt": "577 附件图 4",
+    "caption": "577 附件图 4",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/577/images/img_4.jpg",
+    "relative_path": "images/img_4.jpg",
+    "canonical_url": "http://bbs.keinsci.com/thread-577-1-1.html",
+    "section_path": [
+      "使用molclus程序做团簇构型搜索和分子构象搜索",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:577#img-005": {
+    "image_id": "forum_thread:577#img-005",
+    "source_id": "forum_thread:577",
+    "chunk_id": "forum_thread:577#chunk-0537",
+    "alt": "577 附件图 5",
+    "caption": "577 附件图 5",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/577/images/img_9.png",
+    "relative_path": "images/img_9.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-577-1-1.html",
+    "section_path": [
+      "使用molclus程序做团簇构型搜索和分子构象搜索",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:577#img-006": {
+    "image_id": "forum_thread:577#img-006",
+    "source_id": "forum_thread:577",
+    "chunk_id": "forum_thread:577#chunk-0537",
+    "alt": "577 附件图 6",
+    "caption": "577 附件图 6",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/577/images/img_11.png",
+    "relative_path": "images/img_11.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-577-1-1.html",
+    "section_path": [
+      "使用molclus程序做团簇构型搜索和分子构象搜索",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:577#img-007": {
+    "image_id": "forum_thread:577#img-007",
+    "source_id": "forum_thread:577",
+    "chunk_id": "forum_thread:577#chunk-0537",
+    "alt": "577 附件图 7",
+    "caption": "577 附件图 7",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/577/images/img_13.png",
+    "relative_path": "images/img_13.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-577-1-1.html",
+    "section_path": [
+      "使用molclus程序做团簇构型搜索和分子构象搜索",
+      "入库完整性评估",
+      "本地附件图片"
+    ],
+    "exists": true
+  },
+  "forum_thread:577#img-008": {
+    "image_id": "forum_thread:577#img-008",
+    "source_id": "forum_thread:577",
+    "chunk_id": "forum_thread:577#chunk-0537",
+    "alt": "577 附件图 8",
+    "caption": "577 附件图 8",
+    "nearby_text": "> 本节集中列出本地保留图片，便于 MCP 图片索引；不改变楼层正文。",
+    "path": "data_sources/sobko_sources/forum_threads/577/images/img_14.png",
+    "relative_path": "images/img_14.png",
+    "canonical_url": "http://bbs.keinsci.com/thread-577-1-1.html",
+    "section_path": [
+      "使用molclus程序做团簇构型搜索和分子构象搜索",
+      "入库完整性评估",
+      "本地附件图片"
     ],
     "exists": true
   },
