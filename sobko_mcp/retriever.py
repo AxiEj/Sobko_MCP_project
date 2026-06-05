@@ -6,6 +6,9 @@ import contextlib
 import json
 import math
 import os
+import subprocess
+import sys
+import time
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -140,15 +143,18 @@ class OllamaClient:
         服务不可达、API key 缺失、模型缺失、接口不存在或 JSON 形状不兼容时抛出 `RuntimeError`，上层会降级。
     """
 
-    def __init__(self, config: RagConfig):
+    def __init__(self, config: RagConfig, *, allow_daemon: bool = True):
         self.config = config
+        self.allow_daemon = allow_daemon
         self.timeout = max(10, config.request_timeout)
         self._embedding_base_url: str | None = None
         self._rerank_base_url: str | None = None
         self._embedding_ping_status: Optional[tuple[bool, str]] = None
         self._rerank_ping_status: Optional[tuple[bool, str]] = None
+        self._embedding_daemon_status: Optional[tuple[bool, str]] = None
         self._local_embedding_tokenizer = None
         self._local_embedding_model = None
+        self._local_embedding_model_name: str | None = None
         self._local_embedding_device: str | None = None
 
     def _candidate_base_urls(self, kind: str) -> List[str]:
@@ -212,6 +218,111 @@ class OllamaClient:
             return int(env_value)
         return self.config.embedding_dimensions
 
+    def _env_bool(self, name: str, default: bool) -> bool:
+        """Parse a boolean environment override."""
+
+        value = os.environ.get(name)
+        if value is None:
+            return default
+        return value.strip().lower() in {"1", "true", "yes", "on"}
+
+    def _embedding_daemon_enabled(self) -> bool:
+        """Return whether local_hf embeddings should prefer the shared daemon."""
+
+        if not self.allow_daemon:
+            return False
+        return self._env_bool("SOBKO_EMBEDDING_DAEMON_ENABLED", bool(self.config.embedding_daemon_enabled))
+
+    def _embedding_daemon_required(self) -> bool:
+        """Return whether local_hf embeddings must use the shared daemon."""
+
+        return self._env_bool("SOBKO_EMBEDDING_DAEMON_REQUIRED", bool(self.config.embedding_daemon_required))
+
+    def _embedding_daemon_autostart(self) -> bool:
+        """Return whether MCP may start the shared embedding daemon when absent."""
+
+        return self._env_bool("SOBKO_EMBEDDING_DAEMON_AUTOSTART", bool(self.config.embedding_daemon_autostart))
+
+    def _embedding_daemon_base_url(self) -> str:
+        """Return the shared embedding daemon base URL."""
+
+        return (os.environ.get("SOBKO_EMBEDDING_DAEMON_URL") or self.config.embedding_daemon_base_url).rstrip("/")
+
+    def _daemon_url(self, endpoint: str) -> str:
+        """Join daemon base URL and endpoint."""
+
+        normalized_endpoint = endpoint if endpoint.startswith("/") else f"/{endpoint}"
+        return f"{self._embedding_daemon_base_url()}{normalized_endpoint}"
+
+    def _embedding_daemon_available(self) -> tuple[bool, str]:
+        """Check whether the shared embedding daemon is reachable."""
+
+        if not self._embedding_daemon_enabled():
+            return False, "embedding daemon disabled"
+        if self._embedding_daemon_status and self._embedding_daemon_status[0]:
+            return self._embedding_daemon_status
+        ok, reason = self._probe_embedding_daemon()
+        if ok:
+            return True, reason
+        if self._embedding_daemon_autostart():
+            start_reason = self._start_embedding_daemon()
+            ok, reason = self._probe_embedding_daemon(wait_seconds=8)
+            if ok:
+                return True, reason
+            return False, f"{reason}; autostart={start_reason}"
+        return False, reason
+
+    def _probe_embedding_daemon(self, *, wait_seconds: float = 0) -> tuple[bool, str]:
+        """Probe daemon health, optionally waiting for startup."""
+
+        deadline = time.time() + max(0.0, wait_seconds)
+        last_error = "unknown"
+        while True:
+            try:
+                with request.urlopen(self._daemon_url("/health"), timeout=2) as response:
+                    status_code = response.status
+                    text = response.read().decode("utf-8")
+                if status_code != 200:
+                    last_error = f"HTTP {status_code}"
+                else:
+                    data = json.loads(text)
+                    if data.get("status") == "ok":
+                        self._embedding_daemon_status = (True, "ok")
+                        return self._embedding_daemon_status
+                    last_error = f"health status={data.get('status')}"
+            except Exception as exc:
+                last_error = str(exc)
+            if time.time() >= deadline:
+                self._embedding_daemon_status = None
+                return False, last_error
+            time.sleep(0.25)
+
+    def _start_embedding_daemon(self) -> str:
+        """Start the shared embedding daemon in the project directory."""
+
+        try:
+            project_root = Path(__file__).resolve().parents[1]
+            logs_dir = project_root / ".omx" / "logs"
+            state_dir = project_root / ".omx" / "state"
+            logs_dir.mkdir(parents=True, exist_ok=True)
+            state_dir.mkdir(parents=True, exist_ok=True)
+            log_path = logs_dir / "sobko-embedding-daemon.log"
+            pid_path = state_dir / "sobko-embedding-daemon.pid"
+            command = [sys.executable, str(project_root / "scripts" / "run_embedding_daemon.py")]
+            with log_path.open("ab") as log_handle:
+                proc = subprocess.Popen(
+                    command,
+                    cwd=str(project_root),
+                    stdin=subprocess.DEVNULL,
+                    stdout=log_handle,
+                    stderr=subprocess.STDOUT,
+                    start_new_session=True,
+                )
+            pid_path.write_text(str(proc.pid), encoding="utf-8")
+            return f"started pid={proc.pid}"
+        except Exception as exc:
+            return f"failed: {exc}"
+
     def embedding_available(self) -> tuple[bool, str]:
         """检查 embedding provider 是否具备最小可调用条件。
 
@@ -235,6 +346,12 @@ class OllamaClient:
                 return True, "ok"
             return False, "OpenAI embedding 需要设置 SOBKO_OPENAI_API_KEY 或 OPENAI_API_KEY。"
         if provider in {"local_hf", "local"}:
+            if self._embedding_daemon_enabled():
+                ok, reason = self._embedding_daemon_available()
+                if ok:
+                    return True, "ok"
+                if self._embedding_daemon_required():
+                    return False, f"embedding daemon required but unavailable: {reason}"
             try:
                 import torch  # noqa: F401
                 from transformers import AutoModel, AutoTokenizer  # noqa: F401
@@ -427,6 +544,33 @@ class OllamaClient:
         except Exception as exc:
             raise RuntimeError(f"调用 OpenAI embeddings 失败: {exc}") from exc
 
+    def _post_daemon_embeddings(self, texts: Sequence[str], model_name: str) -> List[List[float]]:
+        """Call the shared local embedding daemon."""
+
+        body = json.dumps({"model": model_name, "input": list(texts)}).encode("utf-8")
+        http_request = request.Request(
+            self._daemon_url("/api/embed"),
+            data=body,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with request.urlopen(http_request, timeout=self.timeout) as response:
+                text = response.read().decode("utf-8")
+            data = json.loads(text)
+        except error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")[:240]
+            raise RuntimeError(f"embedding daemon HTTP {exc.code}: {detail}") from exc
+        except json.JSONDecodeError as exc:
+            raise RuntimeError(f"embedding daemon 返回非法 JSON: {exc}") from exc
+        except Exception as exc:
+            raise RuntimeError(f"调用 embedding daemon 失败: {exc}") from exc
+        if isinstance(data.get("embeddings"), list):
+            return data["embeddings"]
+        if isinstance(data.get("embedding"), list):
+            return [data["embedding"]]
+        raise RuntimeError("embedding daemon 返回格式不兼容，缺少 embeddings/embedding 字段。")
+
     def _embed_texts_local_hf(self, texts: Sequence[str], model_name: str) -> List[List[float]]:
         """使用本地 HuggingFace encoder 生成 embedding。
 
@@ -450,7 +594,11 @@ class OllamaClient:
         except Exception as exc:
             raise RuntimeError(f"local_hf embedding 需要安装 transformers 和 torch: {exc}") from exc
 
-        if self._local_embedding_tokenizer is None or self._local_embedding_model is None:
+        if (
+            self._local_embedding_tokenizer is None
+            or self._local_embedding_model is None
+            or self._local_embedding_model_name != model_name
+        ):
             try:
                 os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
                 os.environ.setdefault("TRANSFORMERS_NO_ADVISORY_WARNINGS", "1")
@@ -459,6 +607,7 @@ class OllamaClient:
                     with contextlib.redirect_stdout(devnull), contextlib.redirect_stderr(devnull):
                         self._local_embedding_tokenizer = AutoTokenizer.from_pretrained(model_name)
                         self._local_embedding_model = AutoModel.from_pretrained(model_name)
+                        self._local_embedding_model_name = model_name
             except Exception as exc:
                 raise RuntimeError(f"加载本地 embedding 模型失败：{model_name}: {exc}") from exc
             requested_device = os.environ.get("SOBKO_LOCAL_EMBEDDING_DEVICE")
@@ -517,7 +666,19 @@ class OllamaClient:
 
         provider = self._embedding_provider()
         if provider in {"local_hf", "local"}:
-            return self._embed_texts_local_hf(texts, self._embedding_model(model))
+            model_name = self._embedding_model(model)
+            if self._embedding_daemon_enabled():
+                ok, reason = self._embedding_daemon_available()
+                if ok:
+                    try:
+                        return self._post_daemon_embeddings(texts, model_name)
+                    except Exception as exc:
+                        self._embedding_daemon_status = None
+                        if self._embedding_daemon_required():
+                            raise RuntimeError(f"共享 embedding daemon 不可用: {exc}") from exc
+                elif self._embedding_daemon_required():
+                    raise RuntimeError(f"共享 embedding daemon 不可用: {reason}")
+            return self._embed_texts_local_hf(texts, model_name)
         if provider == "openai":
             payload: Dict[str, Any] = {
                 "model": self._embedding_model(model),
@@ -749,19 +910,19 @@ class LexicalIndex:
 
 
 class DenseIndex:
-    """dense embedding 分片索引。"""
+    """dense embedding 索引，优先使用 float32 二进制矩阵。"""
 
     def __init__(self, layout: ProjectLayout):
-        """加载 dense 索引元数据和分片。
+        """加载 dense 索引元数据。
 
         功能目的：
-            支持 GitHub 友好的 `<50 MB` embedding 分片，而不是单个巨大 JSON。
+            优先用 mmap 加载 `vectors.f32`，避免把向量展开成 Python list；兼容旧 JSONL 分片。
         输入参数：
             layout：项目目录布局。
         返回值：
             `DenseIndex` 实例。
         关键流程：
-            优先读取 `indexes/dense/metadata.json` 和 `shards/*.jsonl`；兼容旧式 `chunk_embeddings.json`。
+            优先读取二进制矩阵；若不存在则读取 `shards/*.jsonl`；兼容旧式 `chunk_embeddings.json`。
         可能报错或边界情况：
             没有 dense 索引时 `available=False`，检索层自动退回 BM25。
         """
@@ -769,6 +930,8 @@ class DenseIndex:
         self.layout = layout
         self.metadata: Dict[str, Any] = {}
         self.vectors: Dict[str, List[float]] = {}
+        self.binary_vectors: Any = None
+        self.chunk_to_row: Dict[str, int] = {}
         self.available = False
         metadata_path = layout.dense_dir / "metadata.json"
         old_path = layout.dense_dir / "chunk_embeddings.json"
@@ -776,7 +939,10 @@ class DenseIndex:
             self.metadata = read_json(metadata_path)
             self.available = bool(self.metadata.get("available"))
             if self.available:
-                self._load_shards()
+                if isinstance(self.metadata.get("binary"), dict):
+                    self._load_binary()
+                elif self.metadata.get("shards"):
+                    self._load_shards()
         elif old_path.exists():
             payload = read_json(old_path)
             self.metadata = {key: value for key, value in payload.items() if key != "vectors"}
@@ -786,11 +952,55 @@ class DenseIndex:
             status_path = layout.dense_dir / "status.json"
             self.metadata = read_json(status_path) if status_path.exists() else {"available": False, "reason": "dense 索引不存在。"}
 
-    def _load_shards(self) -> None:
-        """加载 dense JSONL 分片。
+    def has_vectors(self) -> bool:
+        """Return whether any dense vector backend is loaded."""
+
+        return self.binary_vectors is not None or bool(self.vectors)
+
+    def _load_binary(self) -> None:
+        """加载 float32 二进制 dense 矩阵。
 
         功能目的：
-            将分片里的 `chunk_id/vector` 记录读入内存，用于实时余弦相似度计算。
+            用 numpy memmap 延迟映射 `vectors.f32`，显著降低 MCP 进程常驻内存。
+        输入参数：
+            无，使用 metadata 中的 binary 描述。
+        返回值：
+            无。
+        关键流程：
+            读取 `chunk_records.json` 建立 `chunk_id -> row` 映射；向量矩阵以只读 memmap 打开。
+        可能报错或边界情况：
+            numpy 不可用或二进制产物缺失会抛出错误，提示迁移包不完整。
+        """
+
+        import numpy as np
+
+        binary = self.metadata["binary"]
+        records_path = self.layout.dense_dir / str(binary["records_path"])
+        vectors_path = self.layout.dense_dir / str(binary["vectors_path"])
+        records_payload = read_json(records_path)
+        records = records_payload.get("records") if isinstance(records_payload, dict) else records_payload
+        if not isinstance(records, list):
+            raise RuntimeError(f"dense chunk records 格式不兼容：{records_path}")
+        shape = binary.get("shape") or [len(records), self.metadata.get("dimension")]
+        row_count = int(shape[0])
+        dimension = int(shape[1])
+        expected_bytes = row_count * dimension * 4
+        actual_bytes = vectors_path.stat().st_size
+        if actual_bytes != expected_bytes:
+            raise RuntimeError(f"dense binary 大小不匹配：expected={expected_bytes} actual={actual_bytes}")
+        self.binary_vectors = np.memmap(vectors_path, dtype="<f4", mode="r", shape=(row_count, dimension))
+        self.chunk_to_row = {
+            str(record["chunk_id"]): int(record.get("row", index))
+            for index, record in enumerate(records)
+            if record.get("chunk_id") is not None
+        }
+        self.available = bool(self.chunk_to_row)
+
+    def _load_shards(self) -> None:
+        """加载旧 dense JSONL 分片。
+
+        功能目的：
+            兼容旧迁移包；新索引默认不再使用 JSONL 分片。
         输入参数：
             无，使用实例 metadata。
         返回值：
@@ -811,6 +1021,43 @@ class DenseIndex:
                     record = json.loads(line)
                     self.vectors[record["chunk_id"]] = record["vector"]
         self.available = bool(self.vectors)
+
+    def score(self, query_vector: Sequence[float], candidate_ids: Sequence[str]) -> Dict[str, float]:
+        """计算 query 向量与候选 chunk 的 cosine 相似度。"""
+
+        if self.binary_vectors is not None:
+            return self._score_binary(query_vector, candidate_ids)
+        scores: Dict[str, float] = {}
+        for chunk_id in candidate_ids:
+            vector = self.vectors.get(chunk_id)
+            if vector:
+                scores[chunk_id] = _cosine_similarity(query_vector, vector)
+        return scores
+
+    def _score_binary(self, query_vector: Sequence[float], candidate_ids: Sequence[str]) -> Dict[str, float]:
+        """用 mmap 矩阵批量计算 cosine 相似度。"""
+
+        import numpy as np
+
+        pairs = [(chunk_id, self.chunk_to_row[chunk_id]) for chunk_id in candidate_ids if chunk_id in self.chunk_to_row]
+        if not pairs:
+            return {}
+        query = np.asarray(query_vector, dtype="<f4")
+        query_norm = float(np.linalg.norm(query))
+        if query_norm <= 1e-12:
+            return {}
+        rows = np.asarray([row for _, row in pairs], dtype=np.int64)
+        matrix = self.binary_vectors[rows]
+        dots = matrix @ query
+        row_norms = np.linalg.norm(matrix, axis=1)
+        denominator = row_norms * query_norm
+        values = np.divide(
+            dots,
+            denominator,
+            out=np.zeros_like(dots, dtype=np.float32),
+            where=denominator > 1e-12,
+        )
+        return {chunk_id: float(score) for (chunk_id, _), score in zip(pairs, values)}
 
 
 class RetrievalEngine:
@@ -924,7 +1171,7 @@ class RetrievalEngine:
 
         if not self.config.rag_use_embedding:
             return {}, False, "配置关闭 embedding 检索。"
-        if not self.dense_index.available or not self.dense_index.vectors:
+        if not self.dense_index.available or not self.dense_index.has_vectors():
             return {}, False, self.dense_index.metadata.get("reason", "dense 索引不可用。")
         configured_provider = self.ollama_client._embedding_provider()
         indexed_provider = str(self.dense_index.metadata.get("provider") or "").strip().lower()
@@ -957,12 +1204,7 @@ class RetrievalEngine:
                 f"query embedding 维度 {len(query_vector)} 与 dense 索引维度 {expected_dimension} 不一致；"
                 "请用当前 embedding 配置重建 dense 索引。",
             )
-        scores: Dict[str, float] = {}
-        for chunk_id in candidate_ids:
-            vector = self.dense_index.vectors.get(chunk_id)
-            if vector:
-                scores[chunk_id] = _cosine_similarity(query_vector, vector)
-        return scores, True, None
+        return self.dense_index.score(query_vector, candidate_ids), True, None
 
     def _rerank_scores(self, query: str, ordered_candidates: Sequence[Dict[str, Any]]) -> tuple[Dict[str, float], bool, str | None]:
         """计算 rerank 分数。

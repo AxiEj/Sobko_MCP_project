@@ -3,39 +3,37 @@
   "provider": "local_hf",
   "model_name": "BAAI/bge-m3",
   "dimension": 1024,
-  "generated_at": "2026-06-05T08:30:09.320746+08:00",
-  "vector_count": 11304,
-  "shard_count": 6,
-  "shards": [
-    {
-      "path": "shards/chunk_embeddings_0001.jsonl",
-      "record_count": 2067,
-      "bytes": 44985905
-    },
-    {
-      "path": "shards/chunk_embeddings_0002.jsonl",
-      "record_count": 2067,
-      "bytes": 44987825
-    },
-    {
-      "path": "shards/chunk_embeddings_0003.jsonl",
-      "record_count": 2067,
-      "bytes": 44989479
-    },
-    {
-      "path": "shards/chunk_embeddings_0004.jsonl",
-      "record_count": 2067,
-      "bytes": 44985746
-    },
-    {
-      "path": "shards/chunk_embeddings_0005.jsonl",
-      "record_count": 2066,
-      "bytes": 44982069
-    },
-    {
-      "path": "shards/chunk_embeddings_0006.jsonl",
-      "record_count": 970,
-      "bytes": 21119007
-    }
-  ]
+  "generated_at": "2026-06-05T10:32:45.210090+08:00",
+  "vector_count": 11346,
+  "format": "binary_f32_v1",
+  "binary": {
+    "format": "f32_row_major_v1",
+    "vectors_path": "vectors.f32",
+    "records_path": "chunk_records.json",
+    "dtype": "float32",
+    "byte_order": "little",
+    "shape": [
+      11346,
+      1024
+    ],
+    "bytes": 46473216
+  },
+  "shard_count": 0,
+  "embedding_cache_config": {
+    "cache_format_version": 1,
+    "provider": "local_hf",
+    "model_name": "BAAI/bge-m3",
+    "dimension": 1024,
+    "requested_dimensions": null,
+    "local_embedding_max_length": 8192,
+    "pooling_strategy": "cls",
+    "normalize_embeddings": true,
+    "encoder_revision": ""
+  },
+  "cache_stats": {
+    "reused": 11304,
+    "computed": 42,
+    "total": 11346
+  },
+  "shards": []
 }

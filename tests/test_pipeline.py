@@ -3,11 +3,17 @@
 from __future__ import annotations
 
 import os
+import tempfile
 import unittest
 from collections import Counter
 from pathlib import Path
 
-from sobko_mcp.config import build_layout, load_config
+from sobko_mcp.config import ProjectLayout, build_layout, load_config
+from sobko_mcp.embedding_cache import (
+    build_embedding_cache_config,
+    embedding_cache_key,
+    load_reusable_embedding_vectors,
+)
 from sobko_mcp.retriever import OllamaClient, RetrievalEngine
 
 
@@ -42,9 +48,9 @@ class PipelineSmokeTests(unittest.TestCase):
         """source registry 应只包含学术帖和 Multiwfn 手册。"""
 
         counts = Counter(source["source_type"] for source in self.engine.sources)
-        self.assertEqual(counts["blog_post"], 577)
+        self.assertEqual(counts["blog_post"], 580)
         self.assertEqual(counts["manual"], 1)
-        self.assertEqual(len(self.engine.sources), 578)
+        self.assertEqual(len(self.engine.sources), 581)
 
     def test_chunk_and_image_counts(self) -> None:
         """标准化产物规模应符合完整迁移包预期。"""
@@ -119,6 +125,93 @@ class PipelineSmokeTests(unittest.TestCase):
             self.config.rag_use_embedding = old_use_embedding
             self.config.embedding_provider = old_provider
             self.config.embedding_model = old_model
+
+    def test_embedding_daemon_is_preferred_for_local_hf(self) -> None:
+        """local_hf 查询应优先走共享 daemon，避免 MCP 进程重复加载模型。"""
+
+        config = load_config(self.layout.configs_dir / "default.json")
+        config.embedding_provider = "local_hf"
+        config.embedding_daemon_enabled = True
+        client = OllamaClient(config)
+
+        def fake_post(texts, model_name):
+            self.assertEqual(list(texts), ["query"])
+            self.assertEqual(model_name, "fake-model")
+            return [[0.1, 0.2, 0.3]]
+
+        client._post_daemon_embeddings = fake_post
+        self.assertEqual(client.embed_texts(["query"], model="fake-model"), [[0.1, 0.2, 0.3]])
+        self.assertIsNone(client._local_embedding_model)
+
+    def test_embedding_cache_key_includes_chunk_hash(self) -> None:
+        """chunk_hash 变化必须导致增量缓存失效。"""
+
+        config = load_config(self.layout.configs_dir / "default.json")
+        cache_config = build_embedding_cache_config(
+            config=config,
+            provider="local_hf",
+            model_name="BAAI/bge-m3",
+            dimension=1024,
+        )
+        self.assertNotEqual(
+            embedding_cache_key("hash-a", cache_config),
+            embedding_cache_key("hash-b", cache_config),
+        )
+
+    def test_legacy_dense_shard_can_seed_incremental_cache(self) -> None:
+        """旧 shard 无 cache_key 时，也能按 chunk_id+chunk_hash 安全初始化缓存。"""
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            dense_dir = root / "indexes" / "dense"
+            shards_dir = dense_dir / "shards"
+            shards_dir.mkdir(parents=True)
+            (dense_dir / "metadata.json").write_text(
+                """{
+  "available": true,
+  "provider": "local_hf",
+  "model_name": "BAAI/bge-m3",
+  "dimension": 3,
+  "shards": [{"path": "shards/chunk_embeddings_0001.jsonl"}]
+}""",
+                encoding="utf-8",
+            )
+            (shards_dir / "chunk_embeddings_0001.jsonl").write_text(
+                '{"chunk_id":"chunk-1","vector":[1.0,0.0,0.0]}\n',
+                encoding="utf-8",
+            )
+            layout = ProjectLayout(
+                root=root,
+                configs_dir=root / "configs",
+                data_sources_dir=root / "data_sources",
+                normalized_dir=root / "normalized",
+                indexes_dir=root / "indexes",
+                bm25_dir=root / "indexes" / "bm25",
+                dense_dir=dense_dir,
+                dense_shards_dir=shards_dir,
+                image_refs_dir=root / "indexes" / "image_refs",
+                rerank_cache_dir=root / "indexes" / "rerank_cache",
+                metadata_dir=root / "metadata",
+                reports_dir=root / "metadata" / "reports",
+                scripts_dir=root / "scripts",
+                tests_dir=root / "tests",
+                docs_dir=root / "docs",
+                server_dir=root / "server",
+                skills_dir=root / "skills",
+            )
+            config = load_config(self.layout.configs_dir / "default.json")
+            cache_config = build_embedding_cache_config(
+                config=config,
+                provider="local_hf",
+                model_name="BAAI/bge-m3",
+                dimension=3,
+            )
+            cache = load_reusable_embedding_vectors(
+                layout=layout,
+                chunks=[{"chunk_id": "chunk-1", "chunk_hash": "hash-1"}],
+                cache_config=cache_config,
+            )
+            self.assertEqual(cache[embedding_cache_key("hash-1", cache_config)], [1.0, 0.0, 0.0])
 
 
 if __name__ == "__main__":

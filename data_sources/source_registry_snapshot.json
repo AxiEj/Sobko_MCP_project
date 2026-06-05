@@ -1,13 +1,16 @@
 {
   "project": "sobko_mcp",
   "index_version": "2026.06.sobko.v1",
-  "generated_at": "2026-06-04T16:08:38.669750+08:00",
-  "source_count": 578,
+  "generated_at": "2026-06-05T10:32:05.042826+08:00",
+  "source_count": 581,
   "source_type_counts": {
-    "blog_post": 577,
+    "blog_post": 580,
     "manual": 1
   },
   "source_ids": [
+    "blog_post:771",
+    "blog_post:770",
+    "blog_post:769",
     "blog_post:767",
     "blog_post:766",
     "blog_post:764",

@@ -97,6 +97,7 @@ export SOBKO_RERANK_API_BASE_URL="http://YOUR_HOST:11434"
 - 修改知识源快照。
 - 修改 chunk 切分逻辑。
 - 更换 embedding 模型。
+- 修改 embedding daemon 或本地 encoder 的 vector-space 关键参数（维度、pooling、max length）。
 - 修改 dense 分片上限。
 
 重建命令：
@@ -109,6 +110,8 @@ python scripts/evaluate_retrieval.py
 python -m unittest discover -s tests
 python scripts/smoke_mcp.py
 ```
+
+`build_indexes.py` 会在重建 dense 索引时复用上一版 shards 中未变化的 embedding。复用条件包括 chunk hash、provider、model、dimension 和本地 encoder 选项；不满足条件的 chunk 会重新计算。
 
 ## 验收标准
 
@@ -123,6 +126,7 @@ python scripts/smoke_mcp.py
 ## 运行注意事项
 
 - 首次加载 dense 索引会占用额外内存，因为 JSONL 分片会读入内存用于实时余弦相似度计算。
+- 如果多个 MCP 客户端共用本机 BGE-M3，运行 `python scripts/run_embedding_daemon.py` 可让它们共享一个常驻模型进程。
 - 没有 embedding 服务时，查询会降级到 BM25，速度通常更快但语义匹配能力下降。
 - 本地 `FlagEmbedding` reranker 首次加载可能较慢；发布和 smoke test 建议设置 `SOBKO_DISABLE_LOCAL_RERANKER=1`。
 - 路径中包含中文目录名，Python 代码按 UTF-8 读取；迁移到 Linux/CentOS 时确认文件系统和终端 locale 支持 UTF-8。

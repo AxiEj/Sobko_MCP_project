@@ -1,4 +1,446 @@
 {
+  "blog_post:771#img-001": {
+    "image_id": "blog_post:771#img-001",
+    "source_id": "blog_post:771",
+    "chunk_id": "blog_post:771#chunk-0004",
+    "alt": "1",
+    "caption": "1",
+    "nearby_text": "在Gemini里上传ethanol.out后，写入提示：This is an output file of optimization task of quantum chemistry code, the value after \"SCF Done\" is energy of each optimization step. Now, I want to create a html file, in which one can choose to load output file like this, and the webpage will graphically show energy variation during the optimization step as a curve map, X-axis corresponds to step number, Y-axis corr…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/771/assets/001.png",
+    "relative_path": "assets/001.png",
+    "canonical_url": "http://sobereva.com/771",
+    "section_path": [
+      "利用AI快速创建观看几何优化过程中能量和结构变化的网页的完整示例",
+      "第1轮对话："
+    ],
+    "exists": true
+  },
+  "blog_post:771#img-002": {
+    "image_id": "blog_post:771#img-002",
+    "source_id": "blog_post:771",
+    "chunk_id": "blog_post:771#chunk-0004",
+    "alt": "2",
+    "caption": "2",
+    "nearby_text": "在Gemini里上传ethanol.out后，写入提示：This is an output file of optimization task of quantum chemistry code, the value after \"SCF Done\" is energy of each optimization step. Now, I want to create a html file, in which one can choose to load output file like this, and the webpage will graphically show energy variation during the optimization step as a curve map, X-axis corresponds to step number, Y-axis corr…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/771/assets/002.png",
+    "relative_path": "assets/002.png",
+    "canonical_url": "http://sobereva.com/771",
+    "section_path": [
+      "利用AI快速创建观看几何优化过程中能量和结构变化的网页的完整示例",
+      "第1轮对话："
+    ],
+    "exists": true
+  },
+  "blog_post:771#img-003": {
+    "image_id": "blog_post:771#img-003",
+    "source_id": "blog_post:771",
+    "chunk_id": "blog_post:771#chunk-0004",
+    "alt": "3",
+    "caption": "3",
+    "nearby_text": "在Gemini里上传ethanol.out后，写入提示：This is an output file of optimization task of quantum chemistry code, the value after \"SCF Done\" is energy of each optimization step. Now, I want to create a html file, in which one can choose to load output file like this, and the webpage will graphically show energy variation during the optimization step as a curve map, X-axis corresponds to step number, Y-axis corr…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/771/assets/003.png",
+    "relative_path": "assets/003.png",
+    "canonical_url": "http://sobereva.com/771",
+    "section_path": [
+      "利用AI快速创建观看几何优化过程中能量和结构变化的网页的完整示例",
+      "第1轮对话："
+    ],
+    "exists": true
+  },
+  "blog_post:771#img-004": {
+    "image_id": "blog_post:771#img-004",
+    "source_id": "blog_post:771",
+    "chunk_id": "blog_post:771#chunk-0004",
+    "alt": "4",
+    "caption": "4",
+    "nearby_text": "在Gemini里上传ethanol.out后，写入提示：This is an output file of optimization task of quantum chemistry code, the value after \"SCF Done\" is energy of each optimization step. Now, I want to create a html file, in which one can choose to load output file like this, and the webpage will graphically show energy variation during the optimization step as a curve map, X-axis corresponds to step number, Y-axis corr…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/771/assets/004.png",
+    "relative_path": "assets/004.png",
+    "canonical_url": "http://sobereva.com/771",
+    "section_path": [
+      "利用AI快速创建观看几何优化过程中能量和结构变化的网页的完整示例",
+      "第1轮对话："
+    ],
+    "exists": true
+  },
+  "blog_post:771#img-005": {
+    "image_id": "blog_post:771#img-005",
+    "source_id": "blog_post:771",
+    "chunk_id": "blog_post:771#chunk-0005",
+    "alt": "5",
+    "caption": "5",
+    "nearby_text": "为了能够显示相对于优化的第1步的能量变化，继续在Gemini里输入：Well done. Now, I want to add a new feature. In this html webpage, add the second graph, its Y-axis shows energy variation with respect to the first step, and the unit should be in kcal/mol, that is the energy multiplied by 627.51.\n\n这次得到的网页是<http://sobereva.com/attach/771/2.html>。载入ethanol.out后可以看到相对能量变化作为网页中第二张图成功显示了：",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/771/assets/005.png",
+    "relative_path": "assets/005.png",
+    "canonical_url": "http://sobereva.com/771",
+    "section_path": [
+      "利用AI快速创建观看几何优化过程中能量和结构变化的网页的完整示例",
+      "第1轮对话：",
+      "第2轮对话："
+    ],
+    "exists": true
+  },
+  "blog_post:771#img-006": {
+    "image_id": "blog_post:771#img-006",
+    "source_id": "blog_post:771",
+    "chunk_id": "blog_post:771#chunk-0006",
+    "alt": "6",
+    "caption": "6",
+    "nearby_text": "这次增加一个文本框，显示相对能量变化曲线里面每个点的具体数值，继续在Gemini里输入： \nGreat. Now add a text box in the webpage to show raw data of the second graph.\n\n这次得到的网页是<http://sobereva.com/attach/771/3.html>。载入ethanol.out后可以看到文本框里出现在页面最下端，信息完全满足预期：",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/771/assets/006.png",
+    "relative_path": "assets/006.png",
+    "canonical_url": "http://sobereva.com/771",
+    "section_path": [
+      "利用AI快速创建观看几何优化过程中能量和结构变化的网页的完整示例",
+      "第1轮对话：",
+      "第3轮对话："
+    ],
+    "exists": true
+  },
+  "blog_post:771#img-007": {
+    "image_id": "blog_post:771#img-007",
+    "source_id": "blog_post:771",
+    "chunk_id": "blog_post:771#chunk-0007",
+    "alt": "7",
+    "caption": "7",
+    "nearby_text": "这次要求在网页顶端把分子结构显示出来，并且让AI参考GaussView的效果和配色。还要求点击曲线图上每个点的时候切换到相应结构。ethanol.out里的优化只有四步，但记录标准朝向坐标的standard orientation段落输出了5次，最后两次是相同的，为了避免Gemini糊涂，应在输入信息里特意说明。以下是ethanol.out的其中一个standard orientation部分，供读者参考\n\n--------------------------------------------------------------------- \n Center Atomic Atomic Coordinates (Angstroms) \n Number Number Type X Y Z \n -----------------------------------------------…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/771/assets/007.png",
+    "relative_path": "assets/007.png",
+    "canonical_url": "http://sobereva.com/771",
+    "section_path": [
+      "利用AI快速创建观看几何优化过程中能量和结构变化的网页的完整示例",
+      "第1轮对话：",
+      "第4轮对话："
+    ],
+    "exists": true
+  },
+  "blog_post:771#img-008": {
+    "image_id": "blog_post:771#img-008",
+    "source_id": "blog_post:771",
+    "chunk_id": "blog_post:771#chunk-0007",
+    "alt": "8",
+    "caption": "8",
+    "nearby_text": "这次要求在网页顶端把分子结构显示出来，并且让AI参考GaussView的效果和配色。还要求点击曲线图上每个点的时候切换到相应结构。ethanol.out里的优化只有四步，但记录标准朝向坐标的standard orientation段落输出了5次，最后两次是相同的，为了避免Gemini糊涂，应在输入信息里特意说明。以下是ethanol.out的其中一个standard orientation部分，供读者参考\n\n--------------------------------------------------------------------- \n Center Atomic Atomic Coordinates (Angstroms) \n Number Number Type X Y Z \n -----------------------------------------------…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/771/assets/008.png",
+    "relative_path": "assets/008.png",
+    "canonical_url": "http://sobereva.com/771",
+    "section_path": [
+      "利用AI快速创建观看几何优化过程中能量和结构变化的网页的完整示例",
+      "第1轮对话：",
+      "第4轮对话："
+    ],
+    "exists": true
+  },
+  "blog_post:771#img-009": {
+    "image_id": "blog_post:771#img-009",
+    "source_id": "blog_post:771",
+    "chunk_id": "blog_post:771#chunk-0010",
+    "alt": "9",
+    "caption": "9",
+    "nearby_text": "让Gemini修改上述问题，输入：unfortunately, after upload a file like I provided previously, molecule structure was not displayed, it always shows \"Awaiting File...\"\n\n这次得到的网页是<http://sobereva.com/attach/771/5.html>。载入文件后完整的页面如下所示，可见显示效果不错，鼠标左键拖动能旋转视角，滚轮滑动能缩放分子，配色和GaussView差不多。\n\n到此，一个Gaussian几何优化输出文件观看网页的雏形就大致弄好了。之后的改进，诸如兼容性、功能性、显示效果、界面布局等，就不再演示了，留给读者折腾。比如我发现当前网页有个问题，每次点击曲线上的圆点切换到另一步时，分子结构的缩放就会被重置，我就接着这么提修改要求：…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/771/assets/009.png",
+    "relative_path": "assets/009.png",
+    "canonical_url": "http://sobereva.com/771",
+    "section_path": [
+      "利用AI快速创建观看几何优化过程中能量和结构变化的网页的完整示例",
+      "第1轮对话：",
+      "第5轮对话："
+    ],
+    "exists": true
+  },
+  "blog_post:770#img-001": {
+    "image_id": "blog_post:770#img-001",
+    "source_id": "blog_post:770",
+    "chunk_id": "blog_post:770#chunk-0001",
+    "alt": "1",
+    "caption": "1",
+    "nearby_text": "**使用Multiwfn快速产生超胞的格点数据**\n\n文/Sobereva@[北京科音](http://www.keinsci.com) 2026-Apr-10\n\n做第一性原理研究周期性的人经常要观看比如电子密度、自旋密度、IRI、IGMH、ELF等函数的等值面，最常用的程序之一就是VMD。但由于计算用的晶胞往往较小，经常需要在VMD的Graphics - Representation界面里的Periodic标签页设置在各个方向显示副本，以使得等值面和结构看起来更全面、完整。然而，这么做不仅无法令VMD显示出跨周期的化学键，显示的等值面在周期接壤处还无法严丝合缝，不好看。例如下图是CP2K计算的一个COF体系的电子密度cube文件按照《在VMD里将cube文件瞬间绘制成效果极佳的等值面图的方法》（<http://sobereva.com/483>）的方法显示的0.001 a.u.电子密度…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/770/assets/001.jpg",
+    "relative_path": "assets/001.jpg",
+    "canonical_url": "http://sobereva.com/770",
+    "section_path": [
+      "使用Multiwfn快速产生超胞的格点数据"
+    ],
+    "exists": true
+  },
+  "blog_post:770#img-002": {
+    "image_id": "blog_post:770#img-002",
+    "source_id": "blog_post:770",
+    "chunk_id": "blog_post:770#chunk-0001",
+    "alt": "2",
+    "caption": "2",
+    "nearby_text": "**使用Multiwfn快速产生超胞的格点数据**\n\n文/Sobereva@[北京科音](http://www.keinsci.com) 2026-Apr-10\n\n做第一性原理研究周期性的人经常要观看比如电子密度、自旋密度、IRI、IGMH、ELF等函数的等值面，最常用的程序之一就是VMD。但由于计算用的晶胞往往较小，经常需要在VMD的Graphics - Representation界面里的Periodic标签页设置在各个方向显示副本，以使得等值面和结构看起来更全面、完整。然而，这么做不仅无法令VMD显示出跨周期的化学键，显示的等值面在周期接壤处还无法严丝合缝，不好看。例如下图是CP2K计算的一个COF体系的电子密度cube文件按照《在VMD里将cube文件瞬间绘制成效果极佳的等值面图的方法》（<http://sobereva.com/483>）的方法显示的0.001 a.u.电子密度…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/770/assets/002.jpg",
+    "relative_path": "assets/002.jpg",
+    "canonical_url": "http://sobereva.com/770",
+    "section_path": [
+      "使用Multiwfn快速产生超胞的格点数据"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-001": {
+    "image_id": "blog_post:769#img-001",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0004",
+    "alt": "1",
+    "caption": "1",
+    "nearby_text": "在文献中特别常见分子表面静电势填色图，是展现静电势分布的最为常见的形式，也就是按照静电势在分子表面上不同位置的数值以不同颜色（根据色彩刻度条）展现。这里分子表面一般采用电子密度为0.001 a.u.或0.002 a.u.的等值面。下面的图是非常有代表性的这种图，(a)和(b)出自《Angew. Chem.上发表了全面介绍各种共价和非共价相互作用可视化分析方法的综述》（<http://sobereva.com/746>）介绍的笔者的综述，(c)出自《一篇文章深入揭示外电场对18碳环的超强调控作用》（<http://sobereva.com/570>）介绍的笔者的论文，关于这些图展现的信息的讨论见相应论文。\n\n上面这些图都是按照《使用Multiwfn+VMD快速地绘制静电势着色的分子范德华表面图和分子间穿透图》（<http://sobereva.com/443>）介绍的方法绘制的，此文里还有…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/001.png",
+    "relative_path": "assets/001.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "1 表面静电势填色图"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-002": {
+    "image_id": "blog_post:769#img-002",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0004",
+    "alt": "2",
+    "caption": "2",
+    "nearby_text": "在文献中特别常见分子表面静电势填色图，是展现静电势分布的最为常见的形式，也就是按照静电势在分子表面上不同位置的数值以不同颜色（根据色彩刻度条）展现。这里分子表面一般采用电子密度为0.001 a.u.或0.002 a.u.的等值面。下面的图是非常有代表性的这种图，(a)和(b)出自《Angew. Chem.上发表了全面介绍各种共价和非共价相互作用可视化分析方法的综述》（<http://sobereva.com/746>）介绍的笔者的综述，(c)出自《一篇文章深入揭示外电场对18碳环的超强调控作用》（<http://sobereva.com/570>）介绍的笔者的论文，关于这些图展现的信息的讨论见相应论文。\n\n上面这些图都是按照《使用Multiwfn+VMD快速地绘制静电势着色的分子范德华表面图和分子间穿透图》（<http://sobereva.com/443>）介绍的方法绘制的，此文里还有…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/002.png",
+    "relative_path": "assets/002.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "1 表面静电势填色图"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-003": {
+    "image_id": "blog_post:769#img-003",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0004",
+    "alt": "3",
+    "caption": "3",
+    "nearby_text": "在文献中特别常见分子表面静电势填色图，是展现静电势分布的最为常见的形式，也就是按照静电势在分子表面上不同位置的数值以不同颜色（根据色彩刻度条）展现。这里分子表面一般采用电子密度为0.001 a.u.或0.002 a.u.的等值面。下面的图是非常有代表性的这种图，(a)和(b)出自《Angew. Chem.上发表了全面介绍各种共价和非共价相互作用可视化分析方法的综述》（<http://sobereva.com/746>）介绍的笔者的综述，(c)出自《一篇文章深入揭示外电场对18碳环的超强调控作用》（<http://sobereva.com/570>）介绍的笔者的论文，关于这些图展现的信息的讨论见相应论文。\n\n上面这些图都是按照《使用Multiwfn+VMD快速地绘制静电势着色的分子范德华表面图和分子间穿透图》（<http://sobereva.com/443>）介绍的方法绘制的，此文里还有…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/003.png",
+    "relative_path": "assets/003.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "1 表面静电势填色图"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-004": {
+    "image_id": "blog_post:769#img-004",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0008",
+    "alt": "4",
+    "caption": "4",
+    "nearby_text": "分子表面静电势的极值点包括极大点和极小点，除了表面静电势（全局）最大点和最小点外，还有局部极大点和局部极小点。Multiwfn可以将所有这些极值点都搜索出来，根据它们的位置和数值可以预测和解释很多问题，比如不同类型分子间相互作用的位置和强度、容易发生亲电或亲核的反应位点。Chem. Sci., 2, 883 (2011)还利用这种信息提出了预测两种分子之间是否能形成共晶的方法，在量子化学波函数分析与Multiwfn程序培训班（<http://www.keinsci.com/WFN>）里做了详细介绍。培训里讲了一大堆这种分析的价值，比如下面的例子体现了表面静电势极值点可以与分子间静电主导的相互作用强度有十分密切的关系，横坐标V就是文章作者用Multiwfn计算的取代甲烷的碳上的表面静电势极大点数值，极值点示意图是Multiwfn直接显示的。可见水分子的氧正冲着取代甲烷的那个极大点，作用强度…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/004.png",
+    "relative_path": "assets/004.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "2 分子表面静电势的定量分析",
+      "2.2 表面静电势的极值点分析"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-005": {
+    "image_id": "blog_post:769#img-005",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0008",
+    "alt": "5",
+    "caption": "5",
+    "nearby_text": "分子表面静电势的极值点包括极大点和极小点，除了表面静电势（全局）最大点和最小点外，还有局部极大点和局部极小点。Multiwfn可以将所有这些极值点都搜索出来，根据它们的位置和数值可以预测和解释很多问题，比如不同类型分子间相互作用的位置和强度、容易发生亲电或亲核的反应位点。Chem. Sci., 2, 883 (2011)还利用这种信息提出了预测两种分子之间是否能形成共晶的方法，在量子化学波函数分析与Multiwfn程序培训班（<http://www.keinsci.com/WFN>）里做了详细介绍。培训里讲了一大堆这种分析的价值，比如下面的例子体现了表面静电势极值点可以与分子间静电主导的相互作用强度有十分密切的关系，横坐标V就是文章作者用Multiwfn计算的取代甲烷的碳上的表面静电势极大点数值，极值点示意图是Multiwfn直接显示的。可见水分子的氧正冲着取代甲烷的那个极大点，作用强度…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/005.png",
+    "relative_path": "assets/005.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "2 分子表面静电势的定量分析",
+      "2.2 表面静电势的极值点分析"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-006": {
+    "image_id": "blog_post:769#img-006",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0009",
+    "alt": "6",
+    "caption": "6",
+    "nearby_text": "我在J. Phys. Org. Chem., 26, 473 (2013)和Struct. Chem., 25, 1521 (2014)提出了表面静电势分布面积统计的思想，准确描述了分子表面上处于不同静电势范围内的面积，在定量考察和对比分子特征方面有重要意义。并且由于Multiwfn里做这种分析非常方便，已被文献使用得十分广泛了。操作详见《使用Multiwfn结合VMD分析和绘制分子表面静电势分布》（<http://sobereva.com/196>）。例如下面这张图是《18个氮原子组成的环状分子长什么样？一篇文章全面揭示18氮环的特征！》（<http://sobereva.com/725>）介绍的我的理论预测18氮环分子的论文里的图，右侧是18氮环（N18）表面静电势面积分布统计，并与18碳环（C18）的情况做了对比。明显可看出N18的表面静电势在广得多的数值范围内分布，因而极性特征显…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/006.png",
+    "relative_path": "assets/006.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "2 分子表面静电势的定量分析",
+      "2.3 面积分布统计"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-007": {
+    "image_id": "blog_post:769#img-007",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0009",
+    "alt": "7",
+    "caption": "7",
+    "nearby_text": "我在J. Phys. Org. Chem., 26, 473 (2013)和Struct. Chem., 25, 1521 (2014)提出了表面静电势分布面积统计的思想，准确描述了分子表面上处于不同静电势范围内的面积，在定量考察和对比分子特征方面有重要意义。并且由于Multiwfn里做这种分析非常方便，已被文献使用得十分广泛了。操作详见《使用Multiwfn结合VMD分析和绘制分子表面静电势分布》（<http://sobereva.com/196>）。例如下面这张图是《18个氮原子组成的环状分子长什么样？一篇文章全面揭示18氮环的特征！》（<http://sobereva.com/725>）介绍的我的理论预测18氮环分子的论文里的图，右侧是18氮环（N18）表面静电势面积分布统计，并与18碳环（C18）的情况做了对比。明显可看出N18的表面静电势在广得多的数值范围内分布，因而极性特征显…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/007.png",
+    "relative_path": "assets/007.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "2 分子表面静电势的定量分析",
+      "2.3 面积分布统计"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-008": {
+    "image_id": "blog_post:769#img-008",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0010",
+    "alt": "8",
+    "caption": "8",
+    "nearby_text": "在Multiwfn手册3.15.2.2节介绍了我提出的把分子表面划分为各个原子对应的局部表面的方法，这使得前面对分子表面定义的各种描述符可以对各个原子分别计算，直接体现出体系中不同原子的差异。在《谈谈怎么计算“原子的静电势”》（<http://sobereva.com/641>）里给出了这种分析的实际例子，通过考察丙烯醛三个碳原子的局部分子表面上的静电势平均值，准确地解释了实验上最容易受到硬亲核试剂进攻发生反应的位点。下面图中不同颜色对应丙烯醛不同原子的局部分子表面区域，数值（kcal/mol）是三个碳原子局部表面上的静电势平均值。",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/008.png",
+    "relative_path": "assets/008.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "2 分子表面静电势的定量分析",
+      "2.4 局部原子表面上的静电势分析"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-009": {
+    "image_id": "blog_post:769#img-009",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0011",
+    "alt": "9",
+    "caption": "9",
+    "nearby_text": "分子表面上的一些静电势明显为正或为负的区域往往对应体系的特征区域，比如sigma穴区域、pi穴区域、孤对电子丰富的区域等。如果这些区域里面有静电势极大点或极小点，那么Multiwfn可以对这些区域给出它的面积和静电势的平均值。举个例子，下图左侧是ClPO2分子的表面静电势填色图和极值点。Cl的键轴末端的表面静电势极大点体现了sigma穴的存在，P原子在分子表面两侧各一个极大点体现了pi穴的存在。Multiwfn里可以把这些极大点附近静电势大于用户设的数值（如0.03 a.u.）的区域确定出来，从而给出这两种特征区域的面积和静电势平均值，并且还可以结合VMD将这样的区域画出来，如下图中间和右边所示。这个分析的完整操作过程见Multiwfn手册4.12.10节的示例。",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/009.png",
+    "relative_path": "assets/009.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "2 分子表面静电势的定量分析",
+      "2.5 特征区域的静电势分析"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-010": {
+    "image_id": "blog_post:769#img-010",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0013",
+    "alt": "10",
+    "caption": "10",
+    "nearby_text": "这一节的分析考察的是整个三维空间中静电势的分布，而不是像之前小节说的只考察分子表面上静电势的分布。\n\n静电势的等值面图十分有用，可以很直观展现静电势分布情况。下面左图是Multiwfn直接绘制的乙硫醛的静电势为-0.02899 a.u.的等值面图，其中蓝色小球是Multiwfn搜索出的两个静电势极小点，数值也标了上去（kcal/mol），这个图十分清楚地展现出了硫由于存在孤对电子而产生的静电势为负的特征区域。下图右侧出自我研究18碳环弱相互作用的文章Carbon, 171, 514 (2021)，18碳环静电势为+0.001 a.u.和-0.001 a.u.的等值面分别是绿色和蓝色，极小点也显示了出来并标注了静电势数值。此图静电势为负的区域来自于18碳环较短的C-C键上拥有的较丰富的pi电子，但由于静电势极小点的大小很小，因此18碳环并不可能与其它分子形成静电作用充分主导的相互作用。笔者…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/010.png",
+    "relative_path": "assets/010.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "3 三维空间中的静电势分布分析"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-011": {
+    "image_id": "blog_post:769#img-011",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0013",
+    "alt": "11",
+    "caption": "11",
+    "nearby_text": "这一节的分析考察的是整个三维空间中静电势的分布，而不是像之前小节说的只考察分子表面上静电势的分布。\n\n静电势的等值面图十分有用，可以很直观展现静电势分布情况。下面左图是Multiwfn直接绘制的乙硫醛的静电势为-0.02899 a.u.的等值面图，其中蓝色小球是Multiwfn搜索出的两个静电势极小点，数值也标了上去（kcal/mol），这个图十分清楚地展现出了硫由于存在孤对电子而产生的静电势为负的特征区域。下图右侧出自我研究18碳环弱相互作用的文章Carbon, 171, 514 (2021)，18碳环静电势为+0.001 a.u.和-0.001 a.u.的等值面分别是绿色和蓝色，极小点也显示了出来并标注了静电势数值。此图静电势为负的区域来自于18碳环较短的C-C键上拥有的较丰富的pi电子，但由于静电势极小点的大小很小，因此18碳环并不可能与其它分子形成静电作用充分主导的相互作用。笔者…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/011.png",
+    "relative_path": "assets/011.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "3 三维空间中的静电势分布分析"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-012": {
+    "image_id": "blog_post:769#img-012",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0016",
+    "alt": "12",
+    "caption": "12",
+    "nearby_text": "Multiwfn的主功能4可以十分方便快捷地对静电势在内的Multiwfn支持的各种函数绘制平面图，包括填色图、等值线图、地形图、梯度线图等等，作图选项设置十分丰富灵活，“量子化学波函数分析与Multiwfn程序培训班”（<http://www.keinsci.com/WFN>）里给了大量例子并全面介绍了各种相关技巧，在Multiwfn手册4.4节也有不少示例。例如下图是Multiwfn直接绘制的碳纳米管片段截面的静电势等值线图，红色实线和蓝色虚线分别对应静电势为正和为负的部分，电子密度为0.001 a.u.描述的范德华表面轮廓（蓝色粗线）一起在图上显示了。可见这张图把此平面上不同区域的静电势特征展现得极为全面直观，并能清楚地看出碳纳米管片段的范德华表面在管内和管外的部分的静电势都为负。从此图也可以清楚看到，距离原子核较近区域的静电势都为正，是因为这样的区域由核电荷主导所致，这是所有化学…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/012.png",
+    "relative_path": "assets/012.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "4 静电势平面图"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-013": {
+    "image_id": "blog_post:769#img-013",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0016",
+    "alt": "13",
+    "caption": "13",
+    "nearby_text": "Multiwfn的主功能4可以十分方便快捷地对静电势在内的Multiwfn支持的各种函数绘制平面图，包括填色图、等值线图、地形图、梯度线图等等，作图选项设置十分丰富灵活，“量子化学波函数分析与Multiwfn程序培训班”（<http://www.keinsci.com/WFN>）里给了大量例子并全面介绍了各种相关技巧，在Multiwfn手册4.4节也有不少示例。例如下图是Multiwfn直接绘制的碳纳米管片段截面的静电势等值线图，红色实线和蓝色虚线分别对应静电势为正和为负的部分，电子密度为0.001 a.u.描述的范德华表面轮廓（蓝色粗线）一起在图上显示了。可见这张图把此平面上不同区域的静电势特征展现得极为全面直观，并能清楚地看出碳纳米管片段的范德华表面在管内和管外的部分的静电势都为负。从此图也可以清楚看到，距离原子核较近区域的静电势都为正，是因为这样的区域由核电荷主导所致，这是所有化学…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/013.png",
+    "relative_path": "assets/013.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "4 静电势平面图"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-014": {
+    "image_id": "blog_post:769#img-014",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0018",
+    "alt": "14",
+    "caption": "14",
+    "nearby_text": "将两个或多个分子的静电势图相叠加，可以从静电互补的角度考察为什么分子间能形成那样的复合物，以及预测和解释特定的复合物构型是否稳定。这是《静电效应主导了氢气、氮气二聚体的构型》（<http://sobereva.com/209>）介绍的我在J. Mol. Model., 19, 5387 (2013)中提出的思想，我称之为静电势互补原理，在Angew. Chem. Int. Ed., 64, e202504895 (2025)综述里的静电势部分也有相关说明。当复合物构型由静电作用主要决定时适用这种静电势互补原理：一个分子和另一个分子的静电势符号相反叠加时，叠加的区域两个分子的静电势的绝对值越大，则越有利于相应构型的形成、稳定。而静电势符号相同的叠加则不利于相应构型的形成，会造成去稳定化。这两种形式的叠加同时存在的话要看净效果。下面的图像出自J. Mol. Model., 19, 5387…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/014.png",
+    "relative_path": "assets/014.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "5 静电势叠加图分析"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-015": {
+    "image_id": "blog_post:769#img-015",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0018",
+    "alt": "15",
+    "caption": "15",
+    "nearby_text": "将两个或多个分子的静电势图相叠加，可以从静电互补的角度考察为什么分子间能形成那样的复合物，以及预测和解释特定的复合物构型是否稳定。这是《静电效应主导了氢气、氮气二聚体的构型》（<http://sobereva.com/209>）介绍的我在J. Mol. Model., 19, 5387 (2013)中提出的思想，我称之为静电势互补原理，在Angew. Chem. Int. Ed., 64, e202504895 (2025)综述里的静电势部分也有相关说明。当复合物构型由静电作用主要决定时适用这种静电势互补原理：一个分子和另一个分子的静电势符号相反叠加时，叠加的区域两个分子的静电势的绝对值越大，则越有利于相应构型的形成、稳定。而静电势符号相同的叠加则不利于相应构型的形成，会造成去稳定化。这两种形式的叠加同时存在的话要看净效果。下面的图像出自J. Mol. Model., 19, 5387…",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/015.png",
+    "relative_path": "assets/015.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "5 静电势叠加图分析"
+    ],
+    "exists": true
+  },
+  "blog_post:769#img-016": {
+    "image_id": "blog_post:769#img-016",
+    "source_id": "blog_post:769",
+    "chunk_id": "blog_post:769#chunk-0029",
+    "alt": "16",
+    "caption": "16",
+    "nearby_text": "电场是静电势的负梯度，是个矢量场，通过分析一个体系的电场可以考察它对其它物质的电子分布、体系朝向可能造成的极化作用等问题。在Multiwfn里利用主功能1可以计算特定位置的电场矢量，具体做法是进入主功能1后输入f12使得被计算导数的函数切换到第12号函数（静电势），之后再输入一个点的坐标，把输出的梯度矢量取负值就是这个位置的电场了。Multiwfn还可以对电场绘制特定平面上的向量场图，Multiwfn手册4.4.10节给了具体例子。例如下图是LiF分子的这种图，可见在原子核附近电场都是向四周发散的，而在更远处，电场方向整体是从带正电的Li指向带负电的F。",
+    "path": "data_sources/sobko_sources/思想家公社帖子/posts/academic/769/assets/016.png",
+    "relative_path": "assets/016.png",
+    "canonical_url": "http://sobereva.com/769",
+    "section_path": [
+      "化学体系的静电势的计算和分析方法汇总",
+      "8 其它信息",
+      "8.5 电场"
+    ],
+    "exists": true
+  },
   "blog_post:766#img-001": {
     "image_id": "blog_post:766#img-001",
     "source_id": "blog_post:766",

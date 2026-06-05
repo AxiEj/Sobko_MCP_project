@@ -52,6 +52,12 @@ class RagConfig:
     embedding_model: str
     embedding_dimensions: Optional[int]
     local_embedding_max_length: Optional[int]
+    embedding_daemon_enabled: bool
+    embedding_daemon_required: bool
+    embedding_daemon_autostart: bool
+    embedding_daemon_base_url: str
+    embedding_daemon_bind_host: str
+    embedding_daemon_bind_port: int
     rerank_provider: str
     rerank_api_base_url: str
     rerank_fallback_base_urls: List[str]
@@ -83,6 +89,12 @@ class RagConfig:
 
         payload.setdefault("embedding_dimensions", None)
         payload.setdefault("local_embedding_max_length", None)
+        payload.setdefault("embedding_daemon_enabled", True)
+        payload.setdefault("embedding_daemon_required", False)
+        payload.setdefault("embedding_daemon_autostart", True)
+        payload.setdefault("embedding_daemon_base_url", "http://127.0.0.1:8769")
+        payload.setdefault("embedding_daemon_bind_host", "127.0.0.1")
+        payload.setdefault("embedding_daemon_bind_port", 8769)
         return cls(**payload)
 
 
