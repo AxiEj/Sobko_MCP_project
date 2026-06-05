@@ -33,6 +33,7 @@ class RagConfig:
     manual_html_path: str
     manual_manifest_path: str
     software_docs_manifest_path: str
+    forum_threads_manifest_path: str
     blog_authority_level: str
     manual_authority_level: str
     rag_enabled: bool
@@ -90,6 +91,7 @@ class RagConfig:
 
         payload.setdefault("embedding_dimensions", None)
         payload.setdefault("software_docs_manifest_path", "data_sources/sobko_sources/software_docs_manifest.jsonl")
+        payload.setdefault("forum_threads_manifest_path", "data_sources/sobko_sources/forum_threads/manifests/threads.jsonl")
         payload.setdefault("local_embedding_max_length", None)
         payload.setdefault("embedding_daemon_enabled", True)
         payload.setdefault("embedding_daemon_required", False)

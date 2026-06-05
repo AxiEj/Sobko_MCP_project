@@ -120,6 +120,7 @@ def build_source_registry(layout: ProjectLayout, config: RagConfig) -> List[Dict
     manual_html_path = resolve_input_path(layout, config.manual_html_path)
     manual_manifest_path = resolve_input_path(layout, config.manual_manifest_path)
     software_docs_manifest_path = resolve_input_path(layout, config.software_docs_manifest_path)
+    forum_threads_manifest_path = resolve_input_path(layout, config.forum_threads_manifest_path)
 
     required_paths = [posts_manifest_path, posts_root_path, manual_md_path, manual_html_path, manual_manifest_path]
     for path in required_paths:
@@ -188,17 +189,23 @@ def build_source_registry(layout: ProjectLayout, config: RagConfig) -> List[Dict
         }
     )
 
-    if software_docs_manifest_path.exists():
-        for doc in read_jsonl(software_docs_manifest_path):
+    optional_markdown_manifests = [
+        (software_docs_manifest_path, "software_doc", "软件文档"),
+        (forum_threads_manifest_path, "forum_thread", "论坛帖"),
+    ]
+    for manifest_path, default_source_type, label in optional_markdown_manifests:
+        if not manifest_path.exists():
+            continue
+        for doc in read_jsonl(manifest_path):
             markdown_path = resolve_input_path(layout, doc["markdown_path"])
             if not markdown_path.exists():
-                raise FileNotFoundError(f"软件文档 Markdown 不存在：{markdown_path}")
+                raise FileNotFoundError(f"{label} Markdown 不存在：{markdown_path}")
             doc_text = markdown_path.read_text(encoding="utf-8")
             html_path = resolve_input_path(layout, doc["html_path"]) if doc.get("html_path") else None
             canonical_portable_path = to_portable_path(layout, markdown_path)
             record = {
                 "source_id": doc["source_id"],
-                "source_type": doc.get("source_type", "software_doc"),
+                "source_type": doc.get("source_type", default_source_type),
                 "title": doc.get("title", ""),
                 "canonical_path": canonical_portable_path,
                 "canonical_url": doc.get("canonical_url", ""),
@@ -222,6 +229,9 @@ def build_source_registry(layout: ProjectLayout, config: RagConfig) -> List[Dict
                 record["download_url"] = doc["download_url"]
             if doc.get("package_sha256"):
                 record["package_sha256"] = doc["package_sha256"]
+            for optional_key in ["coverage", "source_provider", "source_crawled_at", "original_reply_count"]:
+                if doc.get(optional_key) is not None:
+                    record[optional_key] = doc[optional_key]
             records.append(record)
 
     write_jsonl(layout.normalized_dir / "source_registry.jsonl", records)

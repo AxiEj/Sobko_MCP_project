@@ -353,14 +353,19 @@ def main() -> None:
     config = load_config(layout.configs_dir / "default.json")
     chunks = read_jsonl(layout.normalized_dir / "chunks.jsonl")
     images = read_jsonl(layout.normalized_dir / "images.jsonl")
+    sources = read_jsonl(layout.normalized_dir / "source_registry.jsonl")
 
     lexical = build_lexical_index(chunks, layout.bm25_dir / "lexical_index.json")
     dense = build_dense_index(chunks, config, layout)
     image_lookup = build_image_lookup(images, layout.image_refs_dir / "image_lookup.json")
+    source_type_counts = Counter(source["source_type"] for source in sources)
 
     build_manifest = {
         "index_version": config.index_version,
         "generated_at": datetime.now().astimezone().isoformat(),
+        "source_count": len(sources),
+        "source_type_counts": dict(sorted(source_type_counts.items())),
+        "source_ids": [source["source_id"] for source in sources],
         "chunk_count": len(chunks),
         "image_count": len(images),
         "bm25_doc_count": lexical["doc_count"],

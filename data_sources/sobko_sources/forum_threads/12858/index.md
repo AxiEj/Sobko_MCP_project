@@ -1,0 +1,778 @@
+---
+thread_id: 12858
+source_id: forum_thread:12858
+title: "计算RESP原子电荷的超级懒人脚本（一行命令就算出结果）"
+url: http://bbs.keinsci.com/thread-12858-1-1.html
+date: "2019-06-01T00:00:00+08:00"
+source_type: forum_thread
+coverage: browser_verified_full_thread_text
+source_provider: wsl2_chrome_cdp_verified_session
+source_crawled_at: "2026-06-05T09:50:25.197Z"
+original_reply_count: 53
+page_count: 4
+views: 64457
+software_tags:
+- Multiwfn
+- Gaussian
+topic_tags:
+- 静电势与电荷
+- 综述/教程/投稿经验
+authority_level: A
+confidence: 0.97
+classification_reason: sobereva原创工具教程，6.4万浏览，介绍一行命令计算RESP原子电荷的便捷方法。
+---
+
+# 计算RESP原子电荷的超级懒人脚本（一行命令就算出结果）
+
+- 原帖 URL：<http://bbs.keinsci.com/thread-12858-1-1.html>
+- 论坛板块：分子模拟
+- 作者：**sobereva**
+- 浏览量：64457 | 回复数：53 | 共4页
+- 完整性：**全部内容已完整抓取**。
+
+## 楼层正文
+
+### 1 楼（楼主）｜sobereva
+
+计算RESP原子电荷的超级懒人脚本（一行命令就算出结果）A super lazy script to calculate RESP atomic charges (one line of command calculates the result)
+
+
+
+文/Sobereva@北京科音
+
+First release: 2019-Apr-17  Last update: 2024-Sep-6
+
+
+
+RESP电荷主要优点是特别适合对柔性分子做分子动力学计算。之前笔者写过《RESP拟合静电势电荷的原理以及在Multiwfn中的计算》（http://sobereva.com/441）一文，极其详细地介绍了RESP电荷，并结合实际例子充分展现了Multiwfn在计算RESP电荷上的强大性，可谓极度便利而且极度灵活，明显比Antechamber等其它能计算RESP的程序好用、方便得多得多得多。但在网上的答疑过程中，笔者也看到很多要计算RESP电荷的人完全是量子化学外行，甚至GaussView都不会用，Gaussian的关键词一点也不会写，需要一个极度傻瓜化的“一键”工具来计算RESP电荷，为此笔者在这里介绍一个基于Gaussian和Multiwfn的仅仅需要写一条命令就可以算出RESP电荷的Linux环境下的脚本，可谓将RESP电荷的计算极尽简化，不可能做到更简单了。
+
+
+
+另外，笔者在《RESP2原子电荷的思想以及在Multiwfn中的计算》（http://sobereva.com/531）中介绍了RESP2电荷，在文中也提供了和本文使用方式基本一样的脚本RESP2.sh来专门用于一键计算RESP2电荷。如果你计算RESP电荷的目的是用于分子动力学模拟，笔者更建议用RESP2来算，有较大可能结果更好。
+
+
+
+如果你没买Gaussian，也可以用免费的ORCA量子化学程序结合Multiwfn算各种原子电荷，笔者也提供了相应的傻瓜式脚本，见《ORCA结合Multiwfn计算RESP、RESP2和1.2*CM5原子电荷的懒人脚本》（http://sobereva.com/637）。
+
+
+
+如果你想了解本文提供脚本原理是怎么回事，强烈建议仔细阅读《详谈Multiwfn的命令行方式运行和批量运行的方法》（http://sobereva.com/612），里面将一切细节都解释得特别清楚，并能充分体会到写脚本运行Multiwfn多么重要和便利。
+
+
+
+
+
+1 准备工作
+
+
+
+在机子里安装Gaussian。不会装的话仔细看《Gaussian的安装方法及运行时的相关问题》（http://sobereva.com/439）。去http://sobereva.com/multiwfn下载Multiwfn最新版本。然后严格按照《Multiwfn在Linux下安装的中文说明》（http://sobereva.com/688）说的方式安装到Linux下面，从而能通过输入Multiwfn命令启动程序（如果你装的是noGUI版，需要把下面说的脚本里的Multiwfn改为Multiwfn_noGUI）。
+
+
+
+对Multiwfn目录下的examples\RESP\目录下的RESP.sh根据需要进行恰当的修改。此脚本默认调用的是g09，Gaussian16的用户应当将其中的g09替换为g16。此脚本默认为在B3LYP-D3(BJ)/def2-SVP级别下对结构进行优化，然后在B3LYP-D3(BJ)/def2-TZVP级别下计算单点能同时产生分子表面静电势数据，然后调用formchk把chk文件转化为fchk，最后调用Multiwfn产生RESP电荷。量化计算级别在这个脚本里都体现得很清楚，大家可以根据需要对关键词进行修改。
+
+
+
+此脚本默认的计算级别算出的RESP电荷的质量已经很好。当前脚本自动做的B3LYP-D3(BJ)/def2-SVP级别的几何优化对50个原子体系的耗时就已经不太低了，因此几何优化部分如果算不动或者想显著降低耗时的话，可以把原有的关键词改为# PM6D3 opt，即使用PM6-D3半经验方法在真空中做优化，但这个级别主要只适合普通有机体系而且体系没有局部具有显著离子特征的情况。虽然这样得到的结构精度不如B3LYP-D3(BJ)/def2-SVP的理想，但对于算RESP电荷的目的问题不大。单点任务部分算不动的话，可以把def2-TZVP降到6-311G**，如果是阴离子建议改为6-311+G**。
+
+
+
+注意Gaussian09 D.01版本之前不支持DFT-D3校正，因此用老版本者应当把脚本里em=GD3BJ关键词去掉，相关信息看《DFT-D色散校正的使用》（http://sobereva.com/210）。
+
+
+
+
+
+2 使用脚本
+
+
+
+将Multiwfn目录下的examples\RESP\目录下的RESP.sh拷到当前目录，使用chmod +x ./RESP.sh给它增加可执行权限。把含有分子结构信息的文件也拷到当前目录，格式必须是Multiwfn认识的（可以是xyz/mol/mol2/pdb/fch/wfn/molden/gjf等等）。然后运行下面的命令：
+
+./RESP.sh [文件名] [净电荷] [自旋多重度] [溶剂名]
+
+比如./RESP.sh H2O.xyz 0 1 ethanol命令将在IEFPCM隐式溶剂模型表现的乙醇环境中计算中性单重态水分子的RESP电荷。如果净电荷和自旋多重度不写，则分别默认为0和1。如果溶剂名不写，默认为water，如果写gas，则在真空下计算。支持的溶剂名见http://sobereva.com/g09/k_scrf.htm的末尾。
+
+
+
+计算完毕后，当前目录下就有了和输入文件同名的.chg文件。这是个文本文件，前四列是元素名和优化后的坐标，最后一列就是RESP电荷。以下是运算过程的输出例子：
+
+
+
+[root@192 other2]# ./RESP.sh H2O.xyz
+
+Net charge was not defined. Default to 0
+
+Spin multiplicity was not defined. Default to 1
+
+Running optimization task via Gaussian...
+
+Done!
+
+Running single point task via Gaussian...
+
+Done!
+
+Running formchk...
+
+Running Multiwfn...
+
+Finished! The optimized atomic coordinates with RESP charges (the last column) have been exported to H2O.chg in current folder
+
+
+
+如果调用Gaussian运行失败，脚本就会自动停止，届时大家请仔细检查当前目录下的gau.out文件判断出错原因。
+
+
+
+计算的时候用的CPU核数取决于Default.Route文件里的-P-设置，这点在《Gaussian的安装方法及运行时的相关问题》（http://sobereva.com/439）里说了。
+
+
+
+本文的做法只是以最一般的方式计算RESP电荷，如果需要更灵活的拟合方式，比如设置电荷等价性、设置某个片段总电荷为特定值等等，需要在Multiwfn的RESP模块的界面里进行设置，在《RESP拟合静电势电荷的原理以及在Multiwfn中的计算》（http://sobereva.com/441）文中有充分、详细的介绍。
+
+
+
+如果你的输入的结构文件里的结构就已经足够好，不想让脚本自动再做优化浪费时间，可以用examples\RESP\目录下的RESP_noopt.sh代替前述的RESP.sh，二者用法完全一样，只不过前者不做优化步骤。
+
+
+
+如果你的体系里含有18号及以后的元素，由于Gaussian没有内置拟合静电势用的原子半径，因此无法通过以上脚本自动得到RESP电荷，而必须手动做Gaussian计算得到fch文件后自行利用Multiwfn按照http://sobereva.com/441说的操作来计算RESP电荷（届时也会提示缺半径，但按照屏幕上的提示，用Multiwfn自动推荐的半径即可）。
+
+
+
+如果以本文的方式计算了RESP电荷，请别忘了引用Multiwfn原文。引用方式在《Multiwfn FAQ》（http://sobereva.com/452）里写明了。
+
+### 2 楼
+
+报这个错误，未找到原因，求助
+
+Net charge was not defined. Default to 0
+
+Spin multiplicity was not defined. Default to 1
+
+forrtl: severe (59): list-directed I/O syntax error, unit -5, file Internal List-Directed Read
+
+Image              PC                Routine            Line        Source             
+
+Multiwfn           000000000198D709  Unknown               Unknown  Unknown
+
+Multiwfn           00000000019B7F3A  Unknown               Unknown  Unknown
+
+Multiwfn           00000000019B64BB  Unknown               Unknown  Unknown
+
+Multiwfn           00000000005E85B9  Unknown               Unknown  Unknown
+
+Multiwfn           00000000005A8AF1  Unknown               Unknown  Unknown
+
+Multiwfn           0000000000657E16  Unknown               Unknown  Unknown
+
+Multiwfn           000000000040B41E  Unknown               Unknown  Unknown
+
+libc-2.17.so       00002B7926F143D5  __libc_start_main     Unknown  Unknown
+
+Multiwfn           000000000040B329  Unknown               Unknown  Unknown
+
+### 3 楼
+
+wangzhehyd 发表于 2019-4-18 15:17
+
+报这个错误，未找到原因，求助
+
+Net charge was not defined. Default to 0
+
+Spin multiplicity was n ...
+
+可以修改下脚本，检查一下中间产生的Gaussian输入输出文件。注意一定得是最新的Multiwfn版本
+
+### 4 楼
+
+sobereva 发表于 2019-4-18 17:36
+
+可以修改下脚本，检查一下中间产生的Gaussian输入输出文件。注意一定得是最新的Multiwfn版本
+
+谢谢，已解决。请问Gaussian部分的计算是否可以通过TeraChem完成，然后再用multiwfn处理得到resp电荷？
+
+### 5 楼
+
+wangzhehyd 发表于 2019-4-18 20:24
+
+谢谢，已解决。请问Gaussian部分的计算是否可以通过TeraChem完成，然后再用multiwfn处理得到resp电荷？
+
+我没有测试过Terachem产生的molden文件是否规矩，能否正确被Multiwfn读取（如果有问题通常载入文件的时候程序就会有警告）
+
+如果能正确读取，把脚本稍微改写一下就可以实现Multiwfn+Terachem产生RESP电荷。如果不能正常读取，还得多加一步调用molden2aim把molden文件标准化的过程
+
+### 6 楼
+
+厉害，这个超方便，而且得到了结构优化的小分子，可以直接对接了。
+
+
+
+另外请教一下sob老师，画出来的小分子用AM1半经验优化对分子对接结果应该无大影响吧？
+
+### 7 楼
+
+azero 发表于 2019-5-8 18:05
+
+厉害，这个超方便，而且得到了结构优化的小分子，可以直接对接了。
+
+
+
+另外请教一下sob老师，画出来的小分 ...
+
+虽然AM1也不是不能用，但已经过时了。如果为了优化时候图快，建议你改成Gaussian能支持的更好的PM6D3或PM7
+
+### 8 楼
+
+sobereva 发表于 2019-5-8 18:28
+
+虽然AM1也不是不能用，但已经过时了。如果为了优化时候图快，建议你改成Gaussian能支持的更好的PM6D3或PM ...
+
+这个样子，毕竟不是学量化的。
+
+还是用sob老师你脚本优化出来的坐标省事。才几个小分子，花不了多少时间。
+
+### 9 楼
+
+本帖最后由 wuzhiyi 于 2019-6-19 18:44 编辑 
+
+
+
+sob老师好，我是做生物出生的对量化不是很了解。传统上，我们一般用amber14SB来表示蛋白，然后用gaff来表示小分子的LJ，bonded／angle／dihedral。对于电荷的处理，人们一般要么用AM1－BCC，要么用HF/6－31G*做RESP，人们给出的理由是，因为LJ，bonded／angle／dihedral都是以partial charge是按HF/6－31G*来计算为基础来定义的所有不可以换。
+
+
+
+
+
+想问一下sob老师对这种观点的看法如何？我稍微找了找，发现好像大部分时候，人们从新拟合电荷的时候都是在HF/6－31G*下拟合的。比如：
+
+Development and benchmark to obtain AMBER parameters dataset for non-standard amino acids modified with 4-hydroxy-2-nonenal
+
+Forcefield_PTM: Ab Initio Charge and AMBER Forcefield Parameters for Frequently Occurring Post-Translational Modifications
+
+Reparametrization of Protein Force Field Nonbonded Interactions Guided by Osmotic Coefficient Measurements from Molecular Dynamics Simulations
+
+Revised AMBER parameters for bioorganic phosphates
+
+
+
+
+
+而且最新的FF19SB （https://chemrxiv.org/articles/ff ... in_Solution/8279681）仍然是沿用HF/6－31G*的电荷，然后在这个基础上重新拟合dihedral。
+
+虽然ff15ipq （https://pubs.acs.org/doi/full/10.1021/acs.jctc.6b00567）是用IPolQ在MP2/cc-pVTZ下拟合的电荷，但好像没什么人用。想问一下sob老师能不能推荐一下用amberFF配合B3LYP-D3(BJ)/def2-TZVP来计算电荷的文献？
+
+
+
+想问一下，用更好的级别比如B3LYP-D3(BJ)/def2-TZVP主要在哪一方面改善RESP的表现？我们一般用溶解自由能来作为一个很粗略的检测手段，想问一下，有没有这样的研究比如找一个小分子的溶解数据库（类似Mobley的FreeSolv：https://github.com/MobleyLab/FreeSolv，这其中有AM1－BCC和试验结果的对比）然后对比B3LYP-D3(BJ)/def2-TZVP和HF/6－31G*以及实验结果进行比较之类的。
+
+
+
+另想问一下IPolQ这种改善隐式溶剂对水环境的表现的方法，sob老师的看法如何？
+
+
+
+谢谢
+
+### 10 楼
+
+wuzhiyi 发表于 2019-6-19 18:38
+
+sob老师好，我是做生物出生的对量化不是很了解。传统上，我们一般用amber14SB来表示蛋白，然后用gaff来表示 ...
+
+早在2003年提出AMBER03的时候原作者就已经把计算RESP电荷的水平提升到了B3LYP/cc-pVTZ结合IEFPCM隐式溶剂模型，还死咬早就过时的HF/6-31G*是完全匪夷所思的
+
+
+
+稍有量化常识就知道，B3LYP-D3(BJ)/def2-TZVP结合隐式溶剂模型对波函数的描述精度比HF/6-31G*强百倍，后者那是当年计算条件差，不得已而为之，而且只能近似利用HF波函数质量特别恶心、高估极性这点来非常近似地体现水溶液中被极化的情况。显然如今这年头没有任何理由去用HF/6-31G*。
+
+
+
+没有恰好现成的B3LYP-D3(BJ)/def2-TZVP结合隐式溶剂模型算RESP电荷的文献，因为这个级别是我的主张，而且显然是非常合理的。def2-TZVP的档次和cc-pVTZ接近，而对于DFT更划算。B3LYP加了D3去优化结构明显比起用B3LYP对于弱相互作用对体系结构影响显著的时候强得多。见
+
+谈谈“计算时是否需要加DFT-D3色散校正？” 
+
+http://sobereva.com/413
+
+B3LYP-D3(BJ)/def2-TZVP结合隐式溶剂模型算RESP电荷你大可放心去用，除非碰上缺乏量化常识的审稿人，否则绝对不会被怼，即便真碰上了，也有充分理由去回击。
+
+
+
+计算级别问题我已经在此文1.5节里有非常详细的说明
+
+RESP拟合静电势电荷的原理以及在Multiwfn中的计算
+
+http://sobereva.com/441（http://bbs.keinsci.com/thread-10880-1-1.html）
+
+
+
+IPolQ没怎么去特意关注，没什么意思。
+
+
+
+FF19SB沿用HF/6-31G*是考虑和以往老版本蛋白质骨架参数的兼容性，然而自己算RESP电荷都是算的新的有机小分子，完全不需要考虑这种兼容性问题。
+
+如果AMBER力场的开发者现在从头重新开发一套新的力场，我相信100%不会再去用HF/6-31G*算RESP电荷。
+
+### 11 楼
+
+sob老师我想请教一下如何获取分子量十万左右的交联聚合物的RESP电荷
+
+### 12 楼
+
+naoki 发表于 2019-9-6 10:41
+
+sob老师我想请教一下如何获取分子量十万左右的交联聚合物的RESP电荷
+
+这只能对单体进行RESP电荷计算（比如取三聚体，加上电荷约束保证中间单元净电荷量为0），然后再拼成整体。类似于蛋白质/核酸的处理
+
+### 13 楼
+
+sobereva 发表于 2019-9-7 02:17
+
+这只能对单体进行RESP电荷计算（比如取三聚体，加上电荷约束保证中间单元净电荷量为0），然后再拼成整体 ...
+
+谢谢Sob老师回复，我还想向您请教一下，比如取三聚体的话分子末端是补全基团封端，还是空着待连接位置，强行约束静电荷为0？谢谢啦
+
+### 14 楼
+
+naoki 发表于 2019-9-25 09:47
+
+谢谢Sob老师回复，我还想向您请教一下，比如取三聚体的话分子末端是补全基团封端，还是空着待连接位置， ...
+
+必须得用基团封闭，否则边缘区域的电子结构完全不合理
+
+### 15 楼
+
+sobereva 发表于 2019-9-26 04:11
+
+必须得用基团封闭，否则边缘区域的电子结构完全不合理
+
+sob老师，利用orca产生的molden文件结合Multiwfn产生RESP电荷，有没有像Gaussian那样调用cube进行加速的方法呢？因为我通常算的分子比较大，300个原子左右，用Multiwfn进行计算RESP时花费时间比较长。
+
+### 16 楼
+
+yaochuang 发表于 2019-10-5 10:28
+
+sob老师，利用orca产生的molden文件结合Multiwfn产生RESP电荷，有没有像Gaussian那样调用cube进行加速的 ...
+
+把ORCA的.molden载入Multiwfn，用主功能100的主功能2转换成fch，重启后再用fch作为输入文件，就可以直接调用cubegen加速静电势计算。
+
+ORCA据我所知没有类似的工具
+
+### 17 楼
+
+本帖最后由 snljty 于 2019-12-22 16:32 编辑 
+
+
+
+请问卢老师，以下观点是否正确。我算了一下感觉是这样。谢谢！
+
+脚本里算单点和拟合静电势一步的色散校正可以是不需要的，因为原理上这对拟合静电势并没有影响。D3色散校正不影响某个结构的波函数。
+
+### 18 楼
+
+snljty 发表于 2019-12-22 16:28
+
+请问卢老师，以下观点是否正确。我算了一下感觉是这样。谢谢！
+
+脚本里算单点和拟合静电势一步的色散校正可 ...
+
+不能这么说
+
+
+
+很多情况分子内色散作用会严重影响构象，此时光靠B3LYP没法合理表现，若结构优化明显不合理，最终导致电荷也会不合理。如果任何情况下脚本里加D3都没意义的话显然就不会加了。
+
+### 19 楼
+
+sobereva 发表于 2019-12-22 19:40
+
+不能这么说
+
+
+
+很多情况分子内色散作用会严重影响构象，此时光靠B3LYP没法合理表现，若结构优化明显不合 ...
+
+卢老师，我是说结构优化用D3，单点和拟合静电势就不写了，这样说对么？谢谢。
+
+### 20 楼
+
+snljty 发表于 2019-12-22 20:03
+
+卢老师，我是说结构优化用D3，单点和拟合静电势就不写了，这样说对么？谢谢。
+
+虽然不影响结果，但也没必要刻意把这个脚本里单点部分的D3去掉
+
+### 21 楼
+
+sobereva 发表于 2019-12-22 20:27
+
+虽然不影响结果，但也没必要刻意把这个脚本里单点部分的D3去掉
+
+我就是想确认下原理上是一样的~谢谢老师的回答！
+
+### 22 楼
+
+今日更新的Multiwfn文件包里的对应本文的脚本进行了更新，并相应地更新了本文。
+
+### 23 楼
+
+厉害，学习一下
+
+### 24 楼
+
+卢老师好，请问Multiwfn_3,8版本中RESP.sh脚本中高斯计算了3次，第一次是“Running optimization task via Gaussian...”，第二次什么都没有注释，第三次是“echo Running single point task via Gaussian...”，第2次是高斯计算是什么目的，是多余的吗？
+
+### 25 楼
+
+yang001 发表于 2020-9-18 08:54
+
+卢老师好，请问Multiwfn_3,8版本中RESP.sh脚本中高斯计算了3次，第一次是“Running optimization task via  ...
+
+第二次是多余的，应该是之前调试脚本的时候忘删了，谢谢指出。我已经更新了官网上的Multiwfn 3.8(dev)里的这个脚本，删除了多算的这一次
+
+### 26 楼
+
+对脚本编写还不熟悉，空下来得好好学习一下了。社长您好，请教一下，怎么在脚本里添加gaussian的CPU和内存限定词呢？特别是核数多的机子，同时还在运行有任务的，想利用空余的核数计算应该如何实现？谢谢了。
+
+### 27 楼
+
+用RESP.sh脚本计算电荷报错，out文件内容如下，请假老师是那里的问题呢。
+
+ Gaussian 09:  IA32L-G09RevA.01  8-May-2009
+
+                24-Jul-2021 
+
+ ******************************************
+
+ %chk=gau.chk
+
+ ----------------------------------------------------------------------
+
+ # B3LYP/def2TZVP em=GD3BJ scrf(solvent=water) pop=MK IOp(6/33=2,6/42=6
+
+ ) geom=allcheck guess=read
+
+ ----------------------------------------------------------------------
+
+ QPErr --- A syntax error was detected in the input line.
+
+ # B3LYP/def2TZVP em=GD3BJ scrf(solvent=w
+
+         '
+
+ Last state="GCL"
+
+ TCursr= 1177 LCursr=    8
+
+ Error termination via Lnk1e in /home/sbg/g09/l1.exe at Sat Jul 24 17:14:48 2021.
+
+ Job cpu time:  0 days  0 hours  0 minutes  0.1 seconds.
+
+ File lengths (MBytes):  RWF=      1 Int=      0 D2E=      0 Chk=      1 Scr=      1
+
+### 28 楼
+
+sun666 发表于 2021-7-23 17:26
+
+用RESP.sh脚本计算电荷报错，out文件内容如下，请假老师是那里的问题呢。
+
+ Gaussian 09:  IA32L-G09RevA.0 ...
+
+http://bbs.keinsci.com/thread-20395-1-1.html
+
+
+
+看2楼和3楼
+
+### 29 楼
+
+sun666 发表于 2021-7-23 17:26
+
+用RESP.sh脚本计算电荷报错，out文件内容如下，请假老师是那里的问题呢。
+
+ Gaussian 09:  IA32L-G09RevA.0 ...
+
+Gaussian太老
+
+要么换更新Gaussian版本，要么去掉脚本里的em=GD3BJ。本文已经明确说了
+
+
+
+注意Gaussian09 D.01版本之前不支持DFT-D3校正，因此用老版本者应当把脚本里em=GD3BJ关键词取消，相关信息看《DFT-D色散校正的使用》（http://sobereva.com/210）。
+
+### 30 楼
+
+多谢社长的脚本，使用过程中发现两个小问题，还向社长请教！
+
+
+
+1.直接执行脚本 “./RESP.sh abc.pdb -1 0”，
+
+  高斯报错“FileIO operation on non-existent file.”
+
+  看了一下，怀疑是和 $keyword_SP geom=allcheck guess=read 有关；
+
+
+
+2.对 $keyword_SP geom=allcheck guess=read 进行修改
+
+   只改为 $keyword_SP
+
+   高斯报错为电荷和自旋多重度的信息读不到
+
+
+
+请问有什么解决的思路吗，多谢！
+
+### 31 楼
+
+CCmaters 发表于 2021-7-27 22:21
+
+多谢社长的脚本，使用过程中发现两个小问题，还向社长请教！
+
+
+
+1.直接执行脚本 “./RESP.sh abc.pdb -1 0 ...
+
+1 修改脚本保留中间产生的Gaussian输出文件 ，看是否运行有出错的地方
+
+正常情况下不会有这种报错
+
+
+
+2 不要做这种修改
+
+非要改的话，必须输入文件里直接提供坐标、电荷、自旋多重度
+
+### 32 楼
+
+请问sob老师，这个脚本是默认使用1个核来计算吗
+
+### 33 楼
+
+nwafu-zc 发表于 2021-11-7 10:47
+
+请问sob老师，这个脚本是默认使用1个核来计算吗
+
+看你Default.Route怎么设的
+
+### 34 楼
+
+今日更新的Multiwfn文件包里加入了RESP_noopt.sh脚本，此脚本和RESP.sh用法完全一样，只不过不自动做优化，免得输入文件里结构已经足够理想了但还再做优化白浪费时间。
+
+### 35 楼
+
+sob老师您好，最近在整理使用resp电荷进行模拟的相关知识。
+
+由于我做resp电荷拟合是为了做蛋白-配体的MD模拟。所以想请问老师我这样的步骤可行吗？
+
+对于GROMACS：
+
+1.小分子先用sobtop或acpype生成拓扑相关文件
+
+2.利用RESP懒人脚本对小分子的mol2生成chg文件，将最后一列的电荷替换小分子的itp的atoms列的电荷列。并在总拓扑文件中include。
+
+
+
+对于Amber：（主要是对这个过程有疑惑，不清楚对不对）
+
+小分子mol2用懒人脚本生成chg文件，将最后一列的电荷替换mol2文件的最后一列。
+
+使用parmchk2对mol2文件生成frcmod文件。
+
+在tleap中load小分子与parm文件后再生成小分子的拓扑文件。
+
+
+
+老师您看这样可以吗？
+
+### 36 楼
+
+Ryanchen 发表于 2022-10-22 22:34
+
+sob老师您好，最近在整理使用resp电荷进行模拟的相关知识。
+
+由于我做resp电荷拟合是为了做蛋白-配体的MD模 ...
+
+我如今不怎么用Amber
+
+产生gmx拓扑文件后也可以用parmED之类转成AMBER的格式
+
+### 37 楼
+
+sobereva 发表于 2022-10-23 04:11
+
+我如今不怎么用Amber
+
+产生gmx拓扑文件后也可以用parmED之类转成AMBER的格式
+
+明白了，谢谢老师指导！
+
+### 38 楼
+
+sobereva 发表于 2019-4-18 17:36
+
+可以修改下脚本，检查一下中间产生的Gaussian输入输出文件。注意一定得是最新的Multiwfn版本
+
+老师，这个懒人脚本对windows系统能用吗？
+
+### 39 楼
+
+ZHIMING123 发表于 2022-11-2 10:24
+
+老师，这个懒人脚本对windows系统能用吗？
+
+在cmder模拟的bash环境下，或者在虚拟机下都能用
+
+### 40 楼
+
+sobereva 发表于 2022-10-23 04:11
+
+我如今不怎么用Amber
+
+产生gmx拓扑文件后也可以用parmED之类转成AMBER的格式
+
+老师，我用sob生成小分子立场文件，itp文件不加原子电荷那块行吗？（我看您说算resp然后加上），能正常跑就是不知道会不会影响结果？
+
+### 41 楼
+
+ZHIMING123 发表于 2022-11-3 10:57
+
+老师，我用sob生成小分子立场文件，itp文件不加原子电荷那块行吗？（我看您说算resp然后加上），能正常跑 ...
+
+没有叫sob的程序
+
+
+
+没有原子电荷怎么描述静电相互作用
+
+### 42 楼
+
+sobereva 发表于 2022-11-4 07:52
+
+没有叫sob的程序
+
+
+
+没有原子电荷怎么描述静电相互作用
+
+是sobtop生成amber力场的小分子文件，但是itp里原子电荷那列都是0，然后我就拿去动力学了，目前到npt结束一直正常，不知道会不会影响结果
+
+### 43 楼
+
+ZHIMING123 发表于 2022-11-4 11:11
+
+是sobtop生成amber力场的小分子文件，但是itp里原子电荷那列都是0，然后我就拿去动力学了，目前到npt结束 ...
+
+当然不对啊，电荷是非常重要的啊。
+
+简单的一个例子，如果所有的电荷都是0，那你如何区别难溶于水三乙胺和易溶于水三乙胺盐酸盐的阳离子部分。
+
+### 44 楼
+
+ZHIMING123 发表于 2022-11-4 11:11
+
+是sobtop生成amber力场的小分子文件，但是itp里原子电荷那列都是0，然后我就拿去动力学了，目前到npt结束 ...
+
+结果没意义
+
+诸如模拟水的时候所有原子电荷都为0，相当于氢键都完全无法描述，标况下水就全蒸发了
+
+不要以为不报错结果就能用
+
+### 45 楼
+
+sobereva 发表于 2022-11-6 09:29
+
+结果没意义
+
+诸如模拟水的时候所有原子电荷都为0，相当于氢键都完全无法描述，标况下水就全蒸发了
+
+不要 ...
+
+好的，谢谢老师，老师，我看您说用1fs可以不加约束去做nvt、npt，然后我做了也没有报错，那我想问您跑md那步也是1fs 不加约束吗？还是说可以2fs加约束？
+
+### 46 楼
+
+ZHIMING123 发表于 2022-11-6 10:56
+
+好的，谢谢老师，老师，我看您说用1fs可以不加约束去做nvt、npt，然后我做了也没有报错，那我想问您跑md ...
+
+2fs加约束省时间，所以通常都用这种
+
+### 47 楼
+
+sobereva 发表于 2022-11-6 10:59
+
+2fs加约束省时间，所以通常都用这种
+
+老师，如果2fs，加约束报错了，用1fs不加约束成功了，结果可信吗？
+
+### 48 楼
+
+ZHIMING123 发表于 2022-11-6 11:35
+
+老师，如果2fs，加约束报错了，用1fs不加约束成功了，结果可信吗？
+
+没其它前提不好说有没有其它硬伤，但只针对这一点来说，没必然问题
+
+### 49 楼
+
+sobereva 发表于 2022-11-6 13:55
+
+没其它前提不好说有没有其它硬伤，但只针对这一点来说，没必然问题
+
+好的谢谢老师，老师我用完1fs不加约束跑完npt可以直接md吗？看您在问答里面说等体系弛豫了在换用2fs加约束试。
+
+### 50 楼
+
+ZHIMING123 发表于 2022-11-6 15:31
+
+好的谢谢老师，老师我用完1fs不加约束跑完npt可以直接md吗？看您在问答里面说等体系弛豫了在换用2fs加约 ...
+
+语义不明
+
+本来NPT就是MD用的系综的一种
+
+表述必须严谨、清楚
+
+### 51 楼
+
+sobereva 发表于 2022-11-7 10:07
+
+语义不明
+
+本来NPT就是MD用的系综的一种
+
+表述必须严谨、清楚
+
+好的老师，就是我用1fs不加约束去执行完npt，可以直接进行下一步吗？还是说再来一步2fs加约束的npt？
+
+### 52 楼
+
+ZHIMING123 发表于 2022-11-9 15:58
+
+好的老师，就是我用1fs不加约束去执行完npt，可以直接进行下一步吗？还是说再来一步2fs加约束的npt？
+
+可以
+
+### 53 楼
+
+你好老师，想问一下这个目录是有指定路径吗，我把RESP.sh以及摩尔结构文件放在一起，运行Multiwfn检索不到文件
+
+### 54 楼
+
+qixun 发表于 2024-4-16 12:10
+
+你好老师，想问一下这个目录是有指定路径吗，我把RESP.sh以及摩尔结构文件放在一起，运行Multiwfn检索不到 ...
+
+执行脚本的命令是在linux的终端里运行的，而不是在Multiwfn程序里运行的
+
+## 入库完整性评估
+
+- 主帖全文收录
+- 全部回复完整收录

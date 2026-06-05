@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CP2K中遇到SCF难收敛时的解决方法</title>
+<style>
+body { max-width: 920px; margin: 2rem auto; padding: 0 1rem; line-height: 1.72; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #1f2933; }
+a { color: #2563eb; }
+h1, h2, h3, h4 { line-height: 1.35; }
+.source-note { color: #667085; font-size: 0.92rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+strong { color: #111827; }
+</style>
+</head>
+<body>
+<!-- Clean archival copy generated from browser-verified Markdown; site navigation, login widgets, reply forms, footers, and ad containers are intentionally omitted. -->
+<h1>CP2K中遇到SCF难收敛时的解决方法</h1>
+<div class="source-note">
+<div>Source: <a href="http://bbs.keinsci.com/thread-37196-1-1.html">http://bbs.keinsci.com/thread-37196-1-1.html</a></div>
+<div>Archive scope: 仅保留已抽取正文；站点导航、登录/回帖控件、页脚和非正文区已移除。</div>
+</div>
+<h2>CP2K中遇到SCF难收敛时的解决方法</h2>
+<ul>
+<li>原帖 URL：<a href="http://bbs.keinsci.com/thread-37196-1-1.html">http://bbs.keinsci.com/thread-37196-1-1.html</a></li>
+</ul>
+<h3>楼层正文</h3>
+<h4>1 楼（楼主）｜sobereva</h4>
+<p>CP2K中遇到SCF难收敛时的解决方法Solution when SCF is difficult to converge in CP2K</p>
+<p>文/Sobereva@北京科音First release: 2023-May-15   Last update: 2024-Feb-22</p>
+<p>0 前言</p>
+<p>经常有人问CP2K中遇到SCF难收敛怎么解决，这是很家常便饭的问题。这里就基于笔者讲授的“北京科音CP2K第一性原理培训班”（http://www.keinsci.com/workshop/KFP_content.html）里面相关部分的内容专门写个博文，供CP2K用户参考。这里假定读者已经了解CP2K计算的基本的背景知识（如k点、CUTOFF、对角化、OT、&amp;BS、smearing等等），如果不了解相关名词、算法的话，十分推荐参加这个培训全面、系统学习一遍。</p>
+<p>笔者之前专门写过Gaussian用户遇到SCF不收敛的解决方法的文章《解决SCF不收敛问题的方法》（http://sobereva.com/61），本文和那篇文章一样，已经把所有可能有用的方法和要注意的问题说得尽可能全面、充分了，读者遇到难收敛/不收敛时需要结合实际情况一个个尝试。切勿问笔者“这文章我看了，但还是解决不了”之类的，我没有任何可额外补充的（至多是给出当前计算的尽可能详细的信息，比如给出输入输出文件，然后我能回答哪些问题需要优先考虑、哪些方法值得优先尝试）。</p>
+<p>下面第1节先说说遇到SCF不收敛时一般情况需要考虑的问题和解决策略，然后第2、3节再分别说使用对角化和OT时分别可以进一步考虑的。最后再说一下几何优化、分子动力学时与SCF收敛有关的问题。在此之前先看培训班ppt了解一下CP2K是怎么判断SCF收敛的：</p>
+<p>1.png (197.45 KB, 下载次数 Times of downloads: 262)</p>
+<p>下载附件 Download</p>
+<p>2024-5-14 08:16 上传 Uploaded</p>
+<p>1 一般情况时考虑的</p>
+<p>• 检查结构合理性。SCF是否容易收敛和结构的合理性关系极大，化学意义越强的结构通常越容易收敛。因此遇到SCF很难收敛时，需要结合结构化学、固体物理常识检查结构是否靠谱，如模型是否有意义、是否漏了原子、是否某些原子所处的化学环境和实际明显不符（如过渡金属本该与配体成键的地方却光秃秃地悬着）等等。且要结合图像肉眼检查，确保不存在不该出现的结构严重扭曲、盒子边缘原子和周期镜像原子发生过近接触等问题。若有这些问题，即便SCF收敛了，结果显然也毫无意义。</p>
+<p>• 确认关键词、设置没明显不合理的。CP2K的关键词很复杂，对使用者的知识水平要求很高，若用了明显不当的关键词和设置，SCF很难收敛或收敛到离谱结果是极其正常的事，然而很多要点是初学者难以注意到的。比如计算自旋极化体系的时候必须得在&amp;DFT里写UKS（或等价的LSD），否则即便自旋多重度设的是&gt;1，程序也会愣当成是闭壳层算。再比如用wavelet的Poisson solver算孤立体系的时候，如果体系有明显电子密度分布的区域跨越了盒子，结果就无意义。</p>
+<p>顺带一提，CP2K属于那种是完全手动挡还很个性的车。如果经验不够丰富的话，笔者强烈建议总是用Multiwfn（http://sobereva.com/multiwfn）产生其输入文件，见《使用Multiwfn非常便利地创建CP2K程序的输入文件》（http://sobereva.com/587）。Multiwfn的CP2K输入文件创建功能将CP2K的使用尽最大可能简化，不仅用起来极其方便省事，对初学者还能很大程度减小关键词使用不当的可能性。比如将自旋多重度设成&gt;1时自动就会添加UKS、用wavelet做非周期性计算时会自动设置足够大又不太浪费的盒子尺寸并且加入自动让体系在盒子里居中的设置。但无论Multiwfn给CP2K的输入文件的创建提供了多么巨大的便利，CP2K都绝对不是一个黑箱程序。通过北京科音CP2K第一性原理计算培训班（http://www.keinsci.com/KFP）真正完整、系统、深入学一遍CP2K程序的各种相关知识并结合课上讲授的海量例子掌握怎么用CP2K研究广泛的问题，能减少在反复试错上白白浪费的巨量时间、充分避免计算存在硬伤。</p>
+<p>• 确保体系的净电荷、自旋多重度的设置合理。这俩如果设置不当的话，相当于计算了无意义或激发态的电子结构，SCF极难收敛也是很可能出现的事。特别是对于磁性体系，自旋多重度的设置对SCF收敛往往影响极大。</p>
+<p>• 如果SCF有收敛趋势，可增大SCF迭代次数上限再试，即&amp;SCF里的MAX_SCF，其默认的50对于很多情况明显太小。Multiwfn产生的CP2K输入文件里默认用128（128是为了优雅，2的7次方。和Gaussian程序一致），绝大多数情况都够了，但也可能碰上极个别体系仍需要加大。</p>
+<p>笔者超级反感一碰到SCF不收敛，也不观察收敛趋势，上来就增加迭代次数上限的做法，因为这是最典型的菜鸟思维，绝大多数情况毫无用处而白浪费时间。因为如果SCF过程都发生显著震荡了、没收敛的苗头，再怎么迭代下去都是白搭，纯粹是毫无意义地浪费时间和计算资源。</p>
+<p>• 如果发现用其它泛函或基组下计算能收敛的话，可以读取其收敛的波函数作为初猜，这至少比自动产生的初猜波函数要好、更容易收敛。也即&amp;SCF里用SCF_GUESS RESTART，且&amp;DFT里WFN_RESTART_FILE_NAME指定成之前任务的.wfn文件（若考虑了k点是.kp文件）。注意两次的基组特征必须定性一致，比如之前计算用的大核赝势，而现在用小核赝势或全电子基组，这时候读之前的波函数就没意义了。</p>
+<p>通常较小的基组下计算比大基组下计算更容易收敛，比如直接用TZV2P档次的MOLOPT基组不收敛的话，可以尝试用DZVP档次的算，若收敛了，读它收敛的波函数为初猜。</p>
+<p>往往HF成份越大的泛函越容易收敛，很大程度是因为其HOMO-LUMO gap更大、SCF过程中占据和空轨道混合程度相对更缓和所致。因此遇上SCF难收敛时可以尝试用HF成份比实际要用的泛函更大的泛函，若能收敛，读取其收敛的波函数当初猜。HF成份可以参考《不同DFT泛函的HF成份一览》（http://sobereva.com/282）。</p>
+<p>如果原本用的是纯泛函，想尝试杂化泛函但用不动，也可以用DFT+U试试，耗时和纯泛函基本一致，但此时不支持k点，此外怎么获得+U用的Ueff参数也是个问题。如果实际计算不打算+U，也可以尝试3或4 eV的+U看看能否令SCF收敛，如果能，则不+U时读取其收敛的波函数当初猜。</p>
+<p>• 做杂化泛函计算时（特别是对于周期性体系）通常会在&amp;DFT / &amp;XC / &amp;HF / &amp;SCREENING里开启SCREEN_ON_INITIAL_P从而基于初始的密度矩阵做双电子积分的屏蔽来巨幅节约耗时，Multiwfn产生的杂化泛函计算的输入文件里默认也开了这个。若此时没有读取之前收敛的波函数当初猜（通常是便宜得多的纯泛函计算的），则CP2K会基于自动初猜的波函数对应的密度矩阵做积分屏蔽，此时结果通常无意义，SCF能收敛的概率也非常低！然而这个杂化泛函计算的关键要点却经常被初学者所忽略！笔者强烈建议在做杂化泛函计算之前仔细把此文认真读一遍：《CP2K做杂化泛函计算的关键要点和简单例子》（http://sobereva.com/690）。</p>
+<p>• 确保恰当考虑了k点、k点数够多。如果晶胞边长不够大，显然必须考虑k点而不能只用默认的Gamma点。而且k点设得还得够多，否则SCF难收敛极为正常。k点如果设置不当，就算SCF能收敛了也没意义。众所周知，算能量问题，原则上k点应当大到足以令能量随k点数增加而基本收敛的程度。</p>
+<p>• 尝试增大&amp;DFT / &amp;MGRID里的CUTOFF、REL_CUTOFF。这俩截断能设置控制格点精度，不够大的话不仅结果不准，甚至可能造成SCF难收敛。如果当前明显已经够大了，就没必要再盲目尝试再增加了。注：还有种说法是尝试&amp;DFT / &amp;XC / &amp;XC_GRID里写USE_FINER_GRID T将计算交换-相关泛函部分的格点精度提升为CUTOFF的四倍，但根据我的经验这并没有什么实际用处，而耗时暴增。</p>
+<p>• CP2K默认的产生初猜波函数的方法是孤立原子密度的叠加，在整个任务一开始时会对每个KIND对应的原子在孤立状态下做计算，用PRINT_LEVEL MEDIUM时可以看到具体细节。计算孤立原子所用的电子组态可以通过&amp;KIND里的MAGNETIZATION（定义alpha电子数减beta电子数）或者&amp;BS（可以具体控制各个主量子数的各个角量子数上的alpha和beta电子数）来设置。初猜波函数中的孤立原子的组态越接近整个体系收敛的波函数中原子的实际组态则SCF越容易收敛、SCF不收敛的可能性越低。</p>
+<p>如果体系有磁性，遇到SCF不收敛时一定别忘了尝试用MAGNETIZATION或&amp;BS尽可能令初猜波函数中原子组态与实际情况接近，这对SCF是否能够顺利收敛有关键性影响。如果当前体系在文献（可用google搜索来找）或高通量数据库（如Material Project）中已经被计算过，可以参考那里面报道的原子自旋磁矩或原子组态来设。有时同一种元素在体系里处于不止一种化学环境，差异很大时（比如明显处于不同价态）可分成多个&amp;KIND分别设置。</p>
+<p>即便体系没有磁性，利用&amp;BS使初猜波函数中的原子带电状态使之尽可能符合实际也往往是有益的。比如对于NaCl这样高度离子性体系计算时SCF不收敛的话，可以尝试令初猜中Na和Cl的原子组态分别对应Na+和Cl-的状态（默认情况下分别对应中性的Na和Cl）。曾经我用PBEsol/pob-TZVP-rev2计算10层的NaCl板时通过这种做法成功解决了SCF不收敛问题。</p>
+<p>• 尝试将&amp;QS / EPS_DEFAULT减小几个数量级，默认为1E-10。EPS_DEFAULT这个参数控制一堆涉及数值计算精度的参数，如果设得太大，有可能造成SCF难收敛。若这个数值当前已经很小了，比如都1E-12了，尝试继续减小则没必要。</p>
+<p>• 改用其它泛函、基组。如果原先的计算级别就是极难收敛，而有其它级别性价比、精度相仿佛，且发现能收敛，那就别死磕当前的了。</p>
+<p>• 在GPW与GAPW之间切换。如果之前用的GPW结合GTH赝势基组不收敛，尝试用GPAW结合一个全电子基组计算试试，反之亦然。</p>
+<p>• 修改默认产生波函数的方式。参见手册里&amp;SCF / SCF_GUESS设置。但其实这没什么用，除了默认的ATOMIC（即前述的基于孤立原子密度叠加产生的）以及RESTART（读取之前的波函数当初猜），其它的一个能打的都没有。</p>
+<p>用ATOMIC产生初猜时，CP2K计算每个KIND对应的孤立原子也是需要SCF迭代的，上限是固定的50轮（没法靠关键词改），在PRINT_LEVEL MEDIUM时其迭代过程会在一开始输出。有时候我发现到了50轮时收敛精度还很差，故有可能在某些情况下由于这个问题导致初猜质量烂，不利于实际体系的SCF收敛。我发现可以通过atom_kind_orbitals.F里atom%optimization%max_iter修改迭代次数上限，比如改成300然后重新编译，一般孤立原子的SCF就都能收敛了。</p>
+<p>• 如果加了外电场时SCF很难收敛，可能是外电场过大所致，可尝试更小的数值。如果就是要用较大的外电场，可以试试读取较小电场或不带电场时收敛的波函数当初猜。有的体系在很强外电场下本来就不可能稳定存在，这时候SCF不收敛自然很正常，是物理上决定的，也别盲目去计算。</p>
+<p>• 实在没辙时干脆放宽SCF收敛限，即加大&amp;SCF / EPS_SCF，默认是1E-5（这其实已经挺宽松了），这是走投无路时的做法。或者换程序，如免费且和CP2K同样流行的Quantum ESPRESSO，或者尝试CP2K里的纯粹基于平面波的SIRIUS模块。某些体系用CP2K的quickstep模块就是很难收敛，如某些d族纯金属的slab，这和算法、基函数特征有关。</p>
+<p>2 用对角化的情况可专门考虑的</p>
+<p>• 对无gap（如金属、石墨烯）或gap很小的体系（非常窄带半导体）应当使用smearing。即加入&amp;SCF / &amp;SMEAR / METHOD FERMI_DIRAC，且在&amp;SCF里用ADDED_MOS要求求解一些空轨道从而能被热激发的电子所占据。ADDED_MOS数目够用就行，设太大了会增加耗时而且也没用处。Multiwfn产生CP2K输入文件时如果开了smearing会自动做ADDED_MOS设置，并根据体系原子数估计一个通常够用的值。用较小电子温度（如200K、300K）时若不收敛可尝试再提升温度，即&amp;SMEAR / ELECTRONIC_TEMPERATURE设的。温度设高时ADDED_MOS往往需要相应地增加，否则热激发的电子没法按Fermi-Dirac分布占该占的空轨道（此时计算时会有警告）。</p>
+<p>我老在网上看到有人不理解smearing原理是什么就胡用、乱试smearing以试图解决SCF不收敛，所以这里强调一下。一定要注意，对于gap不是很小的体系（比如氧化锂等绝缘体），根本没必要尝试smearing，本来这在原理上就不是smearing能起到帮助SCF收敛的情况，而且本文还有其它一堆方法可以尝试用于帮助SCF收敛，完全轮不到考虑用smearing。</p>
+<p>用smearing还会对结果产生一定影响，结果会依赖于电子温度T的设置，用Fermi-Dirac函数做smearing时最终给出的能量相当于是T温度下电子的自由能。如果你就是要得到基态（0K）的电子能量，原则上最好做T→0的外推。如果你不做外推，在能量横向对比时至少也应当用相同的smearing设置。关于smearing的物理意义和实际意义，以及做外推的方法，我在北京科音CP2K第一性原理计算培训班（http://www.keinsci.com/workshop/KFP_content.html）里有专门详细的讲解。</p>
+<p>注：有的体系虽然表面上看不是金属或其它导体，但由于电子结构特殊、静态相关特别强（如表面上有一大堆悬键），也可能gap很小因而需要用smearing才容易收敛。</p>
+<p>• 对gap较小的体系可尝试使用能级移动，即&amp;SCF / LEVEL_SHIFT，设比如0.3、0.4左右，默认单位是Hartree。这使得SCF过程中人为加大空轨道与占据轨道之间的能级差，从而减轻彼此间混合的剧烈程度而有时令SCF更容易收敛。</p>
+<p>• 修改&amp;SCF / &amp;MIXING / METHOD设置SCF过程中将旧密度矩阵与新密度矩阵混合得到实际每一轮密度矩阵的方法。默认的DIRECT_P_MIXING往往表现极差。通常用BROYDEN_MIXING，这也是Multiwfn产生的输入文件里默认的。亦可尝试PULAY_MIXING，但一般不比BROYDEN_MIXING好。</p>
+<p>• 对于使用BROYDEN_MIXING的情况，尝试修改&amp;MIXING中的ALPHA（新密度矩阵混入旧的的比例，一般用默认的0.4，即混入40%。难收敛时可尝试诸如0.1、0.2、0.3）和NBROYDEN（默认的4明显太小，改大到8通常很有助于收敛，这是Multiwfn产生的输入文件默认的。也可以尝试进一步改大到比如12）</p>
+<p>• 对于使用PULAY_MIXING的情况，尝试修改&amp;MIXING中的NPULAY （默认的4偏小，改大往往很有助于收敛）。注：NPULAY、NBROYDEN、NBUFFER三个关键词实际上等价。</p>
+<p>• 对于使用DIRECT_P_MIXING的情况，收敛到&amp;SCF / EPS_DIIS值后会切换到加速收敛的DIIS算法。但默认的EPS_DIIS为0.1，有点偏小，可以尝试改大以早点启用DIIS（但借助DIIS通常仍不如BROYDEN_MIXING）。还可以把控制最大DIIS矢量的&amp;SCF / MAX_DIIS从默认的4改大到诸如7。</p>
+<p>• 在对角化框架下各种方法都不行的话，尝试改用OT。如果OT能收敛的话，而且当前由于特殊目的又必须用对角化，也可以用OT收敛的波函数当对角化计算的初猜。由于OT不支持k点，因此如果之前对角化是结合k点算的较小晶胞情况，用OT时就只能靠超胞模型了。OT也不支持用ADDED_MOS设置在SCF计算过程中求解空轨道，因此必须用smearing的导体体系就别指望OT了。如果是用GFN1-xTB，总应当用OT，这也是Multiwfn默认的。</p>
+<p>3 用OT的情况可专门考虑的</p>
+<p>• 如果之前没用outer SCF则开启之，这对解决SCF不收敛非常有效，也即加入&amp;SCF / &amp;OUTER_SCF字段。由于其重要性，Multiwfn产生的输入文件里开OT后默认就是启用outer SCF的。此时每次到达&amp;SCF / MAX_SCF所设的inner SCF的步数上限时，就会进入outer SCF过程更新OT的preconditioner，然后进入下一次的inner SCF迭代过程。每次更新preconditioner后经常会看到比之前以更快的速度趋近收敛限。原理上来说，OT每一步都更新preconditioner是最理想、SCF最容易收敛的，但由于这样太昂贵，因此默认情况下（即不用outer SCF时）只会在最开始计算一次preconditioner。</p>
+<p>开启outer SCF时inner SCF的迭代次数上限应当设得比平时更小（否则经历很多次SCF迭代才做一次outer SCF，无法有效达到用outer SCF的目的），15至35是比较合适的范围。outer SCF迭代次数上限通过&amp;SCF / &amp;OUTER_SCF / MAX_SCF控制，总SCF迭代次数上限相当于inner SCF次数上限和(outer SCF次数上限+1)的乘积。</p>
+<p>&amp;SCF / EPS_SCF设的是inner SCF收敛限，&amp;SCF / &amp;OUTER_SCF / EPS_SCF设的是outer SCF收敛限，后者应当小于或等于前者（一般设为相同）。</p>
+<p>• 尝试其它的preconditioner。FULL_ALL通常最好，但最贵。大体系可以尝试明显更便宜的FULL_SINGLE_INVERSE和FULL_KINETIC。个别时候FULL_KINETIC反倒比FULL_ALL更容易收敛。GAPW计算总应当用FULL_ALL。</p>
+<p>• 修改OT算法，把&amp;OT里的ALGORITHM从默认的STRICT改为IRAC，SCF经常会收敛得更稳健，非常值得尝试！特别是我发现用pob系列全电子基组的时候，用IRAC往往容易收敛得多，因此Multiwfn产生基于pob系列基组的输入文件时若用户选了OT，则默认用IRAC。而且用约束性DFT（CDFT）时，我发现用IRAC也会令SCF容易收敛得多得多。</p>
+<p>• &amp;OT / MINIMIZER控制OT用的极小化方法，若之前用的是较快的DIIS（也是Multiwfn产生的用OT的输入文件里默认的），可改为更稳健但耗时更高的CG（共轭梯度法），也可以尝试BROYDEN。</p>
+<p>• MINIMIZER用CG时，尝试用&amp;OT / LINESEARCH选项把线搜索方式设为比默认2PNT更贵但也更稳的3PNT。</p>
+<p>4 几何优化和分子动力学过程中的SCF收敛问题</p>
+<p>在几何优化过程中，有可能中途偶尔出现几步SCF不收敛。此时程序还会继续算下去。只要最终几何优化收敛时SCF也是收敛的状态就行了。（注：从CP2K 2024.1开始，优化中途SCF不收敛会导致任务自动停止，&amp;SCF里写IGNORE_CONVERGENCE_FAILURE才会在SCF不收敛的情况下也继续优化）</p>
+<p>有时候在几何优化初期SCF一直不收敛，不要急于把任务停掉，可以先凑合跑跑看看情况。初始几何结构相对于实际的极小点结构而言肯定是存在多多少少不合理性的，此时SCF也肯定比极小点结构处更难收敛。在SCF不收敛、受力也较糙的情况下凑合跑一定步数后，结构一般会变得比一开始更为合理，此时SCF也往往变得更容易收敛。</p>
+<p>在几何优化、分子动力学过程中，程序会自动利用之前一些结构的波函数外推出当前步的初猜波函数，这比起直接产生的初猜波函数质量通常好得多。外推方式可以通过&amp;DFT / &amp;QS / EXTRAPOLATION来具体设置，默认的ASPC通常是最好的选择。由于这一点，当几何优化、分子动力学跑一定步数之后，SCF达到收敛限所需的迭代次数明显减小、出现SCF不收敛的可能性也大为降低。</p>
+<p>注意当使用k点时CP2K不支持外推产生初猜波函数，因此会在几何优化、分子动力学等涉及结构变化的任务中每一步重新产生初猜波函数，即EXTRAPOLATION USE_GUESS的情况。我一般建议改为EXTRAPOLATION USE_PREV_P，代表直接使用上一步SCF收敛的波函数当初猜。</p>
+<p>如果想减小MD中途出现SCF不收敛的可能，可以尝试减小步长（&amp;MD / TIMESTEP）。如果想减小几何优化中途出现SCF不收敛的可能，可减小优化的步长上限，即置信半径（如通过&amp;MOTION / &amp;GEO_OPT / &amp;BFGS / TRUST_RADIUS）。这样做之后由于相邻两个结构间差异变小了，ASPC或USE_PREV_P给出的初始波函数对于当前结构而言就越理想，自然SCF收敛也会更容易，且有利于让SCF能收敛的状态保持下去。</p>
+<h4>2 楼</h4>
+<p>SCF收敛问题困扰我太久，一直解决不了</p>
+<p>感谢社长！</p>
+<h4>3 楼</h4>
+<p>对于我这种初学者来说超详细了，感谢！</p>
+<h4>4 楼</h4>
+<p>给本文加了一句</p>
+<p>（注：从CP2K 2024.1开始，优化中途SCF不收敛会导致任务自动停止，&amp;SCF里写IGNORE_CONVERGENCE_FAILURE才会在SCF不收敛的情况下也继续优化）</p>
+</body>
+</html>

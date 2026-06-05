@@ -115,6 +115,37 @@ def _classify_chunk_type(text: str) -> str:
     return "text"
 
 
+def _effective_authority_level(source: Dict[str, Any], section_path: List[str]) -> str:
+    """返回当前 chunk 的检索权威等级。
+
+    功能目的：
+        论坛长帖常把 sobereva 主文和普通用户回复放在同一个 source 中。
+        source 级 authority 会让所有楼层同权，因此这里对论坛 chunk 做保守降级。
+    输入参数：
+        source：当前 source 记录。
+        section_path：当前 Markdown 小节路径，论坛帖中通常包含楼层标题。
+    返回值：
+        当前 chunk 应写入的 authority_level。
+    关键流程：
+        非论坛或非 A 级 source 保持原值；A 级论坛 source 中可识别为 sobereva/楼主
+        楼层的 chunk 保持 A，其余楼层降为 B 作为上下文。
+    可能报错或边界情况：
+        如果抓取件没有保存作者名，无法可靠识别 sobereva 回复，宁可降为 B，避免
+        普通用户回复被无差别当成 A 级权威。
+    """
+
+    source_authority = source["authority_level"]
+    if source.get("source_type") != "forum_thread" or source_authority != "A":
+        return source_authority
+    floor_heading = next((item for item in reversed(section_path) if "楼" in item), "")
+    if not floor_heading:
+        return source_authority
+    lowered = floor_heading.lower()
+    if "sobereva" in lowered or "楼主" in floor_heading:
+        return "A"
+    return "B"
+
+
 def _flush_text_buffer(
     *,
     source: Dict[str, Any],
@@ -165,7 +196,7 @@ def _flush_text_buffer(
                 "software_tags": sorted(set(source.get("software_tags", []) + extract_tags(text_for_tags, SOFTWARE_SYNONYMS))),
                 "method_tags": extract_method_tags(text_for_tags),
                 "topic_tags": sorted(set(source.get("topic_tags", []) + extract_tags(text_for_tags, TOPIC_SYNONYMS))),
-                "authority_level": source["authority_level"],
+                "authority_level": _effective_authority_level(source, section_path),
                 "source_type": source["source_type"],
                 "language": detect_language(text_for_tags),
                 "has_image": bool(image_ids),
@@ -307,7 +338,7 @@ def _normalize_blog_source(
                     "software_tags": sorted(set(source.get("software_tags", []) + extract_tags(text_for_tags, SOFTWARE_SYNONYMS))),
                     "method_tags": extract_method_tags(text_for_tags),
                     "topic_tags": sorted(set(source.get("topic_tags", []) + extract_tags(text_for_tags, TOPIC_SYNONYMS))),
-                    "authority_level": source["authority_level"],
+                    "authority_level": _effective_authority_level(source, section_path),
                     "source_type": source["source_type"],
                     "language": detect_language(text_for_tags),
                     "has_image": bool(image_ids),
@@ -492,7 +523,7 @@ def normalize_sources(layout: ProjectLayout) -> Dict[str, int]:
     all_images: List[Dict[str, Any]] = []
     all_sections: List[Dict[str, Any]] = []
     for source in sources:
-        if source["source_type"] in {"blog_post", "software_doc"}:
+        if source["source_type"] in {"blog_post", "software_doc", "forum_thread"}:
             chunks, images, sections = _normalize_blog_source(layout, source)
         elif source["source_type"] == "manual":
             chunks, images, sections = _normalize_manual_source(layout, source)
