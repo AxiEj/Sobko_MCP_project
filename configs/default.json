@@ -7,6 +7,7 @@
   "manual_markdown_path": "data_sources/sobko_sources/multiwfn用户手册/Multiwfn_manual.md",
   "manual_html_path": "data_sources/sobko_sources/multiwfn用户手册/Multiwfn_manual.html",
   "manual_manifest_path": "data_sources/sobko_sources/multiwfn用户手册/manifest.json",
+  "software_docs_manifest_path": "data_sources/sobko_sources/software_docs_manifest.jsonl",
   "blog_authority_level": "B",
   "manual_authority_level": "A",
   "rag_enabled": true,

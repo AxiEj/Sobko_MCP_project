@@ -1,0 +1,302 @@
+{
+  "download_url": "http://sobereva.com/soft/Sobtop/sobtop_2026.1.16.zip",
+  "sha256": "d8a6726ad80a930d45bbcc34f5d32ea47ecca201aacd34ce1a870680d45c3c38",
+  "files": [
+    {
+      "path": "assign_AT.dat",
+      "size": 2235
+    },
+    {
+      "path": "atomtype",
+      "size": 192208
+    },
+    {
+      "path": "atomtype.exe",
+      "size": 232208
+    },
+    {
+      "path": "ATOMTYPE_AMBER.DEF",
+      "size": 7057
+    },
+    {
+      "path": "ATOMTYPE_GFF.DEF",
+      "size": 16851
+    },
+    {
+      "path": "bondcrit.dat",
+      "size": 434
+    },
+    {
+      "path": "bonded_param.dat",
+      "size": 267053
+    },
+    {
+      "path": "CORR_NAME_TYPE.DAT",
+      "size": 1445
+    },
+    {
+      "path": "examples/AMBER.itp",
+      "size": 4836
+    },
+    {
+      "path": "examples/CNT/CNT.itp",
+      "size": 806731
+    },
+    {
+      "path": "examples/CNT/CNT.pdb",
+      "size": 45765
+    },
+    {
+      "path": "examples/CNT/CNT.top",
+      "size": 331
+    },
+    {
+      "path": "examples/diamond_3x3x3/diamond_3x3x3.itp",
+      "size": 1872660
+    },
+    {
+      "path": "examples/diamond_3x3x3/diamond_3x3x3.pdb",
+      "size": 17398
+    },
+    {
+      "path": "examples/diamond_3x3x3/diamond_3x3x3.top",
+      "size": 361
+    },
+    {
+      "path": "examples/exercise/7-helicene.mol2",
+      "size": 2845
+    },
+    {
+      "path": "examples/exercise/COBH3.mol2",
+      "size": 444
+    },
+    {
+      "path": "examples/exercise/PTZ.mol2",
+      "size": 2971
+    },
+    {
+      "path": "examples/FeCl2/exact/FFderiv.txt",
+      "size": 1075
+    },
+    {
+      "path": "examples/FeCl2/exact/freq.inp",
+      "size": 7241
+    },
+    {
+      "path": "examples/FeCl2/exact/freq.out",
+      "size": 5364970
+    },
+    {
+      "path": "examples/FeCl2/exact/opt.inp",
+      "size": 4162
+    },
+    {
+      "path": "examples/FeCl2/exact/opt.out",
+      "size": 72087
+    },
+    {
+      "path": "examples/FeCl2/exact/opted_5x5x1.itp",
+      "size": 213990
+    },
+    {
+      "path": "examples/FeCl2/exact/opted_5x5x1.pdb",
+      "size": 6118
+    },
+    {
+      "path": "examples/FeCl2/exact/opted_5x5x1.top",
+      "size": 355
+    },
+    {
+      "path": "examples/FeCl2/FeCl2.cif",
+      "size": 1177
+    },
+    {
+      "path": "examples/FeCl2/FeCl2_5x5x1.pdb",
+      "size": 6118
+    },
+    {
+      "path": "examples/FeCl2/lazy/FeCl2_5x5x1.gro",
+      "size": 3563
+    },
+    {
+      "path": "examples/FeCl2/lazy/FeCl2_5x5x1.itp",
+      "size": 258999
+    },
+    {
+      "path": "examples/FeCl2/lazy/FeCl2_5x5x1.top",
+      "size": 355
+    },
+    {
+      "path": "examples/GAFF.itp",
+      "size": 6655
+    },
+    {
+      "path": "examples/GAFF2/ATOMTYPE_GFF2.DEF",
+      "size": 17916
+    },
+    {
+      "path": "examples/GAFF2/bonded_param.dat",
+      "size": 468740
+    },
+    {
+      "path": "examples/GAFF2/LJ_param.dat",
+      "size": 16679
+    },
+    {
+      "path": "examples/GAFF2.itp",
+      "size": 7858
+    },
+    {
+      "path": "examples/md_PBC.mdp",
+      "size": 692
+    },
+    {
+      "path": "examples/md_vac.mdp",
+      "size": 570
+    },
+    {
+      "path": "examples/Methyl_benzoate/Methyl_benzoate.fchk",
+      "size": 1921447
+    },
+    {
+      "path": "examples/Methyl_benzoate/Methyl_benzoate.gro",
+      "size": 945
+    },
+    {
+      "path": "examples/Methyl_benzoate/Methyl_benzoate.itp",
+      "size": 13358
+    },
+    {
+      "path": "examples/Methyl_benzoate/Methyl_benzoate.mol2",
+      "size": 1110
+    },
+    {
+      "path": "examples/Methyl_benzoate/Methyl_benzoate.top",
+      "size": 367
+    },
+    {
+      "path": "examples/MOF-5/CP2K_REPEAT-RESP_CHARGES.resp",
+      "size": 13222
+    },
+    {
+      "path": "examples/MOF-5/CP2K_REPEAT.inp",
+      "size": 26625
+    },
+    {
+      "path": "examples/MOF-5/CP2K_REPEAT.out",
+      "size": 31210
+    },
+    {
+      "path": "examples/MOF-5/MOF-5.cif",
+      "size": 34813
+    },
+    {
+      "path": "examples/MOF-5/MOF-5.itp",
+      "size": 462850
+    },
+    {
+      "path": "examples/MOF-5/MOF-5.mol2",
+      "size": 26479
+    },
+    {
+      "path": "examples/MOF-5/MOF-5.pdb",
+      "size": 34038
+    },
+    {
+      "path": "examples/MOF-5/MOF-5.top",
+      "size": 337
+    },
+    {
+      "path": "examples/MOF-5/MOF-5_fragment.gjf",
+      "size": 5510
+    },
+    {
+      "path": "examples/MOF-5/MOF-5_fragment.mol2",
+      "size": 5186
+    },
+    {
+      "path": "examples/polymer/Neoprene_10_cross.itp",
+      "size": 91361
+    },
+    {
+      "path": "examples/polymer/Neoprene_10_cross.mol2",
+      "size": 5669
+    },
+    {
+      "path": "examples/polymer/Neoprene_10_cross.top",
+      "size": 373
+    },
+    {
+      "path": "examples/polymer/Neoprene_40.gro",
+      "size": 18605
+    },
+    {
+      "path": "examples/polymer/Neoprene_40.itp",
+      "size": 371338
+    },
+    {
+      "path": "examples/polymer/Neoprene_40.mol2",
+      "size": 23807
+    },
+    {
+      "path": "examples/polymer/Neoprene_40.top",
+      "size": 355
+    },
+    {
+      "path": "examples/SF6/SF6.fchk",
+      "size": 2147167
+    },
+    {
+      "path": "examples/SF6/SF6.gro",
+      "size": 427
+    },
+    {
+      "path": "examples/SF6/SF6.itp",
+      "size": 4681
+    },
+    {
+      "path": "examples/SF6/SF6.mol2",
+      "size": 500
+    },
+    {
+      "path": "examples/SF6/SF6.top",
+      "size": 331
+    },
+    {
+      "path": "examples/SiO2_3x3x3/SiO2_3x3x3.itp",
+      "size": 419392
+    },
+    {
+      "path": "examples/SiO2_3x3x3/SiO2_3x3x3.pdb",
+      "size": 25997
+    },
+    {
+      "path": "examples/SiO2_3x3x3/SiO2_3x3x3.top",
+      "size": 354
+    },
+    {
+      "path": "examples/UFF.itp",
+      "size": 8336
+    },
+    {
+      "path": "libiomp5md.dll",
+      "size": 2047000
+    },
+    {
+      "path": "LJ_param.dat",
+      "size": 19763
+    },
+    {
+      "path": "sobtop",
+      "size": 17804208
+    },
+    {
+      "path": "sobtop.exe",
+      "size": 14447104
+    },
+    {
+      "path": "sobtop.ini",
+      "size": 964
+    }
+  ]
+}

@@ -119,6 +119,7 @@ def build_source_registry(layout: ProjectLayout, config: RagConfig) -> List[Dict
     manual_md_path = resolve_input_path(layout, config.manual_markdown_path)
     manual_html_path = resolve_input_path(layout, config.manual_html_path)
     manual_manifest_path = resolve_input_path(layout, config.manual_manifest_path)
+    software_docs_manifest_path = resolve_input_path(layout, config.software_docs_manifest_path)
 
     required_paths = [posts_manifest_path, posts_root_path, manual_md_path, manual_html_path, manual_manifest_path]
     for path in required_paths:
@@ -187,7 +188,44 @@ def build_source_registry(layout: ProjectLayout, config: RagConfig) -> List[Dict
         }
     )
 
+    if software_docs_manifest_path.exists():
+        for doc in read_jsonl(software_docs_manifest_path):
+            markdown_path = resolve_input_path(layout, doc["markdown_path"])
+            if not markdown_path.exists():
+                raise FileNotFoundError(f"软件文档 Markdown 不存在：{markdown_path}")
+            doc_text = markdown_path.read_text(encoding="utf-8")
+            html_path = resolve_input_path(layout, doc["html_path"]) if doc.get("html_path") else None
+            canonical_portable_path = to_portable_path(layout, markdown_path)
+            record = {
+                "source_id": doc["source_id"],
+                "source_type": doc.get("source_type", "software_doc"),
+                "title": doc.get("title", ""),
+                "canonical_path": canonical_portable_path,
+                "canonical_url": doc.get("canonical_url", ""),
+                "authority_level": doc.get("authority_level", config.manual_authority_level),
+                "date": doc.get("date"),
+                "software_tags": sorted(set(doc.get("software_tags", []))),
+                "topic_tags": sorted(set(doc.get("topic_tags", []))),
+                "image_count": int(doc.get("image_count", 0)),
+                "version_hint": extract_version_hints(doc_text[:4000]),
+                "language": detect_language(doc_text[:4000]),
+                "index_version": config.index_version,
+                "raw_markdown_path": canonical_portable_path,
+                "raw_post_dir": to_portable_path(layout, markdown_path.parent),
+                "source_hash": stable_hash(doc_text[:20000]),
+                "classification_reason": doc.get("classification_reason", ""),
+                "confidence": doc.get("confidence"),
+            }
+            if html_path is not None:
+                record["html_path"] = to_portable_path(layout, html_path)
+            if doc.get("download_url"):
+                record["download_url"] = doc["download_url"]
+            if doc.get("package_sha256"):
+                record["package_sha256"] = doc["package_sha256"]
+            records.append(record)
+
     write_jsonl(layout.normalized_dir / "source_registry.jsonl", records)
+    source_type_counts = {source_type: sum(1 for item in records if item["source_type"] == source_type) for source_type in sorted({item["source_type"] for item in records})}
     write_json(
         layout.data_sources_dir / "source_registry_snapshot.json",
         {
@@ -195,10 +233,7 @@ def build_source_registry(layout: ProjectLayout, config: RagConfig) -> List[Dict
             "index_version": config.index_version,
             "generated_at": build_time,
             "source_count": len(records),
-            "source_type_counts": {
-                "blog_post": sum(1 for item in records if item["source_type"] == "blog_post"),
-                "manual": sum(1 for item in records if item["source_type"] == "manual"),
-            },
+            "source_type_counts": source_type_counts,
             "source_ids": [item["source_id"] for item in records],
         },
     )

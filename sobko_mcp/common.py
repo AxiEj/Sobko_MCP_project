@@ -25,6 +25,7 @@ SOFTWARE_TAGS: List[str] = [
     "NWChem",
     "VASP",
     "MOPAC",
+    "Sobtop",
 ]
 
 TOPIC_TAGS: List[str] = [
@@ -71,6 +72,7 @@ SOFTWARE_SYNONYMS: Dict[str, Sequence[str]] = {
     "NWChem": ["nwchem"],
     "VASP": ["vasp"],
     "MOPAC": ["mopac"],
+    "Sobtop": ["sobtop", "sobereva topology"],
 }
 
 TOPIC_SYNONYMS: Dict[str, Sequence[str]] = {

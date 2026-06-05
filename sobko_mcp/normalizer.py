@@ -492,7 +492,7 @@ def normalize_sources(layout: ProjectLayout) -> Dict[str, int]:
     all_images: List[Dict[str, Any]] = []
     all_sections: List[Dict[str, Any]] = []
     for source in sources:
-        if source["source_type"] == "blog_post":
+        if source["source_type"] in {"blog_post", "software_doc"}:
             chunks, images, sections = _normalize_blog_source(layout, source)
         elif source["source_type"] == "manual":
             chunks, images, sections = _normalize_manual_source(layout, source)

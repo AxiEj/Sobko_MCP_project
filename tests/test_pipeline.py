@@ -50,7 +50,8 @@ class PipelineSmokeTests(unittest.TestCase):
         counts = Counter(source["source_type"] for source in self.engine.sources)
         self.assertEqual(counts["blog_post"], 580)
         self.assertEqual(counts["manual"], 1)
-        self.assertEqual(len(self.engine.sources), 581)
+        self.assertEqual(counts["software_doc"], 1)
+        self.assertEqual(len(self.engine.sources), 582)
 
     def test_chunk_and_image_counts(self) -> None:
         """标准化产物规模应符合完整迁移包预期。"""
@@ -69,6 +70,12 @@ class PipelineSmokeTests(unittest.TestCase):
 
         result = self.engine.search(query="Multiwfn command-line mode", top_k=5)
         self.assertTrue(any(item["source_id"] == "manual:multiwfn_manual" for item in result.results))
+
+    def test_known_sobtop_search(self) -> None:
+        """Sobtop GROMACS topology query 应命中 Sobtop 软件文档。"""
+
+        result = self.engine.search(query="Sobtop GROMACS topology GAFF Hessian", top_k=5)
+        self.assertTrue(any(item["source_id"] == "software_doc:sobtop" for item in result.results))
 
     def test_rerank_unavailable_records_warning(self) -> None:
         """rerank API 不可用时应降级并返回 warning。"""

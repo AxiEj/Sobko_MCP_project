@@ -1,11 +1,12 @@
 {
   "project": "sobko_mcp",
   "index_version": "2026.06.sobko.v1",
-  "generated_at": "2026-06-05T10:32:05.042826+08:00",
-  "source_count": 581,
+  "generated_at": "2026-06-05T10:49:58.049349+08:00",
+  "source_count": 582,
   "source_type_counts": {
     "blog_post": 580,
-    "manual": 1
+    "manual": 1,
+    "software_doc": 1
   },
   "source_ids": [
     "blog_post:771",
@@ -588,6 +589,7 @@
     "blog_post:4",
     "blog_post:3",
     "blog_post:1",
-    "manual:multiwfn_manual"
+    "manual:multiwfn_manual",
+    "software_doc:sobtop"
   ]
 }
