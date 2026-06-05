@@ -20,7 +20,7 @@ class SobkoMcpServer:
     返回值：
         提供 `serve_forever()` 事件循环。
     关键流程：
-        读取 Content-Length framed JSON-RPC 消息，处理 initialize、tools/list、tools/call。
+        读取 Content-Length 或 JSON lines JSON-RPC 消息，处理 initialize、tools/list、tools/call。
     可能报错或边界情况：
         单次工具调用失败会返回 JSON-RPC error，不让 server 进程直接退出。
     """
@@ -28,7 +28,28 @@ class SobkoMcpServer:
     def __init__(self) -> None:
         self.layout = build_layout()
         self.config = load_config()
-        self.engine = RetrievalEngine(self.layout, self.config)
+        self._engine: RetrievalEngine | None = None
+        self._json_lines_transport = False
+
+    @property
+    def engine(self) -> RetrievalEngine:
+        """惰性加载检索引擎。
+
+        功能目的：
+            避免 Codex 启动 MCP 时在 initialize 握手前加载大体积索引。
+        输入参数：
+            无。
+        返回值：
+            已加载的 `RetrievalEngine` 实例。
+        关键流程：
+            第一次真正调用工具时加载 source、chunk、BM25 和 dense 索引，后续复用。
+        可能报错或边界情况：
+            索引缺失时错误会出现在工具调用响应中，而不是阻塞 MCP 启动。
+        """
+
+        if self._engine is None:
+            self._engine = RetrievalEngine(self.layout, self.config)
+        return self._engine
 
     def _tool_definitions(self) -> list[Dict[str, Any]]:
         """返回 MCP 工具定义。
@@ -54,10 +75,10 @@ class SobkoMcpServer:
                     "properties": {
                         "query": {"type": "string"},
                         "top_k": {"type": "integer", "default": 8},
-                        "source_types": {"type": ["array", "null"], "items": {"type": "string"}},
-                        "software": {"type": ["array", "null"], "items": {"type": "string"}},
-                        "topics": {"type": ["array", "null"], "items": {"type": "string"}},
-                        "authority_at_least": {"type": ["string", "null"]},
+                        "source_types": {"type": "array", "items": {"type": "string"}},
+                        "software": {"type": "array", "items": {"type": "string"}},
+                        "topics": {"type": "array", "items": {"type": "string"}},
+                        "authority_at_least": {"type": "string"},
                         "include_images": {"type": "boolean", "default": True},
                     },
                     "required": ["query"],
@@ -69,8 +90,8 @@ class SobkoMcpServer:
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "chunk_id": {"type": ["string", "null"]},
-                        "source_id": {"type": ["string", "null"]},
+                        "chunk_id": {"type": "string"},
+                        "source_id": {"type": "string"},
                         "expand_prev_next": {"type": "integer", "default": 1},
                         "include_html_anchor": {"type": "boolean", "default": True},
                     },
@@ -94,37 +115,48 @@ class SobkoMcpServer:
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "source_id": {"type": ["string", "null"]},
-                        "chunk_id": {"type": ["string", "null"]},
+                        "source_id": {"type": "string"},
+                        "chunk_id": {"type": "string"},
                     },
                 },
             },
         ]
 
     def _read_message(self) -> Optional[Dict[str, Any]]:
-        """读取一条 framed JSON-RPC 消息。
+        """读取一条 JSON-RPC 消息。
 
         功能目的：
-            实现 MCP stdio transport 的基础读入协议。
+            兼容 Content-Length framed stdio 和 Codex 使用的 JSON lines stdio。
         输入参数：
             无，从 stdin 读取。
         返回值：
             JSON-RPC 消息字典；EOF 时返回 None。
         关键流程：
-            读取 header，解析 Content-Length，再读取指定长度 body。
+            先读取首行；如果首行就是 JSON，则按 JSON lines 解析并用同格式回包。
+            否则按 header 解析 Content-Length，再读取指定长度 body。
         可能报错或边界情况：
             非法 JSON 会抛出异常并由外层处理。
         """
 
+        first_line = sys.stdin.buffer.readline()
+        if not first_line:
+            return None
+        stripped = first_line.strip()
+        if stripped.startswith(b"{"):
+            self._json_lines_transport = True
+            return json.loads(stripped.decode("utf-8"))
+
+        self._json_lines_transport = False
         headers: Dict[str, str] = {}
+        line = first_line
         while True:
-            line = sys.stdin.buffer.readline()
-            if not line:
-                return None
             if line in {b"\r\n", b"\n"}:
                 break
             key, value = line.decode("utf-8").split(":", 1)
             headers[key.strip().lower()] = value.strip()
+            line = sys.stdin.buffer.readline()
+            if not line:
+                return None
         content_length = int(headers.get("content-length", "0"))
         body = sys.stdin.buffer.read(content_length)
         if not body:
@@ -135,18 +167,23 @@ class SobkoMcpServer:
         """写出一条 framed JSON-RPC 消息。
 
         功能目的：
-            实现 MCP stdio transport 的基础响应协议。
+            用当前客户端输入同款 transport 写回响应。
         输入参数：
             payload：响应对象。
         返回值：
             无。
         关键流程：
-            先计算 UTF-8 body 字节长度，再写 Content-Length header 和 body。
+            JSON lines 输入写一行 JSON；Content-Length 输入写 framed body。
         可能报错或边界情况：
             stdout 管道关闭时会抛出 BrokenPipeError，进程自然退出。
         """
 
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        if self._json_lines_transport:
+            sys.stdout.buffer.write(body)
+            sys.stdout.buffer.write(b"\n")
+            sys.stdout.buffer.flush()
+            return
         header = f"Content-Length: {len(body)}\r\n\r\n".encode("utf-8")
         sys.stdout.buffer.write(header)
         sys.stdout.buffer.write(body)
@@ -236,10 +273,11 @@ class SobkoMcpServer:
             message_id = message.get("id")
             try:
                 if method == "initialize":
+                    requested_protocol = message.get("params", {}).get("protocolVersion")
                     self._success(
                         message_id,
                         {
-                            "protocolVersion": "2024-11-05",
+                            "protocolVersion": requested_protocol or "2024-11-05",
                             "capabilities": {"tools": {"listChanged": False}},
                             "serverInfo": {"name": self.config.mcp_server_name, "version": self.config.index_version},
                         },
@@ -250,6 +288,12 @@ class SobkoMcpServer:
                     self._success(message_id, {})
                 elif method == "tools/list":
                     self._success(message_id, {"tools": self._tool_definitions()})
+                elif method == "resources/list":
+                    self._success(message_id, {"resources": []})
+                elif method == "resources/templates/list":
+                    self._success(message_id, {"resourceTemplates": []})
+                elif method == "prompts/list":
+                    self._success(message_id, {"prompts": []})
                 elif method == "tools/call":
                     params = message.get("params", {})
                     result = self._handle_tool_call(params["name"], params.get("arguments", {}))
@@ -281,7 +325,15 @@ def build_fastmcp_server():
 
     layout = build_layout()
     config = load_config()
-    engine = RetrievalEngine(layout, config)
+    engine: RetrievalEngine | None = None
+
+    def get_engine() -> RetrievalEngine:
+        """惰性加载检索引擎，避免 FastMCP initialize 阶段预加载大索引。"""
+
+        nonlocal engine
+        if engine is None:
+            engine = RetrievalEngine(layout, config)
+        return engine
     server = FastMCP(
         name=config.mcp_server_name,
         instructions=(
@@ -303,7 +355,7 @@ def build_fastmcp_server():
     ) -> Dict[str, Any]:
         """执行 Sobko 检索。"""
 
-        return engine.search(
+        return get_engine().search(
             query=query,
             top_k=top_k,
             source_types=source_types,
@@ -322,7 +374,7 @@ def build_fastmcp_server():
     ) -> Dict[str, Any]:
         """展开 source 或 chunk 上下文。"""
 
-        return engine.fetch(
+        return get_engine().fetch(
             chunk_id=chunk_id,
             source_id=source_id,
             expand_prev_next=expand_prev_next,
@@ -333,12 +385,12 @@ def build_fastmcp_server():
     def sobko_get_image(image_id: str, return_mode: str = "path") -> Dict[str, Any]:
         """返回图片路径与邻近说明。"""
 
-        return engine.get_image(image_id=image_id, return_mode=return_mode)
+        return get_engine().get_image(image_id=image_id, return_mode=return_mode)
 
     @server.tool(name="sobko_trace_source", description="Trace authority level, local path, source URL, and lineage.")
     def sobko_trace_source(source_id: str | None = None, chunk_id: str | None = None) -> Dict[str, Any]:
         """追溯来源链路。"""
 
-        return engine.trace_source(source_id=source_id, chunk_id=chunk_id)
+        return get_engine().trace_source(source_id=source_id, chunk_id=chunk_id)
 
     return server

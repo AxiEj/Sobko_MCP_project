@@ -8,7 +8,7 @@ from collections import Counter
 from pathlib import Path
 
 from sobko_mcp.config import build_layout, load_config
-from sobko_mcp.retriever import RetrievalEngine
+from sobko_mcp.retriever import OllamaClient, RetrievalEngine
 
 
 class PipelineSmokeTests(unittest.TestCase):
@@ -76,6 +76,49 @@ class PipelineSmokeTests(unittest.TestCase):
         self.assertTrue(result.results)
         self.assertTrue(any(item.startswith("rerank_fallback:") for item in result.backend_warnings))
         self.config.rag_use_reranker = False
+
+    def test_openai_embedding_response_parsing(self) -> None:
+        """OpenAI embeddings 响应应按 index 还原成输入顺序。"""
+
+        config = load_config(self.layout.configs_dir / "default.json")
+        config.embedding_provider = "openai"
+        config.embedding_model = "text-embedding-3-small"
+        config.embedding_dimensions = 3
+        client = OllamaClient(config)
+
+        def fake_post(payload):
+            self.assertEqual(payload["model"], "text-embedding-3-small")
+            self.assertEqual(payload["dimensions"], 3)
+            return {
+                "data": [
+                    {"index": 1, "embedding": [0.2, 0.3, 0.4]},
+                    {"index": 0, "embedding": [0.1, 0.2, 0.3]},
+                ]
+            }
+
+        client._post_openai_embeddings = fake_post
+        self.assertEqual(
+            client.embed_texts(["first", "second"]),
+            [[0.1, 0.2, 0.3], [0.2, 0.3, 0.4]],
+        )
+
+    def test_embedding_provider_mismatch_degrades_to_lexical(self) -> None:
+        """当前配置和 dense 索引 provider 不一致时不得混用向量空间。"""
+
+        old_use_embedding = self.config.rag_use_embedding
+        old_provider = self.config.embedding_provider
+        old_model = self.config.embedding_model
+        try:
+            self.config.rag_use_embedding = True
+            self.config.embedding_provider = "openai"
+            self.config.embedding_model = "text-embedding-3-small"
+            result = self.engine.search(query="ORCA TDDFT 空穴电子分析", top_k=2)
+            self.assertEqual(result.effective_mode, "lexical_only")
+            self.assertTrue(any("provider=" in item and "不一致" in item for item in result.backend_warnings))
+        finally:
+            self.config.rag_use_embedding = old_use_embedding
+            self.config.embedding_provider = old_provider
+            self.config.embedding_model = old_model
 
 
 if __name__ == "__main__":

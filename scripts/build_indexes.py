@@ -194,7 +194,7 @@ def build_dense_index(chunks: List[Dict[str, Any]], config, layout) -> Dict[str,
         return _write_dense_unavailable(layout, config, "rag_use_embedding=false")
 
     client = OllamaClient(config)
-    ok, reason = client._ping("embedding")
+    ok, reason = client.embedding_available()
     if not ok:
         return _write_dense_unavailable(layout, config, reason)
 
@@ -205,7 +205,7 @@ def build_dense_index(chunks: List[Dict[str, Any]], config, layout) -> Dict[str,
         for start in range(0, len(texts), config.dense_batch_size):
             batch_texts = texts[start : start + config.dense_batch_size]
             batch_ids = chunk_ids[start : start + config.dense_batch_size]
-            embeddings = client.embed_texts(batch_texts, model=config.embedding_model)
+            embeddings = client.embed_texts(batch_texts)
             if len(embeddings) != len(batch_ids):
                 raise RuntimeError(f"embedding 返回条数不匹配：expected={len(batch_ids)} actual={len(embeddings)}")
             for chunk_id, vector in zip(batch_ids, embeddings):
@@ -224,8 +224,8 @@ def build_dense_index(chunks: List[Dict[str, Any]], config, layout) -> Dict[str,
     )
     metadata = {
         "available": True,
-        "provider": config.embedding_provider,
-        "model_name": config.embedding_model,
+        "provider": client._embedding_provider(),
+        "model_name": client._embedding_model(),
         "dimension": dimension,
         "generated_at": datetime.now().astimezone().isoformat(),
         "vector_count": len(vectors),

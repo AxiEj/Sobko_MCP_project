@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import math
 import os
@@ -124,18 +125,19 @@ class SearchResult:
 
 
 class OllamaClient:
-    """Ollama embedding / rerank API 客户端。
+    """Embedding / rerank API 客户端。
 
     功能目的：
-        支持用户通过配置填写 embedding 与 rerank API 端口，同时兼容 Ollama 的 `/api/embed` 和 `/api/rerank` 形态。
+        支持用户通过配置填写 embedding 与 rerank API 端口；embedding 支持 Ollama 和 OpenAI，
+        rerank 继续兼容 Ollama 的 `/api/rerank` 形态。
     输入参数：
         config：Sobko RAG 配置。
     返回值：
         `OllamaClient` 实例。
     关键流程：
-        对 embedding 与 rerank 分别维护候选 base URL；每类 API 首次调用前先 ping。
+        对 Ollama embedding 与 rerank 分别维护候选 base URL；OpenAI embedding 直接调用 HTTPS API。
     可能报错或边界情况：
-        服务不可达、模型缺失、接口不存在或 JSON 形状不兼容时抛出 `RuntimeError`，上层会降级。
+        服务不可达、API key 缺失、模型缺失、接口不存在或 JSON 形状不兼容时抛出 `RuntimeError`，上层会降级。
     """
 
     def __init__(self, config: RagConfig):
@@ -145,6 +147,9 @@ class OllamaClient:
         self._rerank_base_url: str | None = None
         self._embedding_ping_status: Optional[tuple[bool, str]] = None
         self._rerank_ping_status: Optional[tuple[bool, str]] = None
+        self._local_embedding_tokenizer = None
+        self._local_embedding_model = None
+        self._local_embedding_device: str | None = None
 
     def _candidate_base_urls(self, kind: str) -> List[str]:
         """返回指定 API 类型的候选 base URL。
@@ -176,6 +181,68 @@ class OllamaClient:
                 if normalized and normalized not in urls:
                     urls.append(normalized)
         return urls
+
+    def _embedding_provider(self) -> str:
+        """返回当前 embedding provider。
+
+        功能目的：
+            允许通过 `SOBKO_EMBEDDING_PROVIDER` 临时覆盖配置，便于同一迁移包在 local_hf/Ollama/OpenAI 间切换。
+        输入参数：
+            无。
+        返回值：
+            小写 provider 名称。
+        关键流程：
+            环境变量优先，否则使用配置文件。
+        可能报错或边界情况：
+            空字符串会退回配置值。
+        """
+
+        return (os.environ.get("SOBKO_EMBEDDING_PROVIDER") or self.config.embedding_provider).strip().lower()
+
+    def _embedding_model(self, explicit_model: Optional[str] = None) -> str:
+        """返回当前 embedding 模型名。"""
+
+        return explicit_model or os.environ.get("SOBKO_EMBEDDING_MODEL") or self.config.embedding_model
+
+    def _embedding_dimensions(self) -> int | None:
+        """返回 OpenAI embedding dimensions 覆盖值。"""
+
+        env_value = os.environ.get("SOBKO_EMBEDDING_DIMENSIONS")
+        if env_value:
+            return int(env_value)
+        return self.config.embedding_dimensions
+
+    def embedding_available(self) -> tuple[bool, str]:
+        """检查 embedding provider 是否具备最小可调用条件。
+
+        功能目的：
+            构建 dense 索引前快速判断后端是否可用，避免无意义地遍历全部 chunk。
+        输入参数：
+            无。
+        返回值：
+            `(是否可用, 原因)`。
+        关键流程：
+            Ollama 走原 ping 逻辑；OpenAI 只检查 API key 是否存在；local_hf 检查 transformers/torch 是否存在。
+        可能报错或边界情况：
+            OpenAI key 不会被打印，错误信息只说明缺少环境变量。
+        """
+
+        provider = self._embedding_provider()
+        if provider == "ollama":
+            return self._ping("embedding")
+        if provider == "openai":
+            if os.environ.get("SOBKO_OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY"):
+                return True, "ok"
+            return False, "OpenAI embedding 需要设置 SOBKO_OPENAI_API_KEY 或 OPENAI_API_KEY。"
+        if provider in {"local_hf", "local"}:
+            try:
+                import torch  # noqa: F401
+                from transformers import AutoModel, AutoTokenizer  # noqa: F401
+
+                return True, "ok"
+            except Exception as exc:
+                return False, f"local_hf embedding 需要可导入 transformers 和 torch: {exc}"
+        return False, f"暂不支持 embedding_provider={provider}"
 
     def _build_url(self, base_url: str, endpoint: str) -> str:
         """拼接 API URL。
@@ -304,6 +371,134 @@ class OllamaClient:
                 last_error = f"{base_url} {endpoint}: {exc}"
         raise RuntimeError(f"调用 Ollama {endpoint} 失败: {last_error}")
 
+    def _post_openai_embeddings(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """调用 OpenAI embeddings API。
+
+        功能目的：
+            让没有 Ollama 的环境可以用 OpenAI embedding 模型构建和查询 dense 索引。
+        输入参数：
+            payload：OpenAI `/v1/embeddings` 请求体。
+        返回值：
+            JSON 响应字典。
+        关键流程：
+            从 `SOBKO_OPENAI_API_KEY` 或 `OPENAI_API_KEY` 读取密钥，使用标准库发 HTTPS JSON 请求。
+        可能报错或边界情况：
+            缺少 API key、HTTP 非 2xx 或响应不是 JSON 都抛出 `RuntimeError`，上层降级。
+        """
+
+        api_key = os.environ.get("SOBKO_OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError("OpenAI embedding 需要设置 SOBKO_OPENAI_API_KEY 或 OPENAI_API_KEY。")
+        base_url = (
+            os.environ.get("SOBKO_EMBEDDING_API_BASE_URL")
+            or os.environ.get("SOBKO_OPENAI_BASE_URL")
+            or os.environ.get("OPENAI_BASE_URL")
+            or self.config.embedding_api_base_url
+            or "https://api.openai.com"
+        ).rstrip("/")
+        endpoint = os.environ.get("SOBKO_EMBEDDING_API_ENDPOINT") or self.config.embedding_api_endpoint or "/v1/embeddings"
+        if endpoint.startswith(("http://", "https://")):
+            url = endpoint
+        else:
+            normalized_endpoint = endpoint if endpoint.startswith("/") else f"/{endpoint}"
+            if base_url.endswith("/v1") and normalized_endpoint.startswith("/v1/"):
+                url = f"{base_url}{normalized_endpoint[3:]}"
+            else:
+                url = f"{base_url}{normalized_endpoint}"
+        body = json.dumps(payload).encode("utf-8")
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
+        if os.environ.get("OPENAI_ORG_ID"):
+            headers["OpenAI-Organization"] = os.environ["OPENAI_ORG_ID"]
+        if os.environ.get("OPENAI_PROJECT"):
+            headers["OpenAI-Project"] = os.environ["OPENAI_PROJECT"]
+        http_request = request.Request(url, data=body, headers=headers, method="POST")
+        try:
+            with request.urlopen(http_request, timeout=self.timeout) as response:
+                text = response.read().decode("utf-8")
+            return json.loads(text)
+        except error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")[:240]
+            raise RuntimeError(f"OpenAI embeddings HTTP {exc.code}: {detail}") from exc
+        except json.JSONDecodeError as exc:
+            raise RuntimeError(f"OpenAI embeddings 返回非法 JSON: {exc}") from exc
+        except Exception as exc:
+            raise RuntimeError(f"调用 OpenAI embeddings 失败: {exc}") from exc
+
+    def _embed_texts_local_hf(self, texts: Sequence[str], model_name: str) -> List[List[float]]:
+        """使用本地 HuggingFace encoder 生成 embedding。
+
+        功能目的：
+            让没有 Ollama、没有 OpenAI API key 的环境仍可构建和查询 dense 索引。
+        输入参数：
+            texts：待编码文本列表。
+            model_name：HuggingFace 模型名或本地模型目录。
+        返回值：
+            embedding 向量列表。
+        关键流程：
+            惰性加载 tokenizer/model -> tokenizer batch -> encoder forward -> CLS/mean pooling -> L2 normalize。
+        可能报错或边界情况：
+            模型未下载且无法访问 HuggingFace 时会抛出明确错误，上层自动降级 BM25。
+        """
+
+        try:
+            import torch
+            from transformers import AutoModel, AutoTokenizer
+            from transformers.utils import logging as transformers_logging
+        except Exception as exc:
+            raise RuntimeError(f"local_hf embedding 需要安装 transformers 和 torch: {exc}") from exc
+
+        if self._local_embedding_tokenizer is None or self._local_embedding_model is None:
+            try:
+                os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
+                os.environ.setdefault("TRANSFORMERS_NO_ADVISORY_WARNINGS", "1")
+                transformers_logging.set_verbosity_error()
+                with open(os.devnull, "w", encoding="utf-8") as devnull:
+                    with contextlib.redirect_stdout(devnull), contextlib.redirect_stderr(devnull):
+                        self._local_embedding_tokenizer = AutoTokenizer.from_pretrained(model_name)
+                        self._local_embedding_model = AutoModel.from_pretrained(model_name)
+            except Exception as exc:
+                raise RuntimeError(f"加载本地 embedding 模型失败：{model_name}: {exc}") from exc
+            requested_device = os.environ.get("SOBKO_LOCAL_EMBEDDING_DEVICE")
+            if requested_device:
+                self._local_embedding_device = requested_device
+            else:
+                self._local_embedding_device = "cuda" if torch.cuda.is_available() else "cpu"
+            self._local_embedding_model.to(self._local_embedding_device)
+            self._local_embedding_model.eval()
+
+        configured_max_length = self.config.local_embedding_max_length
+        tokenizer_max_length = getattr(self._local_embedding_tokenizer, "model_max_length", None)
+        if isinstance(tokenizer_max_length, int) and tokenizer_max_length > 100_000:
+            tokenizer_max_length = None
+        max_length = int(
+            os.environ.get("SOBKO_LOCAL_EMBEDDING_MAX_LENGTH")
+            or configured_max_length
+            or tokenizer_max_length
+            or 512
+        )
+        pooling = os.environ.get("SOBKO_LOCAL_EMBEDDING_POOLING", "cls").strip().lower()
+        encoded = self._local_embedding_tokenizer(
+            list(texts),
+            padding=True,
+            truncation=True,
+            max_length=max_length,
+            return_tensors="pt",
+        )
+        encoded = {key: value.to(self._local_embedding_device) for key, value in encoded.items()}
+        with torch.no_grad():
+            output = self._local_embedding_model(**encoded)
+            hidden = output.last_hidden_state
+            if pooling == "mean":
+                mask = encoded["attention_mask"].unsqueeze(-1).expand(hidden.size()).float()
+                pooled = (hidden * mask).sum(dim=1) / mask.sum(dim=1).clamp(min=1e-12)
+            else:
+                pooled = hidden[:, 0]
+            pooled = torch.nn.functional.normalize(pooled, p=2, dim=1)
+        return [[float(value) for value in row] for row in pooled.cpu().tolist()]
+
     def embed_texts(self, texts: Sequence[str], model: Optional[str] = None) -> List[List[float]]:
         """批量获取文本 embedding。
 
@@ -320,12 +515,34 @@ class OllamaClient:
             返回条数与输入条数不一致时由调用方在构建阶段发现。
         """
 
-        if self.config.embedding_provider.lower() != "ollama":
-            raise RuntimeError(f"暂不支持 embedding_provider={self.config.embedding_provider}")
+        provider = self._embedding_provider()
+        if provider in {"local_hf", "local"}:
+            return self._embed_texts_local_hf(texts, self._embedding_model(model))
+        if provider == "openai":
+            payload: Dict[str, Any] = {
+                "model": self._embedding_model(model),
+                "input": list(texts),
+                "encoding_format": "float",
+            }
+            dimensions = self._embedding_dimensions()
+            if dimensions:
+                payload["dimensions"] = dimensions
+            data = self._post_openai_embeddings(payload)
+            records = data.get("data")
+            if not isinstance(records, list):
+                raise RuntimeError("OpenAI embeddings 返回格式不兼容，缺少 data 列表。")
+            ordered = sorted(records, key=lambda item: int(item.get("index", 0)))
+            embeddings = [item.get("embedding") for item in ordered]
+            if not all(isinstance(item, list) for item in embeddings):
+                raise RuntimeError("OpenAI embeddings 返回格式不兼容，缺少 embedding 向量。")
+            return embeddings
+
+        if provider != "ollama":
+            raise RuntimeError(f"暂不支持 embedding_provider={provider}")
         data = self._post_json(
             "embedding",
             self.config.embedding_api_endpoint,
-            {"model": model or self.config.embedding_model, "input": list(texts)},
+            {"model": self._embedding_model(model), "input": list(texts)},
         )
         if isinstance(data.get("embeddings"), list):
             return data["embeddings"]
@@ -709,11 +926,37 @@ class RetrievalEngine:
             return {}, False, "配置关闭 embedding 检索。"
         if not self.dense_index.available or not self.dense_index.vectors:
             return {}, False, self.dense_index.metadata.get("reason", "dense 索引不可用。")
+        configured_provider = self.ollama_client._embedding_provider()
+        indexed_provider = str(self.dense_index.metadata.get("provider") or "").strip().lower()
+        if indexed_provider and indexed_provider != configured_provider:
+            return (
+                {},
+                False,
+                f"dense 索引 provider={indexed_provider} 与当前 embedding_provider={configured_provider} 不一致；"
+                "请设置匹配 provider 或运行 python scripts/build_indexes.py 重建 dense 索引。",
+            )
+        configured_model = self.ollama_client._embedding_model()
+        indexed_model = str(self.dense_index.metadata.get("model_name") or "").strip()
+        if indexed_model and indexed_model != configured_model:
+            return (
+                {},
+                False,
+                f"dense 索引 model_name={indexed_model} 与当前 embedding_model={configured_model} 不一致；"
+                "请设置匹配模型或运行 python scripts/build_indexes.py 重建 dense 索引。",
+            )
         try:
-            model_name = self.dense_index.metadata.get("model_name") or self.config.embedding_model
+            model_name = self.dense_index.metadata.get("model_name") or configured_model
             query_vector = self.ollama_client.embed_texts([query], model=model_name)[0]
         except Exception as exc:
             return {}, False, str(exc)
+        expected_dimension = int(self.dense_index.metadata.get("dimension") or 0)
+        if expected_dimension and len(query_vector) != expected_dimension:
+            return (
+                {},
+                False,
+                f"query embedding 维度 {len(query_vector)} 与 dense 索引维度 {expected_dimension} 不一致；"
+                "请用当前 embedding 配置重建 dense 索引。",
+            )
         scores: Dict[str, float] = {}
         for chunk_id in candidate_ids:
             vector = self.dense_index.vectors.get(chunk_id)
@@ -811,7 +1054,7 @@ class RetrievalEngine:
         ordered_ids = [chunk_id for chunk_id, _ in sorted(combined_scores.items(), key=lambda item: item[1], reverse=True)]
         ordered_candidates = [self.chunk_by_id[chunk_id] for chunk_id in ordered_ids[: self.config.rag_rerank_candidate_k]]
         rerank_scores, rerank_available, rerank_error = self._rerank_scores(query, ordered_candidates)
-        if rerank_error:
+        if rerank_error and self.config.rag_use_reranker:
             backend_warnings.append(f"rerank_fallback: {rerank_error}")
         rerank_scores = _normalize_scores(rerank_scores) if rerank_scores else {}
 

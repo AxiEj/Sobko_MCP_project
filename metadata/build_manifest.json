@@ -1,14 +1,14 @@
 {
   "index_version": "2026.06.sobko.v1",
-  "generated_at": "2026-06-04T15:39:07.829189+08:00",
+  "generated_at": "2026-06-05T08:30:09.670194+08:00",
   "chunk_count": 11304,
   "image_count": 2377,
   "bm25_doc_count": 11304,
   "dense_available": true,
   "dense_reason": null,
   "dense_vector_count": 11304,
-  "dense_shard_count": 4,
+  "dense_shard_count": 6,
   "image_lookup_count": 2377,
-  "rerank_enabled": true,
+  "rerank_enabled": false,
   "rerank_model_name": "dengcao/bge-reranker-v2-m3:latest"
 }

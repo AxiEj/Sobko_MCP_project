@@ -1,31 +1,41 @@
 {
   "available": true,
-  "provider": "ollama",
-  "model_name": "bge-m3:latest",
+  "provider": "local_hf",
+  "model_name": "BAAI/bge-m3",
   "dimension": 1024,
-  "generated_at": "2026-06-04T15:39:07.675631+08:00",
+  "generated_at": "2026-06-05T08:30:09.320746+08:00",
   "vector_count": 11304,
-  "shard_count": 4,
+  "shard_count": 6,
   "shards": [
     {
       "path": "shards/chunk_embeddings_0001.jsonl",
-      "record_count": 3512,
-      "bytes": 44995904
+      "record_count": 2067,
+      "bytes": 44985905
     },
     {
       "path": "shards/chunk_embeddings_0002.jsonl",
-      "record_count": 3512,
-      "bytes": 44995589
+      "record_count": 2067,
+      "bytes": 44987825
     },
     {
       "path": "shards/chunk_embeddings_0003.jsonl",
-      "record_count": 3510,
-      "bytes": 44990672
+      "record_count": 2067,
+      "bytes": 44989479
     },
     {
       "path": "shards/chunk_embeddings_0004.jsonl",
-      "record_count": 770,
-      "bytes": 9870655
+      "record_count": 2067,
+      "bytes": 44985746
+    },
+    {
+      "path": "shards/chunk_embeddings_0005.jsonl",
+      "record_count": 2066,
+      "bytes": 44982069
+    },
+    {
+      "path": "shards/chunk_embeddings_0006.jsonl",
+      "record_count": 970,
+      "bytes": 21119007
     }
   ]
 }

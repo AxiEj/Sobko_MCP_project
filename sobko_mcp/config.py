@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -50,6 +50,8 @@ class RagConfig:
     embedding_fallback_base_urls: List[str]
     embedding_api_endpoint: str
     embedding_model: str
+    embedding_dimensions: Optional[int]
+    local_embedding_max_length: Optional[int]
     rerank_provider: str
     rerank_api_base_url: str
     rerank_fallback_base_urls: List[str]
@@ -79,6 +81,8 @@ class RagConfig:
             多余或缺失字段都会抛出 `TypeError`，提示配置与代码版本不匹配。
         """
 
+        payload.setdefault("embedding_dimensions", None)
+        payload.setdefault("local_embedding_max_length", None)
         return cls(**payload)
 
 
